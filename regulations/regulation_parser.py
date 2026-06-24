@@ -1,5 +1,4 @@
 from bs4 import Tag, NavigableString
-from utils import Cursor
 from typing import ClassVar, override
 from parser import Parser, TextCleaner
 
@@ -12,8 +11,8 @@ class RegulationParser(Parser):
                                       "Yürütme"}
 
 
-    def __init__(self, cursor: Cursor):
-        super().__init__(cursor)
+    def __init__(self, content_container: Tag):
+        super().__init__(content_container)
         self.special_articles = {
             4: self.article_n4,
             5: self.article_n5,
@@ -43,13 +42,12 @@ class RegulationParser(Parser):
             definition = f"{definition_base} {ending}"
 
             paragraphs.append({
-                "metadata": {
+                "payload": {
                     "chunk_type": "definition",
                     "paragraph_number": paragraph_number,
                     "term": term,
+                    "text": f"{term} şu anlama gelir: {definition}",
                 },
-
-                "text": f"{term} şu anlama gelir: {definition}",
             })
 
         return paragraphs
@@ -66,13 +64,12 @@ class RegulationParser(Parser):
         definition = paragraph_content[colon + 1:].strip()
 
         return [{
-            "metadata": {
+            "payload": {
+                "text": f"{term} şu anlama gelir: {definition}",
                 "chunk_type": "definition",
                 "paragraph_number": paragraph_number,
                 "term": term,
             },
-
-            "text": f"{term} şu anlama gelir: {definition}",
         }]
 
     def article_n9(self, **kwargs) -> list[dict]:
@@ -97,12 +94,11 @@ class RegulationParser(Parser):
         ending = self._get_paragraph_string(ending_tag)
 
         return [{
-                              "metadata": {
+                              "payload": {
                                   "chunk_type": "instruction",
                                   "paragraph_number": paragraph_number,
+                                  "text": f"{starting} {element} {ending}",
                               },
-
-                              "text": f"{starting} {element} {ending}",
                           } for element in ol_elements]
 
 
@@ -122,12 +118,11 @@ class RegulationParser(Parser):
                   .replace("Yukarıdaki koşulları", "Bu koşulu"))
 
         return [{
-                              "metadata": {
+                              "payload": {
                                   "chunk_type": "instruction",
                                   "paragraph_number": paragraph_number,
+                                  "text": f"{starting} {element} {ending}",
                               },
-
-                              "text": f"{starting} {element} {ending}",
                           } for element in ol_elements]
 
     def article_n26(self, **kwargs) -> list[dict]:
@@ -138,12 +133,11 @@ class RegulationParser(Parser):
         paragraph_content = TextCleaner.add_period(paragraph_content)
 
         return [({
-            "metadata": {
+            "payload": {
                 "chunk_type": "instruction",
                 "paragraph_number": paragraph_number,
+                "text": paragraph_content,
             },
-
-            "text": paragraph_content,
         })
 ]
     @override

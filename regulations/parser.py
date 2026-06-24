@@ -1,18 +1,75 @@
 from bs4 import Tag, NavigableString
 from utils import Cursor
 from typing import ClassVar
+from uuid import uuid4
 
 import re
 
 class Parser:
 
-    CHUNK_TYPES: ClassVar[set] = {
+    TR_MAP: ClassVar[dict] = str.maketrans({
+        "ç": "c", "Ç": "C",
+        "ğ": "g", "Ğ": "G",
+        "ı": "i", "İ": "I",
+        "ö": "o", "Ö": "O",
+        "ş": "s", "Ş": "S",
+        "ü": "u", "Ü": "U",
+    })
+
+    CHUNK_TYPES: ClassVar[set[str]] = {
         "instruction",
         "definition"
     }
 
-    def __init__(self, cursor: Cursor):
+    CHAPTER_NUMBER_MAPPING: ClassVar[dict[str, int]] = {
+        "BİRİNCİ": 1,
+        "İKİNCİ": 2,
+        "ÜÇÜNCÜ": 3,
+        "DÖRDÜNCÜ": 4,
+        "BEŞİNCİ": 5,
+        "ALTINCI": 6,
+        "YEDİNCİ": 7,
+        "SEKİZİNCİ": 8,
+        "DOKUZUNCU": 9,
+        "ONUNCU": 10,
+        "ON BİRİNCİ": 11,
+        "ON İKİNCİ": 12,
+        "ON ÜÇÜNCÜ": 13,
+        "ON DÖRDÜNCÜ": 14,
+        "ON BEŞİNCİ": 15,
+    }
+
+    def __init__(self, content_container: Tag):
+
+        self.content_container = content_container
+
+        base_class = content_container.get("class", [None])[0]
+        if base_class is not None:
+            target_class = f"{base_class}-description"
+            regulation_container = content_container.find(
+                "div",
+                class_=target_class,
+                recursive=False
+            )
+        else:
+            raise ValueError("No regulations found")
+
+        documentary = [element
+                       for element in regulation_container.select("p, ol")
+                       if not self._is_empty(element)]
+
+        cursor = Cursor(documentary)
         self.cursor = cursor
+
+    def _is_empty(self, tag: Tag) -> bool:
+        if tag is not None:
+
+            is_empty = not tag.get_text(strip=True) and not tag.find()
+
+            if is_empty:
+                return True
+
+        return False
 
     @staticmethod
     def _tag_to_text(tag: Tag) -> str:
@@ -97,27 +154,117 @@ class Parser:
 
         return False
 
+    def _add_main_title(self, chunks: list[dict]) -> None:
+
+        base_class = self.content_container.get("class", [None])[0]
+        if base_class is not None:
+            target_class = f"{base_class}-header"
+            title_selector = self.content_container.find(
+                "div",
+                class_=target_class,
+                recursive=False
+            )
+        else:
+            raise ValueError("No title found")
+
+        main_title = self._tag_to_text(
+            title_selector.select_one("h2")
+        )
+
+        for chunk in chunks:
+            payload = chunk["payload"]
+            payload["main_title"] = main_title
+
+    def _add_id(self, chunks: list[dict]) -> None:
+
+        for chunk in chunks:
+
+            payload = chunk["payload"]
+
+            base_slug = (chunk["payload"]["main_title"]
+                         .translate(self.TR_MAP)
+                         .lower()
+                         .replace(" ", "_"))
+            base_slug = re.sub(r"[^a-z0-9]+", "_", base_slug).strip("_")
+
+            chapter_id = f"chapter_{payload["chapter_number"]:02d}"
+            article_id = f"article_{payload["article_number"]:02d}"
+            paragraph_id = f"paragraph_{payload["paragraph_number"]:02d}"
+
+            id_items = [base_slug, chapter_id, article_id, paragraph_id]
+
+            if "item_letter" in payload:
+                item_id = f"item_{payload["item_letter"]}"
+                id_items.append(item_id)
+
+            id_ = ":".join(id_items)
+
+            chunk["payload"]["chunk_id"] = id_
+            chunk["point_id"] = str(uuid4())
+
+    def _add_embedding_text(self, chunks: list[dict]) -> None:
+
+        for chunk in chunks:
+            payload = chunk["payload"]
+            text = chunk["payload"]["text"]
+
+            parts = [
+                f'Belge: {payload["main_title"]}',
+                f'Bölüm: {payload["chapter_name"]}',
+                f'Madde {payload["article_number"]}: {payload["article_title"]}',
+            ]
+
+            if "item_letter" in payload:
+                parts.append(f'Paragraf {payload["paragraph_number"]}')
+                parts.append(f'Bent {payload["item_letter"]}: {text}')
+            else:
+                parts.append(f'Paragraf {payload["paragraph_number"]}: {text}')
+
+            embedding_text = "\n".join(parts)
+
+            chunk["embedding_text"] = embedding_text
+
     def _parse_chapters(self) -> list[dict]:
 
         chapters = []
 
-        chapter_number = self._tag_to_text(self.cursor.next())
+        chapter_label = self._tag_to_text(self.cursor.next())
+
+        chapter_number_str = (re.sub(r"\s+BÖLÜM\s*$", "", chapter_label)
+                              .strip()
+                              .upper())
+        chapter_number = self.CHAPTER_NUMBER_MAPPING.get(chapter_number_str)
+
+        if chapter_number is None:
+            raise ValueError(f"Unknown chapter label: {chapter_label!r}")
+
         chapter_name = self._tag_to_text(self.cursor.next())
         titles = self._parse_titles()
 
         for title in titles:
-            title["metadata"]["chapter_number"] = chapter_number
-            title["metadata"]["chapter_name"] = chapter_name
+            title["payload"]["chapter_number"] = chapter_number
+            title["payload"]["chapter_label"] = chapter_label
+            title["payload"]["chapter_name"] = chapter_name
             chapters.append(title)
 
         while self.cursor.peek() is not None:
-            chapter_number = self._tag_to_text(self.cursor.next())
+            chapter_label = self._tag_to_text(self.cursor.next())
+
+            chapter_number_str = (re.sub(r"\s+BÖLÜM\s*$", "", chapter_label)
+                                  .strip()
+                                  .upper())
+            chapter_number = self.CHAPTER_NUMBER_MAPPING.get(chapter_number_str)
+
+            if chapter_number is None:
+                raise ValueError(f"Unknown chapter label: {chapter_label!r}")
+
             chapter_name = self._tag_to_text(self.cursor.next())
             titles = self._parse_titles()
 
             for title in titles:
-                title["metadata"]["chapter_number"] = chapter_number
-                title["metadata"]["chapter_name"] = chapter_name
+                title["payload"]["chapter_number"] = chapter_number
+                title["payload"]["chapter_label"] = chapter_label
+                title["payload"]["chapter_name"] = chapter_name
                 chapters.append(title)
 
         return chapters
@@ -130,7 +277,7 @@ class Parser:
         articles = self._parse_articles()
 
         for article in articles:
-            article["metadata"]["article_title"] = title
+            article["payload"]["article_title"] = title
             titles.append(article)
 
         while self._is_title(self.cursor.peek()):
@@ -139,7 +286,7 @@ class Parser:
             articles = self._parse_articles()
 
             for article in articles:
-                article["metadata"]["article_title"] = title
+                article["payload"]["article_title"] = title
                 titles.append(article)
 
         return titles
@@ -164,7 +311,7 @@ class Parser:
             paragraphs.extend(self._parse_paragraph(article_number))
 
         for paragraph in paragraphs:
-            paragraph["metadata"]["article_number"] = article_number
+            paragraph["payload"]["article_number"] = article_number
 
         return paragraphs
 
@@ -187,42 +334,39 @@ class Parser:
                 ending = self._get_paragraph_string(ending_tag)
 
                 paragraphs = [{
-                                "metadata": {
+                                "payload": {
                                     "chunk_type": "instruction",
                                     "paragraph_number": paragraph_number,
+                                    "text": f"{starting} {element} {ending}",
                                 },
-
-                                "text": f"{starting} {element} {ending}",
                                   } for element in ol_elements]
 
             else:
 
                 paragraphs = [{
-                                "metadata": {
+                                "payload": {
                                     "chunk_type": "instruction",
                                     "paragraph_number": paragraph_number,
+                                    "text": f"{starting} {element}",
                                 },
-
-                                "text": f"{starting} {element}",
                                   } for element in ol_elements]
 
         else:
 
                 paragraphs = [{
-                    "metadata": {
+                    "payload": {
                         "chunk_type": "instruction",
                         "paragraph_number": paragraph_number,
+                        "text": paragraph_content,
                     },
-
-                    "text": paragraph_content,
                 }]
 
         items = self._parse_items()
         if len(items) > 0:
 
             paragraphs = [{
-                "text": f"{paragraph["text"]} {item["item_content"]}",
-                "metadata": {
+                "payload": {
+                    "text": f"{paragraph["payload"]["text"]} {item["item_content"]}",
                     "paragraph_number": paragraph_number,
                     "chunk_type": "instruction",
                     "item_letter": item["item_letter"],
@@ -308,8 +452,12 @@ class Parser:
         return cleaned_text
 
     def run(self):
-        return self._parse_chapters()
+        chunks = self._parse_chapters()
+        self._add_main_title(chunks)
+        self._add_id(chunks)
+        self._add_embedding_text(chunks)
 
+        return chunks
 
 class TextCleaner:
 

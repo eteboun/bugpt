@@ -1,25 +1,21 @@
 import requests
 
-from bs4 import BeautifulSoup, Tag
+from sentence_transformers import SentenceTransformer
+from bs4 import BeautifulSoup
 from typing import ClassVar
-from utils import Cursor, to_text
+from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, VectorParams, PointStruct
+
 from regulation_parser import RegulationParser
 
 class ErasmusRegulations:
 
     URL: ClassVar[str] = "https://bogazici.edu.tr/tr/pages/bogazici-universitesi-degisim-programlari-yon/662/"
-    REGULATION_SELECTOR: ClassVar[str] = "div.inner-page__content-description"
+    CONTENT_SELECTOR: ClassVar[str] = "div.inner-page__content"
 
-    @classmethod
-    def _is_empty(cls, tag: Tag) -> bool:
-        if tag is not None:
+    COLLECTION_NAME: ClassVar[str] = "regulations"
 
-            is_empty = not tag.get_text(strip=True) and not tag.find()
-
-            if is_empty:
-                return True
-
-        return False
+    MODEL: ClassVar[SentenceTransformer] = SentenceTransformer("intfloat/multilingual-e5-base")
 
     @classmethod
     def _get_soup(cls) -> BeautifulSoup:
@@ -32,10 +28,10 @@ class ErasmusRegulations:
     def _get_regulations_container(cls):
 
         soup = cls._get_soup()
-        regulations_container = soup.select_one(cls.REGULATION_SELECTOR)
+        content_container = soup.select_one(cls.CONTENT_SELECTOR)
 
-        if regulations_container is not None:
-            return regulations_container
+        if content_container is not None:
+            return content_container
         else:
             raise ValueError("No regulations found")
 
@@ -43,18 +39,91 @@ class ErasmusRegulations:
     def _get_chunks(cls) -> list[dict]:
 
         regulations_container = cls._get_regulations_container()
-        documentary = [element
-                       for element in regulations_container.select("p, ol")
-                       if not cls._is_empty(element)]
-
-        cursor = Cursor(documentary)
-        parser = RegulationParser(cursor)
+        parser = RegulationParser(regulations_container)
 
         chunks = parser.run()
 
         return chunks
 
+    @classmethod
+    def _embed_chunks(cls, chunks: list[dict]) -> list[dict]:
+
+        passages = [
+            "passage: " + chunk["embedding_text"]
+            for chunk in chunks
+        ]
+
+        embeddings = cls.MODEL.encode(
+            passages,
+            normalize_embeddings=True,
+            show_progress_bar=True,
+            batch_size=32,
+        )
+
+        for chunk, embedding in zip(chunks, embeddings):
+            chunk["embedding"] = embedding.tolist()
+
+        return chunks
+
+    @classmethod
+    def _save_chunks(cls, chunks: list[dict]) -> None:
+
+        if not chunks:
+            return
+
+        client = QdrantClient(path="qdrant_test_db")
+
+        if client.collection_exists(cls.COLLECTION_NAME):
+            client.delete_collection(cls.COLLECTION_NAME)
+
+        client.create_collection(
+            collection_name=cls.COLLECTION_NAME,
+            vectors_config=VectorParams(
+                size=len(chunks[0]["embedding"]),
+                distance=Distance.COSINE
+            )
+        )
+
+        points = [
+            PointStruct(
+                id=chunk["point_id"],
+                vector=chunk["embedding"],
+                payload=chunk["payload"]
+            ) for chunk in chunks
+        ]
+
+        client.upsert(
+            collection_name=cls.COLLECTION_NAME,
+            points=points
+        )
+
+    @classmethod
+    def run(cls) -> None:
+        chunks = cls._get_chunks()
+        embedded_chunks = cls._embed_chunks(chunks)
+        cls._save_chunks(embedded_chunks)
+
+    @classmethod
+    def search(cls, query: str) -> None:
+
+        client = QdrantClient(path="qdrant_test_db")
+
+        if not client.collection_exists(cls.COLLECTION_NAME):
+            raise ValueError("Collection not found")
+
+        query_vector = cls.MODEL.encode(query,
+                                        normalize_embeddings=True).tolist()
+
+        results = client.query_points(
+            collection_name=cls.COLLECTION_NAME,
+            query=query_vector,
+            limit=5
+        ).points
+
+        for point in results:
+            print("score:", point.score)
+            print("text:", point.payload["text"])
+            print()
 
 
-
-print(to_text(ErasmusRegulations._get_chunks()))
+ErasmusRegulations.search(query="Değişim programları kapsamında üniversite neleri karşılar?")
