@@ -141,17 +141,17 @@ class RegulationParser(Parser):
         })
 ]
     @override
-    def _is_paragraph(self, article: Tag) -> bool:
+    def _is_paragraph(cls, article: Tag) -> bool:
 
         if article is None:
             return False
 
-        text = self._tag_to_text(article)
+        text = cls._tag_to_text(article)
         match = re.match(r"^\s*\(\d+\)\s*", text)
 
         if article.find() is None and len(text) > 0:
 
-            if text in self.NON_BOLD_TITLES:
+            if text in cls.NON_BOLD_TITLES:
                 return False
 
             return bool(match)
@@ -159,17 +159,17 @@ class RegulationParser(Parser):
         return False
 
     @override
-    def _is_item(self, item: Tag) -> bool:
+    def _is_item(cls, item: Tag) -> bool:
 
         if item is None:
             return False
 
-        text = self._tag_to_text(item)
+        text = cls._tag_to_text(item)
         match = re.match(r"^\s*\([a-z]+\)\s*", text)
 
         if item.find() is None and len(text) > 0:
 
-            if text in self.NON_BOLD_TITLES:
+            if text in cls.NON_BOLD_TITLES:
                 return False
 
             return bool(match)
@@ -177,30 +177,29 @@ class RegulationParser(Parser):
         return False
 
     @override
-    def _is_title(self, title: Tag | None) -> bool:
+    def _is_title(cls, title: Tag | None) -> bool:
 
         if title is None:
             return False
 
         has_header = False
         non_bold = False
+        no_string = True
         for child in title.contents:
 
-            if isinstance(child, Tag) and child.name == "strong" and len(self._tag_to_text(child)) > 0:
+            if isinstance(child, Tag) and child.name == "strong" and len(cls._tag_to_text(child)) > 0:
                 has_header = True
 
-            if isinstance(child, NavigableString) and child.strip() in self.NON_BOLD_TITLES:
+            if isinstance(child, NavigableString) and len(child.strip()) > 0:
+                no_string = False
+
+            if isinstance(child, NavigableString) and child.strip() in cls.NON_BOLD_TITLES:
                 non_bold = True
 
-        if not has_header and not non_bold:
-            return False
-
-        article = self.cursor.peek(n=2)
-
-        if self._is_article(article):
+        if non_bold:
             return True
 
-        return False
+        return has_header and no_string
 
     @override
     def _parse_paragraph(self, article_number) -> list[dict]:

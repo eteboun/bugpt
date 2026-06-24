@@ -126,4 +126,4 @@ class ErasmusRegulations:
             print()
 
 
-ErasmusRegulations.search(query="Değişim programları kapsamında üniversite neleri karşılar?")
+ErasmusRegulations.search(query="Değişim programına başvurmak için kaç yıl öğretime devam etmiş olmak gerekir?")

@@ -61,7 +61,8 @@ class Parser:
         cursor = Cursor(documentary)
         self.cursor = cursor
 
-    def _is_empty(self, tag: Tag) -> bool:
+    @classmethod
+    def _is_empty(cls, tag: Tag) -> bool:
         if tag is not None:
 
             is_empty = not tag.get_text(strip=True) and not tag.find()
@@ -71,16 +72,17 @@ class Parser:
 
         return False
 
-    @staticmethod
-    def _tag_to_text(tag: Tag) -> str:
+    @classmethod
+    def _tag_to_text(cls, tag: Tag) -> str:
         return tag.get_text(" ", strip=True)
 
-    def _is_ending(self, ending: Tag) -> bool:
+    @classmethod
+    def _is_ending(cls, ending: Tag) -> bool:
 
         if ending is None:
             return False
 
-        text = self._tag_to_text(ending)
+        text = cls._tag_to_text(ending)
         number_match = re.match(r"^\s*\(\d+\)\s*", text)
         letter_match = re.match(r"^\s*\([a-z]+\)\s*", text)
 
@@ -89,7 +91,8 @@ class Parser:
 
         return False
 
-    def _is_article(self, article: Tag | None) -> bool:
+    @classmethod
+    def _is_article(cls, article: Tag | None) -> bool:
 
         if article is None:
             return False
@@ -101,17 +104,18 @@ class Parser:
             if isinstance(child, NavigableString) and len(child.strip()) > 0:
                 has_string = True
 
-            if isinstance(child, Tag) and child.name == "strong" and len(self._tag_to_text(child)) > 0:
+            if isinstance(child, Tag) and child.name == "strong" and len(cls._tag_to_text(child)) > 0:
                 has_header = True
 
         return has_string and has_header
 
-    def _is_paragraph(self, article: Tag) -> bool:
+    @classmethod
+    def _is_paragraph(cls, article: Tag) -> bool:
 
         if article is None:
             return False
 
-        text = self._tag_to_text(article)
+        text = cls._tag_to_text(article)
         match = re.match(r"^\s*\(\d+\)\s*", text)
 
         if article.find() is None and len(text) > 0:
@@ -119,12 +123,13 @@ class Parser:
 
         return False
 
-    def _is_item(self, item: Tag) -> bool:
+    @classmethod
+    def _is_item(cls, item: Tag) -> bool:
 
         if item is None:
             return False
 
-        text = self._tag_to_text(item)
+        text = cls._tag_to_text(item)
         match = re.match(r"^\s*\([a-z]+\)\s*", text)
 
         if item.find() is None and len(text) > 0:
@@ -133,26 +138,23 @@ class Parser:
 
         return False
 
-    def _is_title(self, title: Tag | None) -> bool:
+    @classmethod
+    def _is_title(cls, title: Tag | None) -> bool:
 
         if title is None:
             return False
 
         has_header = False
+        no_string = True
         for child in title.contents:
 
-            if isinstance(child, Tag) and child.name == "strong" and len(self._tag_to_text(child)) > 0:
+            if isinstance(child, Tag) and child.name == "strong" and len(cls._tag_to_text(child)) > 0:
                 has_header = True
 
-        if not has_header:
-            return False
+            if isinstance(child, NavigableString) and len(child.strip()) > 0:
+                no_string = False
 
-        article = self.cursor.peek(n=2)
-
-        if self._is_article(article):
-            return True
-
-        return False
+        return has_header and no_string
 
     def _add_main_title(self, chunks: list[dict]) -> None:
 
@@ -175,14 +177,15 @@ class Parser:
             payload = chunk["payload"]
             payload["main_title"] = main_title
 
-    def _add_id(self, chunks: list[dict]) -> None:
+    @classmethod
+    def _add_id(cls, chunks: list[dict]) -> None:
 
         for chunk in chunks:
 
             payload = chunk["payload"]
 
             base_slug = (chunk["payload"]["main_title"]
-                         .translate(self.TR_MAP)
+                         .translate(cls.TR_MAP)
                          .lower()
                          .replace(" ", "_"))
             base_slug = re.sub(r"[^a-z0-9]+", "_", base_slug).strip("_")
@@ -202,7 +205,8 @@ class Parser:
             chunk["payload"]["chunk_id"] = id_
             chunk["point_id"] = str(uuid4())
 
-    def _add_embedding_text(self, chunks: list[dict]) -> None:
+    @classmethod
+    def _add_embedding_text(cls, chunks: list[dict]) -> None:
 
         for chunk in chunks:
             payload = chunk["payload"]
@@ -280,7 +284,7 @@ class Parser:
             article["payload"]["article_title"] = title
             titles.append(article)
 
-        while self._is_title(self.cursor.peek()):
+        while self._is_title(self.cursor.peek()) and self._is_article(self.cursor.peek(n=2)):
 
             title = self._tag_to_text(self.cursor.next())
             articles = self._parse_articles()
@@ -392,13 +396,15 @@ class Parser:
 
         return items
 
-    def _get_ordered_list_elements(self, ol: Tag) -> list[str]:
+    @classmethod
+    def _get_ordered_list_elements(cls, ol: Tag) -> list[str]:
         return [
-            self._tag_to_text(li)
+            cls._tag_to_text(li)
             for li in ol.find_all("li")
         ]
 
-    def _get_paragraph_string(self, paragraph: Tag) -> str:
+    @classmethod
+    def _get_paragraph_string(cls, paragraph: Tag) -> str:
         strings = [
             child.strip()
             for child in paragraph.contents
@@ -409,9 +415,10 @@ class Parser:
         cleaned_text = re.sub(r"^\s*\(\d+\)\s*", "", text)
         return cleaned_text
 
-    def _get_article_number(self, article: Tag) -> int:
+    @classmethod
+    def _get_article_number(cls, article: Tag) -> int:
         header = article.select_one("strong")
-        text = self._tag_to_text(header)
+        text = cls._tag_to_text(header)
 
         match = re.search(r"\d+", text)
 
@@ -420,7 +427,8 @@ class Parser:
 
         return int(match.group())
 
-    def _get_paragraph_number(self, paragraph: Tag) -> int:
+    @classmethod
+    def _get_paragraph_number(cls, paragraph: Tag) -> int:
         strings = [
             child.strip()
             for child in paragraph.contents
@@ -434,9 +442,10 @@ class Parser:
 
         return int(match.group(1))
 
-    def _get_item_letter(self, item: Tag) -> str:
+    @classmethod
+    def _get_item_letter(cls, item: Tag) -> str:
 
-        text = self._tag_to_text(item)
+        text = cls._tag_to_text(item)
         match = re.match(r"^\(([a-z]+)\)", text)
 
         if match is None:
@@ -444,9 +453,10 @@ class Parser:
 
         return match.group(1)
 
-    def _get_item_string(self, item: Tag) -> str:
+    @classmethod
+    def _get_item_string(cls, item: Tag) -> str:
 
-        text = self._tag_to_text(item)
+        text = cls._tag_to_text(item)
 
         cleaned_text = re.sub(r"^\s*\([a-z]+\)\s*", "", text)
         return cleaned_text
