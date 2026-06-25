@@ -1,5 +1,5 @@
 from bs4 import Tag, NavigableString
-from utils import Cursor
+from regulations.utils import Cursor
 from typing import ClassVar
 from uuid import uuid4
 
@@ -18,7 +18,6 @@ class Parser:
 
     CHUNK_TYPES: ClassVar[set[str]] = {
         "instruction",
-        "definition"
     }
 
     CHAPTER_NUMBER_MAPPING: ClassVar[dict[str, int]] = {
@@ -38,6 +37,9 @@ class Parser:
         "ON DÖRDÜNCÜ": 14,
         "ON BEŞİNCİ": 15,
     }
+
+    ITEM_PATTERN: ClassVar[re.Pattern[str]]
+    PARAGRAPH_PATTERN: ClassVar[re.Pattern[str]]
 
     def __init__(self, content_container: Tag):
 
@@ -61,8 +63,8 @@ class Parser:
         cursor = Cursor(documentary)
         self.cursor = cursor
 
-    @classmethod
-    def _is_empty(cls, tag: Tag) -> bool:
+    @staticmethod
+    def _is_empty(tag: Tag) -> bool:
         if tag is not None:
 
             is_empty = not tag.get_text(strip=True) and not tag.find()
@@ -82,11 +84,11 @@ class Parser:
         if ending is None:
             return False
 
-        text = cls._tag_to_text(ending)
-        number_match = re.match(r"^\s*\(\d+\)\s*", text)
-        letter_match = re.match(r"^\s*\([a-z]+\)\s*", text)
+        text = TextCleaner.remove_hyphen(cls._tag_to_text(ending))
+        number_match = cls.PARAGRAPH_PATTERN.match(text)
+        letter_match = cls.ITEM_PATTERN.match(text)
 
-        if ending.find() is None and len(text) > 0:
+        if ending.find("strong") is None and len(text) > 0:
             return not bool(number_match) and not bool(letter_match)
 
         return False
@@ -110,15 +112,15 @@ class Parser:
         return has_string and has_header
 
     @classmethod
-    def _is_paragraph(cls, article: Tag) -> bool:
+    def _is_paragraph(cls, paragraph: Tag) -> bool:
 
-        if article is None:
+        if paragraph is None:
             return False
 
-        text = cls._tag_to_text(article)
-        match = re.match(r"^\s*\(\d+\)\s*", text)
+        text = TextCleaner.remove_hyphen(cls._tag_to_text(paragraph))
+        match = cls.PARAGRAPH_PATTERN.match(text)
 
-        if article.find() is None and len(text) > 0:
+        if paragraph.find("strong") is None and len(text) > 0:
             return bool(match)
 
         return False
@@ -129,10 +131,10 @@ class Parser:
         if item is None:
             return False
 
-        text = cls._tag_to_text(item)
-        match = re.match(r"^\s*\([a-z]+\)\s*", text)
+        text = TextCleaner.remove_hyphen(cls._tag_to_text(item))
+        match = cls.ITEM_PATTERN.match(text)
 
-        if item.find() is None and len(text) > 0:
+        if item.find("strong") is None and len(text) > 0:
 
             return bool(match)
 
@@ -230,6 +232,16 @@ class Parser:
 
     def _parse_chapters(self) -> list[dict]:
 
+        chapters = self._parse_chapter()
+
+        while self.cursor.peek() is not None:
+
+            chapters.extend(self._parse_chapter())
+
+        return chapters
+
+    def _parse_chapter(self) -> list[dict]:
+
         chapters = []
 
         chapter_label = self._tag_to_text(self.cursor.next())
@@ -251,29 +263,19 @@ class Parser:
             title["payload"]["chapter_name"] = chapter_name
             chapters.append(title)
 
-        while self.cursor.peek() is not None:
-            chapter_label = self._tag_to_text(self.cursor.next())
-
-            chapter_number_str = (re.sub(r"\s+BÖLÜM\s*$", "", chapter_label)
-                                  .strip()
-                                  .upper())
-            chapter_number = self.CHAPTER_NUMBER_MAPPING.get(chapter_number_str)
-
-            if chapter_number is None:
-                raise ValueError(f"Unknown chapter label: {chapter_label!r}")
-
-            chapter_name = self._tag_to_text(self.cursor.next())
-            titles = self._parse_titles()
-
-            for title in titles:
-                title["payload"]["chapter_number"] = chapter_number
-                title["payload"]["chapter_label"] = chapter_label
-                title["payload"]["chapter_name"] = chapter_name
-                chapters.append(title)
-
         return chapters
 
     def _parse_titles(self) -> list[dict]:
+
+        titles = self._parse_title()
+
+        while self._is_title(self.cursor.peek()) and self._is_article(self.cursor.peek(n=2)):
+
+            titles.extend(self._parse_title())
+
+        return titles
+
+    def _parse_title(self) -> list[dict]:
 
         titles = []
 
@@ -283,15 +285,6 @@ class Parser:
         for article in articles:
             article["payload"]["article_title"] = title
             titles.append(article)
-
-        while self._is_title(self.cursor.peek()) and self._is_article(self.cursor.peek(n=2)):
-
-            title = self._tag_to_text(self.cursor.next())
-            articles = self._parse_articles()
-
-            for article in articles:
-                article["payload"]["article_title"] = title
-                titles.append(article)
 
         return titles
 
@@ -309,13 +302,20 @@ class Parser:
         article = self.cursor.peek()
         article_number = self._get_article_number(article)
 
-        paragraphs = self._parse_paragraph(article_number)
-
-        while self._is_paragraph(self.cursor.peek()):
-            paragraphs.extend(self._parse_paragraph(article_number))
+        paragraphs = self._parse_paragraphs(article_number)
 
         for paragraph in paragraphs:
             paragraph["payload"]["article_number"] = article_number
+
+        return paragraphs
+
+    def _parse_paragraphs(self, article_number) -> list[dict]:
+
+        paragraphs = self._parse_paragraph(article_number)
+
+        while self._is_paragraph(self.cursor.peek()):
+
+            paragraphs.extend(self._parse_paragraph(article_number))
 
         return paragraphs
 
@@ -335,7 +335,7 @@ class Parser:
             if self._is_ending(self.cursor.peek()):
 
                 ending_tag = self.cursor.next()
-                ending = self._get_paragraph_string(ending_tag)
+                ending = self._get_ending_string(ending_tag)
 
                 paragraphs = [{
                                 "payload": {
@@ -368,15 +368,32 @@ class Parser:
         items = self._parse_items()
         if len(items) > 0:
 
-            paragraphs = [{
-                "payload": {
-                    "text": f"{paragraph["payload"]["text"]} {item["item_content"]}",
-                    "paragraph_number": paragraph_number,
-                    "chunk_type": "instruction",
-                    "item_letter": item["item_letter"],
-                }
-            } for paragraph in paragraphs
-                for item in items]
+            if self._is_ending(self.cursor.peek()):
+
+                ending_tag = self.cursor.next()
+                ending = self._get_ending_string(ending_tag)
+
+                paragraphs = [{
+                    "payload": {
+                        "text": f"{paragraph["payload"]["text"]} {item["item_content"]} {ending}",
+                        "paragraph_number": paragraph_number,
+                        "chunk_type": "instruction",
+                        "item_letter": item["item_letter"],
+                    }
+                } for paragraph in paragraphs
+                    for item in items]
+
+            else:
+
+                paragraphs = [{
+                    "payload": {
+                        "text": f"{paragraph["payload"]["text"]} {item["item_content"]}",
+                        "paragraph_number": paragraph_number,
+                        "chunk_type": "instruction",
+                        "item_letter": item["item_letter"],
+                    }
+                } for paragraph in paragraphs
+                    for item in items]
 
         return paragraphs
 
@@ -404,23 +421,32 @@ class Parser:
         ]
 
     @classmethod
-    def _get_paragraph_string(cls, paragraph: Tag) -> str:
-        strings = [
+    def _get_paragraph_string(cls, paragraph: Tag | str) -> str:
+
+        text = " ".join([
             child.strip()
             for child in paragraph.contents
             if isinstance(child, NavigableString)
-        ]
-        text = " ".join(strings)
+        ]) if isinstance(paragraph, Tag) else paragraph
 
-        cleaned_text = re.sub(r"^\s*\(\d+\)\s*", "", text)
+        cleaned_text = TextCleaner.remove_hyphen(text)
+        cleaned_text = cls.PARAGRAPH_PATTERN.sub("", cleaned_text)
         return cleaned_text
 
     @classmethod
-    def _get_article_number(cls, article: Tag) -> int:
-        header = article.select_one("strong")
-        text = cls._tag_to_text(header)
+    def _get_ending_string(cls, ending: Tag | str) -> str:
+        text = cls._tag_to_text(ending) if isinstance(ending, Tag) else ending
+        cleaned_text = TextCleaner.remove_hyphen(text)
+        return cleaned_text
 
-        match = re.search(r"\d+", text)
+    @classmethod
+    def _get_article_number(cls, article: Tag | str) -> int:
+        print(article)
+        text = cls._tag_to_text(article.select_one("strong")) \
+            if isinstance(article, Tag) else article
+
+        cleaned_text = TextCleaner.remove_hyphen(text)
+        match = re.search(r"\d+", cleaned_text)
 
         if match is None:
             raise ValueError("Could not extract article number")
@@ -428,14 +454,17 @@ class Parser:
         return int(match.group())
 
     @classmethod
-    def _get_paragraph_number(cls, paragraph: Tag) -> int:
-        strings = [
+    def _get_paragraph_number(cls, paragraph: Tag | str) -> int:
+
+        text = " ".join([
             child.strip()
             for child in paragraph.contents
             if isinstance(child, NavigableString)
-        ]
-        text = " ".join(strings)
-        match = re.match(r"^\s*\((\d+)\)\s*", text)
+        ]) \
+            if isinstance(paragraph, Tag) else paragraph
+
+        cleaned_text = TextCleaner.remove_hyphen(text)
+        match = cls.PARAGRAPH_PATTERN.match(cleaned_text)
 
         if match is None:
             raise ValueError("Could not extract paragraph number")
@@ -443,22 +472,25 @@ class Parser:
         return int(match.group(1))
 
     @classmethod
-    def _get_item_letter(cls, item: Tag) -> str:
+    def _get_item_letter(cls, item: Tag | str) -> str:
 
-        text = cls._tag_to_text(item)
-        match = re.match(r"^\(([a-z]+)\)", text)
+        text = cls._tag_to_text(item) if isinstance(item, Tag) else item
+
+        cleaned_text = TextCleaner.remove_hyphen(text)
+        match = cls.ITEM_PATTERN.match(cleaned_text)
 
         if match is None:
-            raise ValueError("Could not extract paragraph number")
+            raise ValueError("Could not extract item letter")
 
         return match.group(1)
 
     @classmethod
-    def _get_item_string(cls, item: Tag) -> str:
+    def _get_item_string(cls, item: Tag | str) -> str:
 
-        text = cls._tag_to_text(item)
+        text = cls._tag_to_text(item) if isinstance(item, Tag) else item
 
-        cleaned_text = re.sub(r"^\s*\([a-z]+\)\s*", "", text)
+        cleaned_text = TextCleaner.remove_hyphen(text)
+        cleaned_text = cls.ITEM_PATTERN.sub("", cleaned_text)
         return cleaned_text
 
     def run(self):
@@ -490,3 +522,7 @@ class TextCleaner:
         return (element
                 .strip()
                 .removesuffix(".") + ".")
+
+    @classmethod
+    def remove_hyphen(cls, element: str) -> str:
+        return re.sub(r"^\s*[-–]+\s*", "", element)

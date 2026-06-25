@@ -1,5 +1,5 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
-from menu_tools.menu_tools import MenuTools
+from menu.menu_tools import MenuTools
 import json
 import torch
 
@@ -21,7 +21,7 @@ available_tools = {
     "menu": MenuTools.tool_menu,
 }
 
-with open("menu_tools/MENU_AGENT_SYSTEM_PROMPT", encoding="utf-8") as f:
+with open("menu/MENU_AGENT_SYSTEM_PROMPT", encoding="utf-8") as f:
     menu_sys_prompt = f.read()
 
 with open("FORMATTER_SYSTEM_PROMPT", encoding="utf-8") as f:

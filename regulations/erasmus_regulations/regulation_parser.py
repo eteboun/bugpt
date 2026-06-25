@@ -1,6 +1,6 @@
 from bs4 import Tag, NavigableString
 from typing import ClassVar, override
-from parser import Parser, TextCleaner
+from regulations.parser import Parser, TextCleaner
 
 import re
 
@@ -10,18 +10,25 @@ class RegulationParser(Parser):
                                       "Yürürlük",
                                       "Yürütme"}
 
+    CHUNK_TYPES = {
+        "instruction",
+        "definition",
+    }
+
+    ITEM_PATTERN = re.compile(r"^\s*\(([a-zçğıöşü]+)\)\s*")
+    PARAGRAPH_PATTERN = re.compile(r"^\s*\((\d+)\)\s*")
 
     def __init__(self, content_container: Tag):
         super().__init__(content_container)
         self.special_articles = {
-            4: self.article_n4,
-            5: self.article_n5,
-            9: self.article_n9,
-            13: self.article_n13,
-            26: self.article_n26,
+            4: self.article_4,
+            5: self.article_5,
+            9: self.article_9,
+            13: self.article_13,
+            26: self.article_26,
         }
 
-    def article_n4(self, **kwargs) -> list[dict]:
+    def article_4(self, **kwargs) -> list[dict]:
 
         paragraph_number = kwargs["paragraph_number"]
 
@@ -31,7 +38,7 @@ class RegulationParser(Parser):
         ol_elements = TextCleaner.remove_comma(self._get_ordered_list_elements(ol))
 
         ending_tag = self.cursor.next()
-        ending = self._get_paragraph_string(ending_tag)
+        ending = self._get_ending_string(ending_tag)
 
         for element in ol_elements:
             colon = element.find(":")
@@ -52,7 +59,7 @@ class RegulationParser(Parser):
 
         return paragraphs
 
-    def article_n5(self, **kwargs) -> list[dict]:
+    def article_5(self, **kwargs) -> list[dict]:
 
         paragraph_content = kwargs["paragraph_content"]
         paragraph_number = kwargs["paragraph_number"]
@@ -60,7 +67,7 @@ class RegulationParser(Parser):
         colon = paragraph_content.find(":")
 
         term = paragraph_content[:colon].strip()
-        term = re.sub(r"^\s*\(\d+\)\s*", "", term)
+        term = self.PARAGRAPH_PATTERN.sub("", term)
         definition = paragraph_content[colon + 1:].strip()
 
         return [{
@@ -72,7 +79,7 @@ class RegulationParser(Parser):
             },
         }]
 
-    def article_n9(self, **kwargs) -> list[dict]:
+    def article_9(self, **kwargs) -> list[dict]:
 
         paragraph_content = kwargs["paragraph_content"]
         paragraph_number = kwargs["paragraph_number"]
@@ -82,7 +89,7 @@ class RegulationParser(Parser):
         ol_1 = self.cursor.next()
         ol_1_elements = self._get_ordered_list_elements(ol_1)
 
-        ol_1_last_item_ending = self._tag_to_text(self.cursor.next())
+        ol_1_last_item_ending = self._get_ending_string(self.cursor.next())
         ol_1_elements[-1] = f"{ol_1_elements[-1]} {ol_1_last_item_ending}"
 
         ol_2 = self.cursor.next()
@@ -91,7 +98,7 @@ class RegulationParser(Parser):
         ol_elements = TextCleaner.remove_comma(ol_1_elements + ol_2_elements)
 
         ending_tag = self.cursor.next()
-        ending = self._get_paragraph_string(ending_tag)
+        ending = self._get_ending_string(ending_tag)
 
         return [{
                               "payload": {
@@ -102,7 +109,7 @@ class RegulationParser(Parser):
                           } for element in ol_elements]
 
 
-    def article_n13(self, **kwargs) -> list[dict]:
+    def article_13(self, **kwargs) -> list[dict]:
 
         paragraph_content = kwargs["paragraph_content"]
         paragraph_number = kwargs["paragraph_number"]
@@ -114,7 +121,7 @@ class RegulationParser(Parser):
 
         ending_tag = self.cursor.next()
         ending = (self
-                  ._get_paragraph_string(ending_tag)
+                  ._get_ending_string(ending_tag)
                   .replace("Yukarıdaki koşulları", "Bu koşulu"))
 
         return [{
@@ -125,7 +132,7 @@ class RegulationParser(Parser):
                               },
                           } for element in ol_elements]
 
-    def article_n26(self, **kwargs) -> list[dict]:
+    def article_26(self, **kwargs) -> list[dict]:
 
         paragraph_content = kwargs["paragraph_content"]
         paragraph_number = kwargs["paragraph_number"]
@@ -141,13 +148,14 @@ class RegulationParser(Parser):
         })
 ]
     @override
+    @classmethod
     def _is_paragraph(cls, article: Tag) -> bool:
 
         if article is None:
             return False
 
-        text = cls._tag_to_text(article)
-        match = re.match(r"^\s*\(\d+\)\s*", text)
+        text = TextCleaner.remove_hyphen(cls._tag_to_text(article))
+        match = cls.PARAGRAPH_PATTERN.match(text)
 
         if article.find() is None and len(text) > 0:
 
@@ -159,13 +167,14 @@ class RegulationParser(Parser):
         return False
 
     @override
+    @classmethod
     def _is_item(cls, item: Tag) -> bool:
 
         if item is None:
             return False
 
-        text = cls._tag_to_text(item)
-        match = re.match(r"^\s*\([a-z]+\)\s*", text)
+        text = TextCleaner.remove_hyphen(cls._tag_to_text(item))
+        match = cls.ITEM_PATTERN.match(text)
 
         if item.find() is None and len(text) > 0:
 
@@ -177,6 +186,7 @@ class RegulationParser(Parser):
         return False
 
     @override
+    @classmethod
     def _is_title(cls, title: Tag | None) -> bool:
 
         if title is None:
