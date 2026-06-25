@@ -10,74 +10,16 @@ class RegulationParser(Parser):
                                       "Yürürlük",
                                       "Yürütme"}
 
-    CHUNK_TYPES = {
-        "instruction",
-        "definition",
-    }
-
     ITEM_PATTERN = re.compile(r"^\s*\(([a-zçğıöşü]+)\)\s*")
     PARAGRAPH_PATTERN = re.compile(r"^\s*\((\d+)\)\s*")
 
     def __init__(self, content_container: Tag):
         super().__init__(content_container)
         self.special_articles = {
-            4: self.article_4,
-            5: self.article_5,
             9: self.article_9,
             13: self.article_13,
             26: self.article_26,
         }
-
-    def article_4(self, **kwargs) -> list[dict]:
-
-        paragraph_number = kwargs["paragraph_number"]
-
-        paragraphs = []
-
-        ol = self.cursor.next()
-        ol_elements = TextCleaner.remove_comma(self._get_ordered_list_elements(ol))
-
-        ending_tag = self.cursor.next()
-        ending = self._get_ending_string(ending_tag)
-
-        for element in ol_elements:
-            colon = element.find(":")
-
-            term = element[:colon].strip()
-
-            definition_base = element[colon + 1:].strip()
-            definition = f"{definition_base} {ending}"
-
-            paragraphs.append({
-                "payload": {
-                    "chunk_type": "definition",
-                    "paragraph_number": paragraph_number,
-                    "term": term,
-                    "text": f"{term} şu anlama gelir: {definition}",
-                },
-            })
-
-        return paragraphs
-
-    def article_5(self, **kwargs) -> list[dict]:
-
-        paragraph_content = kwargs["paragraph_content"]
-        paragraph_number = kwargs["paragraph_number"]
-
-        colon = paragraph_content.find(":")
-
-        term = paragraph_content[:colon].strip()
-        term = self.PARAGRAPH_PATTERN.sub("", term)
-        definition = paragraph_content[colon + 1:].strip()
-
-        return [{
-            "payload": {
-                "text": f"{term} şu anlama gelir: {definition}",
-                "chunk_type": "definition",
-                "paragraph_number": paragraph_number,
-                "term": term,
-            },
-        }]
 
     def article_9(self, **kwargs) -> list[dict]:
 
@@ -102,7 +44,6 @@ class RegulationParser(Parser):
 
         return [{
                               "payload": {
-                                  "chunk_type": "instruction",
                                   "paragraph_number": paragraph_number,
                                   "text": f"{starting} {element} {ending}",
                               },
@@ -126,7 +67,6 @@ class RegulationParser(Parser):
 
         return [{
                               "payload": {
-                                  "chunk_type": "instruction",
                                   "paragraph_number": paragraph_number,
                                   "text": f"{starting} {element} {ending}",
                               },
@@ -141,7 +81,6 @@ class RegulationParser(Parser):
 
         return [({
             "payload": {
-                "chunk_type": "instruction",
                 "paragraph_number": paragraph_number,
                 "text": paragraph_content,
             },

@@ -1,9 +1,7 @@
 from regulations.embedder import Embedder
-from regulation_parser import RegulationParser
+from regulations.double_major_regulations.regulation_parser import RegulationParser
 
-class RegulationEmbedder(Embedder):
+class DoubleMajorRegulationEmbedder(Embedder):
 
     URL = "https://bogazici.edu.tr/tr/pages/bogazici-universitesi-cift-ana-dal-programlar/661"
     PARSER = RegulationParser
-
-print(RegulationEmbedder._get_chunks())

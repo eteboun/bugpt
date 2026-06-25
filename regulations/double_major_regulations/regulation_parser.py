@@ -56,7 +56,6 @@ class RegulationParser(Parser):
 
             chunk = {
                 "payload": {
-                    "chunk_type": "instruction",
                     "paragraph_number": paragraph_number,
                     "article_title": title,
                     "article_number": article_number,

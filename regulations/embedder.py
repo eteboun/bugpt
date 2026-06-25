@@ -6,14 +6,13 @@ from typing import ClassVar
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
 from regulations.parser import Parser
-# SentenceTransformer("intfloat/multilingual-e5-base")
+
 class Embedder:
 
     URL: ClassVar[str]
     PARSER: ClassVar[type[Parser]]
     CONTENT_SELECTOR: ClassVar[str] = "div.inner-page__content"
     COLLECTION_NAME: ClassVar[str] = "regulations"
-    MODEL: ClassVar[SentenceTransformer] = None
 
     @classmethod
     def _get_soup(cls) -> BeautifulSoup:
@@ -44,14 +43,14 @@ class Embedder:
         return chunks
 
     @classmethod
-    def _embed_chunks(cls, chunks: list[dict]) -> list[dict]:
+    def _embed_chunks(cls, chunks: list[dict], model: SentenceTransformer) -> list[dict]:
 
         passages = [
             "passage: " + chunk["embedding_text"]
             for chunk in chunks
         ]
 
-        embeddings = cls.MODEL.encode(
+        embeddings = model.encode(
             passages,
             normalize_embeddings=True,
             show_progress_bar=True,
@@ -64,23 +63,20 @@ class Embedder:
         return chunks
 
     @classmethod
-    def _save_chunks(cls, chunks: list[dict]) -> None:
+    def _save_chunks(cls, chunks: list[dict], client: QdrantClient) -> None:
 
         if not chunks:
             return
 
-        client = QdrantClient(path="../qdrant_test_db")
+        if not client.collection_exists(cls.COLLECTION_NAME):
 
-        if client.collection_exists(cls.COLLECTION_NAME):
-            client.delete_collection(cls.COLLECTION_NAME)
-
-        client.create_collection(
-            collection_name=cls.COLLECTION_NAME,
-            vectors_config=VectorParams(
-                size=len(chunks[0]["embedding"]),
-                distance=Distance.COSINE
+            client.create_collection(
+                collection_name=cls.COLLECTION_NAME,
+                vectors_config=VectorParams(
+                    size=len(chunks[0]["embedding"]),
+                    distance=Distance.COSINE
+                )
             )
-        )
 
         points = [
             PointStruct(
@@ -96,7 +92,7 @@ class Embedder:
         )
 
     @classmethod
-    def run(cls) -> None:
+    def run(cls, client: QdrantClient, model: SentenceTransformer) -> None:
         chunks = cls._get_chunks()
-        embedded_chunks = cls._embed_chunks(chunks)
-        cls._save_chunks(embedded_chunks)
+        embedded_chunks = cls._embed_chunks(chunks, model)
+        cls._save_chunks(embedded_chunks, client)

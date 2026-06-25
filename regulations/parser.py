@@ -16,10 +16,6 @@ class Parser:
         "ü": "u", "Ü": "U",
     })
 
-    CHUNK_TYPES: ClassVar[set[str]] = {
-        "instruction",
-    }
-
     CHAPTER_NUMBER_MAPPING: ClassVar[dict[str, int]] = {
         "BİRİNCİ": 1,
         "İKİNCİ": 2,
@@ -339,7 +335,6 @@ class Parser:
 
                 paragraphs = [{
                                 "payload": {
-                                    "chunk_type": "instruction",
                                     "paragraph_number": paragraph_number,
                                     "text": f"{starting} {element} {ending}",
                                 },
@@ -349,7 +344,6 @@ class Parser:
 
                 paragraphs = [{
                                 "payload": {
-                                    "chunk_type": "instruction",
                                     "paragraph_number": paragraph_number,
                                     "text": f"{starting} {element}",
                                 },
@@ -359,7 +353,6 @@ class Parser:
 
                 paragraphs = [{
                     "payload": {
-                        "chunk_type": "instruction",
                         "paragraph_number": paragraph_number,
                         "text": paragraph_content,
                     },
@@ -377,7 +370,6 @@ class Parser:
                     "payload": {
                         "text": f"{paragraph["payload"]["text"]} {item["item_content"]} {ending}",
                         "paragraph_number": paragraph_number,
-                        "chunk_type": "instruction",
                         "item_letter": item["item_letter"],
                     }
                 } for paragraph in paragraphs
@@ -389,7 +381,6 @@ class Parser:
                     "payload": {
                         "text": f"{paragraph["payload"]["text"]} {item["item_content"]}",
                         "paragraph_number": paragraph_number,
-                        "chunk_type": "instruction",
                         "item_letter": item["item_letter"],
                     }
                 } for paragraph in paragraphs
@@ -441,7 +432,7 @@ class Parser:
 
     @classmethod
     def _get_article_number(cls, article: Tag | str) -> int:
-        print(article)
+
         text = cls._tag_to_text(article.select_one("strong")) \
             if isinstance(article, Tag) else article
 
