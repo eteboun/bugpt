@@ -6,8 +6,8 @@ import shutil
 from qdrant_client import QdrantClient
 from sentence_transformers import SentenceTransformer
 
-from double_major_regulations.regulation_embedder import DoubleMajorRegulationEmbedder
-from erasmus_regulations.regulation_embedder import ErasmusRegulationEmbedder
+from double_major_regulations.regulation_pipeline import DoubleMajorRegulationEmbedder
+from erasmus_regulations.regulation_pipeline import ErasmusRegulationEmbedder
 
 class DBManager:
 
@@ -44,6 +44,7 @@ class DBManager:
     @_run_client
     def search_db(self, client, query: str, collection_name: str, limit: int = 5):
 
+        query = f"query: {query}"
         vector = self.MODEL.encode(query).tolist()
 
         results = client.query_points(
@@ -56,9 +57,8 @@ class DBManager:
             print(f"score: {point.score}")
             print(f"text: {point.payload["text"]}")
 
-
 manager = DBManager("./storage")
 manager.search_db(
-    query="Çift ana dal yapmak için minimum not ortalama şartı nedir?",
+    query="çift anadal programına başvurma şartları nelerdir?",
     collection_name="regulations"
 )
