@@ -158,7 +158,6 @@ class ComponentOperations:
             for child in paragraph.contents
             if isinstance(child, NavigableString)
         ])
-        print(text)
         match = ComponentOperations.PARAGRAPH_PATTERN.match(text)
 
         if match is None:

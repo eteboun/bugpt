@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup, Tag
 from typing import ClassVar
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
+from regulations.chunker_config import ChunkerConfig
 from regulations.html_document_tree import HtmlDocumentTree
 from regulations.normalizer import Normalizer
 
@@ -17,11 +18,13 @@ class Pipeline:
 
     def __init__(self, url: str,
                  collection_name: str,
-                 normalizer: type[Normalizer]):
+                 normalizer: type[Normalizer],
+                 chunker_config: ChunkerConfig):
 
         self.url = url
         self.collection_name = collection_name
         self.normalizer = normalizer
+        self.chunker_config = chunker_config
 
         response = requests.get(self.url, timeout=10)
         response.raise_for_status()

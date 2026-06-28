@@ -55,12 +55,14 @@ class Normalizer:
                     ComponentOperations.tag_to_text(header)
                 )
 
+                cleared_text_string = TextCleaner.remove_hyphen(text)
+
                 cleared_header = soup.new_tag("strong")
                 cleared_header.string = cleared_header_string
 
                 element.clear()
                 element.append(cleared_header)
-                element.append(text)
+                element.append(cleared_text_string)
 
             elif ComponentOperations.is_plain_text(element):
                 cleared_text_string = TextCleaner.remove_hyphen(
