@@ -1,6 +1,5 @@
 from typing import Literal, TypedDict
 
-
 class ChunkerOption(TypedDict):
     include_paragraph_content: bool
     item_merge: Literal["full", "none", "partial"]
@@ -9,19 +8,20 @@ class ChunkerOption(TypedDict):
 class ChunkerConfig:
 
     def __init__(self):
-        self.options: dict[tuple[int, int, int], ChunkerOption] = {}
+        self.options: dict[tuple[int, int, int, int], ChunkerOption] = {}
 
     def add_option(
         self,
         chapter_number: int,
         article_number: int,
         paragraph_number: int,
+        item_group_number: int | None = None,
         include_paragraph_content: bool = True,
         item_merge: Literal["full", "none", "partial"] = "none",
         item_group_sizes: tuple[int, ...] | None = None,
     ) -> None:
 
-        key = (chapter_number, article_number, paragraph_number)
+        key = (chapter_number, article_number, paragraph_number, item_group_number)
 
         self.options[key] = {
             "include_paragraph_content": include_paragraph_content,
@@ -34,9 +34,10 @@ class ChunkerConfig:
         chapter_number: int,
         article_number: int,
         paragraph_number: int,
+        item_group_number: int = 1
     ) -> ChunkerOption:
 
         return self.options.get(
-            (chapter_number, article_number, paragraph_number),
+            (chapter_number, article_number, paragraph_number, item_group_number),
             {"item_merge": "none", "item_group_sizes": None, "include_paragraph_content": True},
         )

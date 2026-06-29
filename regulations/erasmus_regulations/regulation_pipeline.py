@@ -33,5 +33,5 @@ pipeline = Pipeline(
     normalizer=RegulationNormalizer,
     chunker_config=config
 )
-
 print(json.dumps(pipeline._get_chunks(), indent=4, ensure_ascii=False))
+

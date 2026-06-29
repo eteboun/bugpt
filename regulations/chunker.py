@@ -14,6 +14,9 @@ class Chunker:
         "ü": "u", "Ü": "U",
     })
 
+    def __init__(self, config: ChunkerConfig):
+        self.config = config
+
     @staticmethod
     def _create_id(payload: dict[str, str | int | list[dict]]) -> str:
 
@@ -81,7 +84,7 @@ class Chunker:
         return embedding_text
 
     @staticmethod
-    def _create_grouped_items(
+    def _create_chunked_items(
             option: ChunkerOption,
             items: list[dict],
     ) -> list[list[dict]]:
@@ -109,25 +112,38 @@ class Chunker:
 
         return groups
 
-    @staticmethod
-    def _create_payloads_by_paragraph(option: ChunkerOption,
-                                   paragraph: dict) -> list[dict[str, str | int | list[dict]]]:
+    def _create_payloads_by_paragraph(self,
+                                      chapter_number: int,
+                                      article_number: int,
+                                      paragraph: dict) -> list[dict[str, str | int | list[dict]]]:
+
+        paragraph_number = paragraph["paragraph_number"]
 
         payloads = []
-        include_paragraph_content = option["include_paragraph_content"]
 
-        items = paragraph["items"]
+        item_groups = paragraph["item_groups"]
 
-        if items:
-            grouped_items = Chunker._create_grouped_items(
+        for idx, item_group in enumerate(item_groups):
+
+            option = self.config.get_option(
+                chapter_number=chapter_number,
+                article_number=article_number,
+                paragraph_number=paragraph_number,
+                item_group_number=idx+1
+            )
+            include_paragraph_content = option["include_paragraph_content"]
+
+            items = item_group["items"]
+            chunked_items = Chunker._create_chunked_items(
                 option=option,
                 items=items
             )
+
             paragraph_number = paragraph["paragraph_number"]
             paragraph_content = paragraph["paragraph_content"]
-            ending = paragraph["ending"]
+            ending = item_group["ending"]
 
-            for group in grouped_items:
+            for group in chunked_items:
                 text_pieces = []
                 items_included = []
                 for item in group:
@@ -136,11 +152,11 @@ class Chunker:
 
                     sub_items = item["sub_items"]
                     if sub_items:
-                        for idx, sub_item_content in enumerate(sub_items):
+                        for idx_, sub_item_content in enumerate(sub_items):
                             text_pieces.append(f"{item_content} {sub_item_content}")
                             items_included.append({
                                 "item_letter": item_letter,
-                                "sub_item_number": idx+1,
+                                "sub_item_number": idx_+1,
                             })
                     else:
                         text_pieces.append(f"{item_content}")
@@ -177,8 +193,7 @@ class Chunker:
 
         return payloads
 
-    @staticmethod
-    def run(tree: dict, config: ChunkerConfig) -> list[dict]:
+    def run(self, tree: dict) -> list[dict]:
 
         main_title = tree["main_title"]
         chunks = []
@@ -190,15 +205,9 @@ class Chunker:
 
                         chapter_number = chapter["chapter_number"]
                         article_number = article["article_number"]
-                        paragraph_number = paragraph["paragraph_number"]
 
-                        option = config.get_option(
-                            chapter_number=chapter_number,
-                            article_number=article_number,
-                            paragraph_number=paragraph_number,
-                        )
-
-                        payloads = Chunker._create_payloads_by_paragraph(option=option,
+                        payloads = self._create_payloads_by_paragraph(chapter_number=chapter_number,
+                                                                         article_number=article_number,
                                                                          paragraph=paragraph)
 
                         for payload in payloads:

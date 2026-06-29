@@ -25,7 +25,7 @@ class Pipeline:
         self.url = url
         self.collection_name = collection_name
         self.normalizer = normalizer
-        self.chunker_config = chunker_config
+        self.chunker = Chunker(chunker_config)
 
         response = requests.get(self.url, timeout=10)
         response.raise_for_status()
@@ -59,7 +59,7 @@ class Pipeline:
     def _get_chunks(self) -> list[dict]:
 
         tree = self._get_html_tree()
-        chunks = Chunker.run(tree, self.chunker_config)
+        chunks = self.chunker.run(tree)
 
         return chunks
 

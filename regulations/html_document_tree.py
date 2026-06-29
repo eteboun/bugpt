@@ -109,26 +109,17 @@ class HtmlDocumentTree:
         paragraph_content = ComponentOperations.get_paragraph_string(paragraph_tag)
         paragraph_number = ComponentOperations.get_paragraph_number(paragraph_tag)
 
-        paragraph = {
-            "paragraph_number": paragraph_number,
-            "paragraph_content": paragraph_content,
-        }
-
-        items = self._parse_items()
-        ending = None
-        if items and ComponentOperations.is_sub_item_or_ending(self.cursor.peek()):
-            ending_tag = self.cursor.next()
-            ending = ComponentOperations.tag_to_text(ending_tag)
-
-        paragraph["items"] = items
-        paragraph["ending"] = ending
+        paragraph = {"paragraph_number": paragraph_number,
+                     "paragraph_content": paragraph_content,
+                     "item_groups": self._parse_item_groups()}
 
         return paragraph
 
-    def _parse_items(self) -> list[dict]:
+    def _parse_item_groups(self) -> list[dict]:
+
+        item_groups = []
 
         items = []
-
         while ComponentOperations.is_item(self.cursor.peek()):
             item = self.cursor.next()
             item_letter = ComponentOperations.get_item_letter(item)
@@ -142,7 +133,26 @@ class HtmlDocumentTree:
                 "sub_items": sub_items,
             })
 
-        return items
+        if items:
+            if ComponentOperations.is_sub_item_or_ending(self.cursor.peek()):
+                ending_tag = self.cursor.next()
+                ending = ComponentOperations.tag_to_text(ending_tag)
+
+                item_group = {
+                    "items": items,
+                    "ending": ending,
+                }
+                item_groups.append(item_group)
+                item_groups.extend(self._parse_item_groups())
+
+            else:
+                item_group = {
+                    "items": items,
+                    "ending": None,
+                }
+                item_groups.append(item_group)
+
+        return item_groups
 
     def _parse_sub_items(self) -> list[str]:
 
