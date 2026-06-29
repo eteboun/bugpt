@@ -1,6 +1,7 @@
 from regulations.pipeline import Pipeline
 from regulations.erasmus_regulations.regulation_normalizer import RegulationNormalizer
 from regulations.chunker_config import ChunkerConfig
+import json
 
 config = ChunkerConfig()
 
@@ -32,3 +33,5 @@ pipeline = Pipeline(
     normalizer=RegulationNormalizer,
     chunker_config=config
 )
+
+print(json.dumps(pipeline._get_chunks(), indent=4, ensure_ascii=False))

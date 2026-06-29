@@ -2,6 +2,7 @@ from typing import Literal, TypedDict
 
 
 class ChunkerOption(TypedDict):
+    include_paragraph_content: bool
     item_merge: Literal["full", "none", "partial"]
     item_group_sizes: tuple[int, ...] | None
 
@@ -15,13 +16,15 @@ class ChunkerConfig:
         chapter_number: int,
         article_number: int,
         paragraph_number: int,
-        item_merge: Literal["full", "none", "partial"],
+        include_paragraph_content: bool = True,
+        item_merge: Literal["full", "none", "partial"] = "none",
         item_group_sizes: tuple[int, ...] | None = None,
     ) -> None:
 
         key = (chapter_number, article_number, paragraph_number)
 
         self.options[key] = {
+            "include_paragraph_content": include_paragraph_content,
             "item_merge": item_merge,
             "item_group_sizes": item_group_sizes,
         }
@@ -35,5 +38,5 @@ class ChunkerConfig:
 
         return self.options.get(
             (chapter_number, article_number, paragraph_number),
-            {"item_merge": "full", "item_group_sizes": None},
+            {"item_merge": "none", "item_group_sizes": None, "include_paragraph_content": True},
         )

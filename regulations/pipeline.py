@@ -8,6 +8,7 @@ from qdrant_client.models import Distance, VectorParams, PointStruct
 from regulations.chunker_config import ChunkerConfig
 from regulations.html_document_tree import HtmlDocumentTree
 from regulations.normalizer import Normalizer
+from regulations.chunker import Chunker
 
 class Pipeline:
 
@@ -54,6 +55,13 @@ class Pipeline:
         tree = parser.run()
 
         return tree
+
+    def _get_chunks(self) -> list[dict]:
+
+        tree = self._get_html_tree()
+        chunks = Chunker.run(tree, self.chunker_config)
+
+        return chunks
 
     @staticmethod
     def _embed_chunks(chunks: list[dict], model: SentenceTransformer) -> list[dict]:
