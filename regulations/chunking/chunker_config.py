@@ -15,7 +15,7 @@ class ChunkerConfig:
         chapter_number: int,
         article_number: int,
         paragraph_number: int,
-        item_group_number: int | None = None,
+        item_group_number: int = 1,
         include_paragraph_content: bool = True,
         item_merge: Literal["full", "none", "partial"] = "none",
         item_group_sizes: tuple[int, ...] | None = None,

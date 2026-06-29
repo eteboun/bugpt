@@ -9,8 +9,7 @@ def run_pipeline(model: SentenceTransformer, client: QdrantClient) -> None:
         collection_name="regulations",
         normalizer=RegulationNormalizer,
         chunker_config_name="erasmus",
-        model=model,
-        client=client,
     )
 
-    pipeline.run()
+    pipeline.run(model=model,
+                 client=client)
