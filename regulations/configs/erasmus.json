@@ -1,0 +1,21 @@
+[
+  {
+    "chapter_number": 1,
+    "article_number": 4,
+    "paragraph_number": 1,
+    "item_merge": "none"
+  },
+  {
+    "chapter_number": 3,
+    "article_number": 8,
+    "paragraph_number": 1,
+    "item_merge": "none"
+  },
+  {
+    "chapter_number": 3,
+    "article_number": 13,
+    "paragraph_number": 1,
+    "item_merge": "partial",
+    "item_group_sizes": [3, 1]
+  }
+]

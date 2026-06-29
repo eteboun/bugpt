@@ -6,8 +6,9 @@ import shutil
 from qdrant_client import QdrantClient
 from sentence_transformers import SentenceTransformer
 
-from double_major_regulations.regulation_pipeline import DoubleMajorRegulationEmbedder
-from erasmus_regulations.regulation_pipeline import ErasmusRegulationEmbedder
+from regulations.pipelines import (dormitory_pipeline,
+                                   erasmus_pipeline,
+                                   major_pipeline)
 
 class DBManager:
 
@@ -29,10 +30,15 @@ class DBManager:
         return wrapper
 
     @_run_client
-    def build_db(self, client):
+    def build_db(self, client: QdrantClient):
 
-        DoubleMajorRegulationEmbedder.run(client, self.MODEL)
-        ErasmusRegulationEmbedder.run(client, self.MODEL)
+        dormitory_pipeline.run_pipeline(model=self.MODEL, client=client)
+        erasmus_pipeline.run_pipeline(model=self.MODEL, client=client)
+        major_pipeline.run_pipeline(model=self.MODEL, client=client)
+
+    def rebuild_db(self):
+        self.delete_db()
+        self.build_db()
 
     def delete_db(self):
         path = Path(self.path)
@@ -58,7 +64,7 @@ class DBManager:
             print(f"text: {point.payload["text"]}")
 
 manager = DBManager("./storage")
-manager.search_db(
-    query="çift anadal programına başvurma şartları nelerdir?",
-    collection_name="regulations"
-)
+
+while True:
+    manager.search_db(query=input("Enter query: "),
+                      collection_name="regulations")

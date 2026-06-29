@@ -29,6 +29,14 @@ class ChunkerConfig:
             "item_group_sizes": item_group_sizes,
         }
 
+    def add_options(
+            self,
+            option_list: list[dict[str, int | bool | tuple[int, ...] | Literal["full", "none", "partial"] | None]]
+    ) -> None:
+
+        for option in option_list:
+            self.add_option(**option)
+
     def get_option(
         self,
         chapter_number: int,

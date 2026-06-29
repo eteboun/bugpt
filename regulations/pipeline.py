@@ -1,3 +1,4 @@
+import json
 import requests
 
 from sentence_transformers import SentenceTransformer
@@ -20,12 +21,23 @@ class Pipeline:
     def __init__(self, url: str,
                  collection_name: str,
                  normalizer: type[Normalizer],
-                 chunker_config: ChunkerConfig):
+                 chunker_config_name: str,
+                 client: QdrantClient,
+                 model: SentenceTransformer):
+
+        with open(f"configs\\{chunker_config_name}.json", "r") as f:
+            options = json.load(f)
 
         self.url = url
         self.collection_name = collection_name
         self.normalizer = normalizer
+
+        chunker_config = ChunkerConfig()
+        chunker_config.add_options(options)
         self.chunker = Chunker(chunker_config)
+
+        self.client = client
+        self.model = model
 
         response = requests.get(self.url, timeout=10)
         response.raise_for_status()
@@ -63,15 +75,16 @@ class Pipeline:
 
         return chunks
 
-    @staticmethod
-    def _embed_chunks(chunks: list[dict], model: SentenceTransformer) -> list[dict]:
+    def _embed_chunks(self) -> list[dict]:
+
+        chunks = self._get_chunks()
 
         passages = [
             "passage: " + chunk["embedding_text"]
             for chunk in chunks
         ]
 
-        embeddings = model.encode(
+        embeddings = self.model.encode(
             passages,
             normalize_embeddings=True,
             show_progress_bar=True,
@@ -83,14 +96,13 @@ class Pipeline:
 
         return chunks
 
-    def _save_chunks(self, chunks: list[dict], client: QdrantClient) -> None:
+    def _save_chunks(self) -> None:
 
-        if not chunks:
-            return
+        chunks = self._embed_chunks()
 
-        if not client.collection_exists(self.collection_name):
+        if not self.client.collection_exists(self.collection_name):
 
-            client.create_collection(
+            self.client.create_collection(
                 collection_name=self.collection_name,
                 vectors_config=VectorParams(
                     size=len(chunks[0]["embedding"]),
@@ -100,13 +112,16 @@ class Pipeline:
 
         points = [
             PointStruct(
-                id=chunk["point_id"],
+                id=chunk["id"],
                 vector=chunk["embedding"],
                 payload=chunk["payload"]
             ) for chunk in chunks
         ]
 
-        client.upsert(
+        self.client.upsert(
             collection_name=self.collection_name,
             points=points
         )
+
+    def run(self) -> None:
+        self._save_chunks()
