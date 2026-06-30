@@ -1,8 +1,8 @@
-from typing import ClassVar
+from typing import ClassVar, Literal
 from bs4 import Tag, NavigableString
 import re
 
-class ComponentOperations:
+class ParserFunctions:
 
     ITEM_PATTERN: ClassVar[re.Pattern[str]] = re.compile(r"^\s*\(?([a-zçğıöşü]+)\)\s*")
     PARAGRAPH_PATTERN: ClassVar[re.Pattern[str]] = re.compile(r"^\s*\(?(\d+)\)\s*")
@@ -41,7 +41,7 @@ class ComponentOperations:
 
     @staticmethod
     def has_text(tag: Tag | None) -> bool:
-        return tag is not None and bool(ComponentOperations.tag_to_text(tag))
+        return tag is not None and bool(ParserFunctions.tag_to_text(tag))
 
     @staticmethod
     def has_strong(tag: Tag | None) -> bool:
@@ -49,7 +49,7 @@ class ComponentOperations:
             return False
 
         for header in tag.select("strong"):
-            if ComponentOperations.tag_to_text(header):
+            if ParserFunctions.tag_to_text(header):
                 return True
 
         return False
@@ -71,7 +71,7 @@ class ComponentOperations:
         if tag is None:
             return False
 
-        return ComponentOperations.has_string(tag) and ComponentOperations.has_strong(tag)
+        return ParserFunctions.has_string(tag) and ParserFunctions.has_strong(tag)
 
     @staticmethod
     def is_title(tag: Tag) -> bool:
@@ -79,7 +79,7 @@ class ComponentOperations:
         if tag is None:
             return False
 
-        return not ComponentOperations.has_string(tag) and ComponentOperations.has_strong(tag)
+        return not ParserFunctions.has_string(tag) and ParserFunctions.has_strong(tag)
 
     @staticmethod
     def is_plain_text(tag: Tag) -> bool:
@@ -87,43 +87,57 @@ class ComponentOperations:
         if tag is None:
             return False
 
-        return ComponentOperations.has_string(tag) and not ComponentOperations.has_strong(tag)
+        return ParserFunctions.has_string(tag) and not ParserFunctions.has_strong(tag)
 
     @staticmethod
-    def is_paragraph(paragraph: Tag) -> bool:
+    def is_paragraph(tag: Tag) -> bool:
 
-        is_valid = ComponentOperations.is_plain_text(paragraph)
+        is_valid = ParserFunctions.is_plain_text(tag)
         if not is_valid:
             return False
 
-        text = ComponentOperations.tag_to_text(paragraph)
-        match = ComponentOperations.PARAGRAPH_PATTERN.match(text)
+        text = ParserFunctions.tag_to_text(tag)
+        match = ParserFunctions.PARAGRAPH_PATTERN.match(text)
 
         return bool(match)
 
     @staticmethod
-    def is_item(item: Tag) -> bool:
+    def is_item_list(tag: Tag) -> bool:
 
-        is_valid = ComponentOperations.is_plain_text(item)
+        if tag is None:
+            return False
+
+        return tag.name == "ol"
+
+    @staticmethod
+    def is_lettered_item(tag: Tag) -> bool:
+
+        is_valid = ParserFunctions.is_plain_text(tag)
         if not is_valid:
             return False
 
-        text = ComponentOperations.tag_to_text(item)
-        match = ComponentOperations.ITEM_PATTERN.match(text)
+        text = ParserFunctions.tag_to_text(tag)
+        match = ParserFunctions.ITEM_PATTERN.match(text)
 
         return bool(match)
 
     @staticmethod
-    def is_sub_item_or_ending(element: Tag) -> bool:
-        is_valid = ComponentOperations.is_plain_text(element)
+    def is_sub_item_or_ending(tag: Tag) -> bool:
+        is_valid = ParserFunctions.is_plain_text(tag)
         if not is_valid:
             return False
 
-        text = ComponentOperations.tag_to_text(element)
-        item_match = ComponentOperations.ITEM_PATTERN.match(text)
-        paragraph_match = ComponentOperations.PARAGRAPH_PATTERN.match(text)
+        text = ParserFunctions.tag_to_text(tag)
+        item_match = ParserFunctions.ITEM_PATTERN.match(text)
+        paragraph_match = ParserFunctions.PARAGRAPH_PATTERN.match(text)
 
         return not bool(item_match) and not bool(paragraph_match)
+
+    @staticmethod
+    def get_item_list_strings(item_list: Tag) -> list[str]:
+
+        return [ParserFunctions.tag_to_text(li)
+                for li in item_list.find_all("li", recursive=False)]
 
     @staticmethod
     def get_paragraph_string(paragraph: Tag) -> str:
@@ -134,13 +148,13 @@ class ComponentOperations:
             if isinstance(child, NavigableString)
         ])
 
-        cleaned_text = ComponentOperations.PARAGRAPH_PATTERN.sub("", text)
+        cleaned_text = ParserFunctions.PARAGRAPH_PATTERN.sub("", text)
         return cleaned_text
 
     @staticmethod
     def get_article_number(article: Tag) -> int:
 
-        text = " ".join(ComponentOperations.tag_to_text(element)
+        text = " ".join(ParserFunctions.tag_to_text(element)
                         for element in article.select("strong"))
 
         match = re.search(r"\d+", text)
@@ -151,6 +165,16 @@ class ComponentOperations:
         return int(match.group())
 
     @staticmethod
+    def get_article_kind(article: Tag) -> Literal["temporary", "default"]:
+
+        text = " ".join(ParserFunctions.tag_to_text(element)
+                        for element in article.select("strong"))
+
+        if "GEÇİCİ" in text:
+            return "temporary"
+        return "default"
+
+    @staticmethod
     def get_paragraph_number(paragraph: Tag) -> int:
 
         text = " ".join([
@@ -158,7 +182,7 @@ class ComponentOperations:
             for child in paragraph.contents
             if isinstance(child, NavigableString)
         ])
-        match = ComponentOperations.PARAGRAPH_PATTERN.match(text)
+        match = ParserFunctions.PARAGRAPH_PATTERN.match(text)
 
         if match is None:
             raise ValueError("Could not extract paragraph number")
@@ -166,11 +190,11 @@ class ComponentOperations:
         return int(match.group(1))
 
     @staticmethod
-    def get_item_letter(item: Tag) -> str:
+    def get_lettered_item_letter(item: Tag) -> str:
 
-        text = ComponentOperations.tag_to_text(item)
+        text = ParserFunctions.tag_to_text(item)
 
-        match = ComponentOperations.ITEM_PATTERN.match(text)
+        match = ParserFunctions.ITEM_PATTERN.match(text)
 
         if match is None:
             raise ValueError("Could not extract item letter")
@@ -178,37 +202,9 @@ class ComponentOperations:
         return match.group(1)
 
     @staticmethod
-    def get_item_string(item: Tag) -> str:
+    def get_lettered_item_string(item: Tag) -> str:
 
-        text = ComponentOperations.tag_to_text(item)
+        text = ParserFunctions.tag_to_text(item)
 
-        cleaned_text = ComponentOperations.ITEM_PATTERN.sub("", text)
+        cleaned_text = ParserFunctions.ITEM_PATTERN.sub("", text)
         return cleaned_text
-
-class TextCleaner:
-
-    @staticmethod
-    def remove_colon(element: str) -> str:
-        return (element
-                .strip()
-                .removesuffix(":")
-                )
-
-    @staticmethod
-    def remove_comma(elements: list[str]) -> list[str]:
-        return [element
-                .strip()
-                .removesuffix(",")
-                for element in elements]
-
-    @staticmethod
-    def add_period(element: str) -> str:
-        return (element
-                .strip()
-                .removesuffix(".") + ".")
-
-    @staticmethod
-    def remove_hyphen(element: str) -> str:
-        return (re.sub(r"^\s*[-–]+\s*|\s*[-–]+\s*$", "", element)
-                .strip())
-

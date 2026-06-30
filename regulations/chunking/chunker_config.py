@@ -1,6 +1,8 @@
-from typing import Literal, TypedDict
+from typing import Literal
+from dataclasses import dataclass
 
-class ChunkerOption(TypedDict):
+@dataclass
+class ChunkerOption:
     include_paragraph_content: bool
     item_merge: Literal["full", "none", "partial"]
     item_group_sizes: tuple[int, ...] | None
@@ -23,11 +25,11 @@ class ChunkerConfig:
 
         key = (chapter_number, article_number, paragraph_number, item_group_number)
 
-        self.options[key] = {
-            "include_paragraph_content": include_paragraph_content,
-            "item_merge": item_merge,
-            "item_group_sizes": item_group_sizes,
-        }
+        self.options[key] = ChunkerOption(
+            include_paragraph_content=include_paragraph_content,
+            item_merge=item_merge,
+            item_group_sizes=item_group_sizes,
+        )
 
     def add_options(
             self,

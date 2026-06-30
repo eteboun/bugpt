@@ -2,7 +2,8 @@ from dataclasses import dataclass, field, asdict
 
 @dataclass
 class ItemIncluded:
-    item_letter: str
+    label: str
+    number: int
     sub_item_number: int | None
 
     def as_dict(self):

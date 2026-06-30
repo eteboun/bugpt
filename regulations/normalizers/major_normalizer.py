@@ -1,9 +1,9 @@
 from bs4 import Tag, BeautifulSoup
-from regulations.normalizer import Normalizer
-from regulations.component_operations import ComponentOperations
+from regulations.html_parser.html_normalizer import HtmlNormalizer
+from regulations.html_parser.html_parser_functions import ParserFunctions
 from typing import ClassVar, override
 
-class RegulationNormalizer(Normalizer):
+class RegulationNormalizer(HtmlNormalizer):
 
     INCOMPATIBLE_TITLES: ClassVar[set] = {"Dayanak",
                                           "Çift ana dal Programında Başarı Şartı, Ders Yükü ve Süre",
@@ -17,21 +17,21 @@ class RegulationNormalizer(Normalizer):
 
         elements = regulation_container.find_all('p', recursive=False)
         for element in list(elements):
-            if ComponentOperations.is_article(element):
-                if ComponentOperations.tag_to_text(
+            if ParserFunctions.is_article(element):
+                if ParserFunctions.tag_to_text(
                         element.find("strong")
                 ) in RegulationNormalizer.INCOMPATIBLE_TITLES:
 
                     title_tag = element.find("strong")
 
                     article_tag = title_tag.find_next_sibling("strong")
-                    paragraph_text = ComponentOperations.get_string(element)
+                    paragraph_text = ParserFunctions.get_string(element)
 
                     title_p = soup.new_tag('p')
                     title_p.append(title_tag)
 
                     article_strong = soup.new_tag('strong')
-                    article_strong.string = ComponentOperations.tag_to_text(article_tag)
+                    article_strong.string = ParserFunctions.tag_to_text(article_tag)
 
                     article_p = soup.new_tag('p')
                     article_p.append(article_strong)

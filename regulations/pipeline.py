@@ -9,8 +9,9 @@ from qdrant_client.models import Distance, VectorParams, PointStruct
 
 from regulations.chunking.chunk_structure import Chunk
 from regulations.chunking.chunker_config import ChunkerConfig
-from regulations.html_document_tree import HtmlDocumentTree
-from regulations.normalizer import Normalizer
+from regulations.document_structure import Document
+from regulations.html_parser.html_document_tree import HtmlDocumentTree
+from regulations.html_parser.html_normalizer import HtmlNormalizer
 from regulations.chunking.chunker import Chunker
 
 class Pipeline:
@@ -22,7 +23,7 @@ class Pipeline:
 
     def __init__(self, url: str,
                  collection_name: str,
-                 normalizer: type[Normalizer],
+                 normalizer: type[HtmlNormalizer],
                  chunker_config_name: str):
 
         with open(f"../configs/{chunker_config_name}.json", "r") as f:
@@ -54,21 +55,21 @@ class Pipeline:
         regulation_container = content_container.select_one(self.DESCRIPTION_SELECTOR)
         self.normalizer.run(regulation_container, self.soup)
 
-    def _get_html_tree(self) -> dict:
+    def _get_document_tree(self) -> Document:
 
         content_container = self._get_content_container()
         self._normalize_content_container(content_container)
 
         parser = HtmlDocumentTree(content_container)
 
-        tree = parser.run()
+        document = parser.run()
 
-        return tree
+        return document
 
     def _get_chunks(self) -> list[Chunk]:
 
-        tree = self._get_html_tree()
-        chunks = self.chunker.run(tree)
+        document = self._get_document_tree()
+        chunks = self.chunker.run(document)
 
         return chunks
 
