@@ -13,7 +13,7 @@ class RegulationNormalizer(HtmlNormalizer):
     @staticmethod
     def _fix_container(regulation_container: Tag, soup: BeautifulSoup):
 
-        elements = regulation_container.find_all('p', recursive=False)
+        elements = regulation_container.find_all("p", recursive=False)
         for element in list(elements):
             if ParserFunctions.is_article(element):
                 article_number = ParserFunctions.get_article_number(element)
@@ -25,7 +25,7 @@ class RegulationNormalizer(HtmlNormalizer):
                     ol_2 = p.find_next_sibling("ol")
 
                     last_li = ol_1.find_all("li", recursive=False)[-1]
-                    last_li.string += p.string
+                    last_li.string += " " + p.string
 
                     next_li_list = ol_2.find_all("li", recursive=False)
                     for li in next_li_list:

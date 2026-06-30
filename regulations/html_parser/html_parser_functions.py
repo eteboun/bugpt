@@ -4,7 +4,7 @@ import re
 
 class ParserFunctions:
 
-    ITEM_PATTERN: ClassVar[re.Pattern[str]] = re.compile(r"^\s*\(?([a-zçğıöşü]+)\)\s*")
+    LETTERED_ITEM_PATTERN: ClassVar[re.Pattern[str]] = re.compile(r"^\s*\(?([a-zçğıöşü]+)\)\s*")
     PARAGRAPH_PATTERN: ClassVar[re.Pattern[str]] = re.compile(r"^\s*\(?(\d+)\)\s*")
 
     CHAPTER_NUMBER_MAPPING: ClassVar[dict[str, int]] = {
@@ -117,7 +117,7 @@ class ParserFunctions:
             return False
 
         text = ParserFunctions.tag_to_text(tag)
-        match = ParserFunctions.ITEM_PATTERN.match(text)
+        match = ParserFunctions.LETTERED_ITEM_PATTERN.match(text)
 
         return bool(match)
 
@@ -128,10 +128,10 @@ class ParserFunctions:
             return False
 
         text = ParserFunctions.tag_to_text(tag)
-        item_match = ParserFunctions.ITEM_PATTERN.match(text)
+        lettered_item_match = ParserFunctions.LETTERED_ITEM_PATTERN.match(text)
         paragraph_match = ParserFunctions.PARAGRAPH_PATTERN.match(text)
 
-        return not bool(item_match) and not bool(paragraph_match)
+        return not bool(lettered_item_match) and not bool(paragraph_match)
 
     @staticmethod
     def get_item_list_strings(item_list: Tag) -> list[str]:
@@ -194,7 +194,7 @@ class ParserFunctions:
 
         text = ParserFunctions.tag_to_text(item)
 
-        match = ParserFunctions.ITEM_PATTERN.match(text)
+        match = ParserFunctions.LETTERED_ITEM_PATTERN.match(text)
 
         if match is None:
             raise ValueError("Could not extract item letter")
@@ -206,5 +206,5 @@ class ParserFunctions:
 
         text = ParserFunctions.tag_to_text(item)
 
-        cleaned_text = ParserFunctions.ITEM_PATTERN.sub("", text)
+        cleaned_text = ParserFunctions.LETTERED_ITEM_PATTERN.sub("", text)
         return cleaned_text

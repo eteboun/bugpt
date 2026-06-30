@@ -13,3 +13,13 @@ def run_pipeline(model: SentenceTransformer, client: QdrantClient) -> None:
 
     pipeline.run(model=model,
                  client=client)
+
+
+
+pipeline = Pipeline(
+    url="https://bogazici.edu.tr/tr/pages/bogazici-universitesi-degisim-programlari-yon/662",
+    collection_name="regulations",
+    normalizer=RegulationNormalizer,
+    chunker_config_name="erasmus",
+)
+print(pipeline._get_document_tree())

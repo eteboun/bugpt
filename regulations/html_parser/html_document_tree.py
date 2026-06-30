@@ -16,7 +16,7 @@ class HtmlDocumentTree:
         self.content_container = content_container
 
         regulation_container = content_container.select_one(self.DESCRIPTION_SELECTOR)
-        elements = regulation_container.find_all("p", recursive=False)
+        elements = regulation_container.find_all(["p", "ol"], recursive=False)
 
         cursor = Cursor(list(elements))
         self.cursor = cursor
@@ -147,6 +147,7 @@ class HtmlDocumentTree:
 
         idx = 0
         item_groups = []
+
         while ParserFunctions.is_lettered_item(self.cursor.peek()) or ParserFunctions.is_item_list(self.cursor.peek()):
 
             if ParserFunctions.is_lettered_item(self.cursor.peek()):

@@ -78,6 +78,6 @@ class HtmlNormalizer:
 
         HtmlNormalizer._remove_empty_elements(regulation_container)
         cls._fix_container(regulation_container, soup)
-        for p in regulation_container.select("p"):
+        for p in regulation_container.find_all("p", recursive=False):
             HtmlNormalizer._merge_strongs(p)
         HtmlNormalizer._remove_hyphens(regulation_container, soup)
