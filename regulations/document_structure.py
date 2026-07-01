@@ -16,7 +16,7 @@ class Item:
     sub_items: list[SubItem]
 
 @dataclass
-class ItemGroup:
+class ItemBlock:
     items: list[Item]
     ending: str | None
 
@@ -27,7 +27,7 @@ class Paragraph:
     number: int
     text: str
 
-    item_groups: list[ItemGroup]
+    item_blocks: list[ItemBlock]
 
 @dataclass
 class Article:

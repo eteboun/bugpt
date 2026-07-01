@@ -69,9 +69,9 @@ class MenuTools:
                 return lunch_meal, dinner_meal, lunch_takeaway_meal, dinner_takeaway_meal
             return lunch_meal, dinner_meal
 
-    @classmethod
-    def _get_menu(cls):
-        soup = cls._get_soup(cls.URL)
+    @staticmethod
+    def _get_menu():
+        soup = MenuTools._get_soup(MenuTools.URL)
         menu_scheme = {
             "lunch": {
                 "canteen": {},
@@ -82,14 +82,14 @@ class MenuTools:
                 "takeaway": {},
             }
         }
-        for ctg, sel in cls.CATEGORY_SELECTORS.items():
+        for ctg, sel in MenuTools.CATEGORY_SELECTORS.items():
             containers = soup.select(f"div[class^='food-container {sel}']")
-            if ctg in cls.TAKEAWAY_CATEGORIES:
-                lunch_meal, dinner_meal, lunch_takeaway_meal, dinner_takeaway_meal = cls._get_meals_of_containers(containers)
+            if ctg in MenuTools.TAKEAWAY_CATEGORIES:
+                lunch_meal, dinner_meal, lunch_takeaway_meal, dinner_takeaway_meal = MenuTools._get_meals_of_containers(containers)
                 menu_scheme['lunch']["takeaway"][ctg] = lunch_takeaway_meal
                 menu_scheme['dinner']["takeaway"][ctg] = dinner_takeaway_meal
             else:
-                lunch_meal, dinner_meal = cls._get_meals_of_containers(containers)
+                lunch_meal, dinner_meal = MenuTools._get_meals_of_containers(containers)
 
             menu_scheme['lunch']["canteen"][ctg] = lunch_meal
             menu_scheme['dinner']["canteen"][ctg] = dinner_meal
@@ -105,6 +105,6 @@ class MenuTools:
 
         return menu
 
-    @classmethod
-    def tool_menu(cls):
-        return cls._get_menu()
+    @staticmethod
+    def tool_menu():
+        return MenuTools._get_menu()

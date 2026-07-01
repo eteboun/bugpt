@@ -109,7 +109,7 @@ class HtmlDocumentTree:
         return Paragraph(
             text=text,
             number=number,
-            item_groups=self._parse_item_groups()
+            item_blocks=self._parse_item_blocks()
         )
 
     def _parse_lettered_items(self, general_idx: int) -> list[Item]:
@@ -143,11 +143,11 @@ class HtmlDocumentTree:
             for local_idx, text in enumerate(list_items)
         ]
 
-    def _parse_item_groups(self) -> list[ItemGroup]:
+    def _parse_item_blocks(self) -> list[ItemBlock]:
 
         local_idx = 0
         general_idx = 0
-        item_groups = []
+        item_blocks = []
         while ParserFunctions.is_lettered_item(self.cursor.peek()) or ParserFunctions.is_item_list(self.cursor.peek()):
 
             if ParserFunctions.is_lettered_item(self.cursor.peek()):
@@ -160,19 +160,19 @@ class HtmlDocumentTree:
                 ending_tag = self.cursor.next()
                 ending = ParserFunctions.tag_to_text(ending_tag)
 
-                item_groups.append(
-                    ItemGroup(items=items, ending=ending, local_index=local_idx)
+                item_blocks.append(
+                    ItemBlock(items=items, ending=ending, local_index=local_idx)
                 )
 
             else:
-                item_groups.append(
-                    ItemGroup(items=items, ending=None, local_index=local_idx)
+                item_blocks.append(
+                    ItemBlock(items=items, ending=None, local_index=local_idx)
                 )
 
             general_idx += len(items)
             local_idx += 1
 
-        return item_groups
+        return item_blocks
 
     def _parse_sub_items(self) -> list[SubItem]:
 

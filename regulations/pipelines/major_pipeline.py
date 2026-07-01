@@ -6,7 +6,6 @@ from qdrant_client import QdrantClient
 def run_pipeline(model: SentenceTransformer, client: QdrantClient) -> None:
     pipeline = Pipeline(
         url="https://bogazici.edu.tr/tr/pages/bogazici-universitesi-cift-ana-dal-programlar/661",
-        collection_name="regulations",
         normalizer=RegulationNormalizer,
         chunker_config_name="major",
     )

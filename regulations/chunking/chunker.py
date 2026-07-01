@@ -107,30 +107,40 @@ class Chunker:
 
         return groups
 
-    def _create_chunks(self,
+    def _create_chunk(self, payload: Payload) -> Chunk:
+
+        embedding_text = self._create_embedding_text(payload)
+
+        return Chunk(
+            embedding_text=embedding_text,
+            id=str(uuid.uuid4()),
+            payload=payload,
+        )
+
+    def _create_payloads(self,
                          main_title: str,
                          chapter_name: str,
                          article_title:str,
                           chapter_number: int,
                           article_number: int,
-                          paragraph: Paragraph) -> list[Chunk]:
+                          paragraph: Paragraph) -> list[Payload]:
 
         paragraph_number = paragraph.number
 
         payloads = []
-        item_groups = paragraph.item_groups
+        item_blocks = paragraph.item_blocks
 
-        if item_groups:
-            for item_group in item_groups:
+        if item_blocks:
+            for item_block in item_blocks:
 
                 option = self.config.get_option(
                     chapter_number=chapter_number,
                     article_number=article_number,
                     paragraph_number=paragraph_number,
-                    item_group_number=item_group.local_index+1
+                    item_block_number=item_block.local_index + 1
                 )
 
-                items = item_group.items
+                items = item_block.items
                 chunked_items = Chunker._create_chunked_items(
                     option=option,
                     items=items
@@ -139,20 +149,23 @@ class Chunker:
                 for group in chunked_items:
                     text_pieces = []
                     items_included = []
+                    single_items_with_sub_items = []
+
                     for item in group:
-
                         if item.sub_items:
+                            if len(group) != 1:
+                                for sub_item in item.sub_items:
+                                    text_pieces.append(f"{item.text} {sub_item.text}")
 
-                            for sub_item in item.sub_items:
-                                text_pieces.append(f"{item.text} {sub_item.text}")
-
-                                items_included.append(
-                                    ItemIncluded(label=item.label,
-                                                 sub_item_number=sub_item.local_index+1,
-                                                 local_item_number=item.local_index+1,
-                                                 general_item_number=item.general_index+1,
-                                                 item_group_number=item_group.local_index + 1)
-                                )
+                                    items_included.append(
+                                        ItemIncluded(label=item.label,
+                                                     sub_item_number=sub_item.local_index+1,
+                                                     local_item_number=item.local_index+1,
+                                                     general_item_number=item.general_index+1,
+                                                     item_block_number=item_block.local_index+1)
+                                    )
+                            else:
+                                single_items_with_sub_items.append(item)
                         else:
                             text_pieces.append(f"{item.text}")
 
@@ -161,20 +174,38 @@ class Chunker:
                                              sub_item_number=None,
                                              local_item_number=item.local_index+1,
                                              general_item_number=item.general_index+1,
-                                             item_group_number=item_group.local_index + 1)
+                                             item_block_number=item_block.local_index+1)
                             )
 
                     text = "\n".join(text_pieces)
                     if option.include_paragraph_content:
                         text = f"{paragraph.text} {text}"
-                    if item_group.ending:
-                        text = f"{text} {item_group.ending}"
+                    if item_block.ending:
+                        text = f"{text} {item_block.ending}"
 
                     payloads.append(Payload(
                         paragraph_number=paragraph.number,
                         items_included=items_included,
                         text=text,
                     ))
+
+                    if single_items_with_sub_items:
+                        for item in single_items_with_sub_items:
+                            for sub_item in item.sub_items:
+                                text = f"{paragraph.text} {item.text} {sub_item.text}"
+                                items_included = [
+                                    ItemIncluded(label=item.label,
+                                                 sub_item_number=sub_item.local_index+1,
+                                                 local_item_number=item.local_index+1,
+                                                 general_item_number=item.general_index+1,
+                                                 item_block_number=item_block.local_index+1)
+                                ]
+
+                                payloads.append(Payload(
+                                    paragraph_number=paragraph.number,
+                                    items_included=items_included,
+                                    text=text,
+                                ))
 
                 if not option.include_paragraph_content:
                     payloads.append(Payload(
@@ -189,28 +220,15 @@ class Chunker:
                 text=paragraph.text,
             ))
 
-        chunks = []
         for payload in payloads:
             payload.main_title = main_title
             payload.article_title = article_title
             payload.chapter_number = chapter_number
             payload.chapter_name = chapter_name
             payload.article_number = article_number
-
             payload.id = self._create_id(payload)
 
-            embedding_text = self._create_embedding_text(payload)
-            id_ = str(uuid.uuid4())
-
-            chunks.append(
-                Chunk(
-                    payload=payload,
-                    embedding_text=embedding_text,
-                    id=id_
-                )
-            )
-
-        return chunks
+        return payloads
 
     def run(self, document: Document) -> list[Chunk]:
 
@@ -222,13 +240,18 @@ class Chunker:
                 for article in title.articles:
                     for paragraph in article.paragraphs:
 
-                        chunks.extend(self._create_chunks(
+                        payloads = self._create_payloads(
                             main_title=document_title,
                             chapter_name=chapter.name,
                             chapter_number=chapter.number,
                             article_title=title.name,
                             article_number=article.number,
                             paragraph=paragraph
-                        ))
+                        )
+
+                        for payload in payloads:
+                            chunks.append(
+                                self._create_chunk(payload=payload)
+                            )
 
         return chunks

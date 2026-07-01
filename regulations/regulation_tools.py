@@ -10,9 +10,10 @@ from regulations.pipelines import (dormitory_pipeline,
                                    erasmus_pipeline,
                                    major_pipeline)
 
-class DBManager:
+class RegulationTools:
 
     MODEL: ClassVar[SentenceTransformer] = SentenceTransformer("intfloat/multilingual-e5-base")
+    COLLECTION: ClassVar[str] = "regulations"
 
     def __init__(self, path: str):
         self.path = path
@@ -48,23 +49,13 @@ class DBManager:
             raise Exception("Path doesn't exist")
 
     @_run_client
-    def search_db(self, client, query: str, collection_name: str, limit: int = 5):
+    def tool_search_regulation(self, client, query: str, limit: int = 5):
 
         query = f"query: {query}"
         vector = self.MODEL.encode(query).tolist()
 
         results = client.query_points(
-            collection_name=collection_name,
+            collection_name=self.COLLECTION,
             query=vector,
             limit=limit,
         ).points
-
-        for point in results:
-            print(f"score: {point.score}")
-            print(f"text: {point.payload["text"]}")
-
-manager = DBManager("./storage")
-
-while True:
-    manager.search_db(query=input("Enter query: "),
-                      collection_name="regulations")

@@ -52,9 +52,9 @@ class ChunkerConfig:
         chapter_number: int,
         article_number: int,
         paragraph_number: int,
-        item_group_number: int = 1
+        item_block_number: int = 1
     ) -> ChunkerOption:
 
         return self.options.get(
-            (chapter_number, article_number, paragraph_number, item_group_number),
+            (chapter_number, article_number, paragraph_number, item_block_number),
         ) or self.options.get(self.DEFAULT_OPTION_KEY)

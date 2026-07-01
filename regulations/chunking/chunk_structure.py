@@ -3,7 +3,7 @@ from dataclasses import dataclass, field, asdict
 @dataclass
 class ItemIncluded:
     label: str
-    item_group_number: int
+    item_block_number: int
     local_item_number: int
     general_item_number: int
     sub_item_number: int | None

@@ -4,6 +4,7 @@ import requests
 from sentence_transformers import SentenceTransformer
 from bs4 import BeautifulSoup, Tag
 from typing import ClassVar
+from pathlib import Path
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
 
@@ -21,16 +22,19 @@ class Pipeline:
     DESCRIPTION_SELECTOR: ClassVar[str] = "div.inner-page__content-description"
     HEADER_SELECTOR: ClassVar[str] = "div.inner-page__content-header"
 
+    COLLECTION: ClassVar[str] = "regulations"
+
     def __init__(self, url: str,
-                 collection_name: str,
                  normalizer: type[HtmlNormalizer],
                  chunker_config_name: str):
 
-        with open(f"../configs/{chunker_config_name}.json", "r") as f:
+        BASE_DIR = Path(__file__).resolve().parent
+        config_path = BASE_DIR / "configs" / f"{chunker_config_name}.json"
+
+        with open(config_path, "r") as f:
             options = json.load(f)
 
         self.url = url
-        self.collection_name = collection_name
         self.normalizer = normalizer
 
         chunker_config = ChunkerConfig()
@@ -77,10 +81,10 @@ class Pipeline:
 
         chunks = self._get_chunks()
 
-        if not client.collection_exists(self.collection_name):
+        if not client.collection_exists(self.COLLECTION):
 
             client.create_collection(
-                collection_name=self.collection_name,
+                collection_name=self.COLLECTION,
                 vectors_config=VectorParams(
                     size=model.get_embedding_dimension(),
                     distance=Distance.COSINE
@@ -96,7 +100,7 @@ class Pipeline:
         ]
 
         client.upsert(
-            collection_name=self.collection_name,
+            collection_name=self.COLLECTION,
             points=points
         )
 
