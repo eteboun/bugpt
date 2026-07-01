@@ -1,20 +1,13 @@
 from typing import ClassVar
 from menu.menu_tools import MenuTools
 from regulations.regulation_tools import RegulationTools
+from app.model_runner import ModelRunner
 import torch
 import json
 
-class Service:
+class Service(ModelRunner):
 
     tools: ClassVar[dict]
-    system_prompt_path: ClassVar[str]
-
-    def __init__(self, model, tokenizer):
-        self.model = model
-        self.tokenizer = tokenizer
-
-        with open(self.system_prompt_path, 'r', encoding='utf8') as f:
-            self.system_prompt = f.read()
 
     def call_tool(self, user_prompt: str):
 
@@ -29,7 +22,9 @@ class Service:
             }
         ]
 
-        text = self.tokenizer.apply_chat_template(messages)
+        text = self.tokenizer.apply_chat_template(messages,
+                                                  tokenize=False,
+                                                  add_generation_prompt=True)
         inputs = self.tokenizer(text, return_tensors="pt").to(self.model.device)
 
         with torch.inference_mode():
@@ -45,7 +40,7 @@ class Service:
         generated = self.tokenizer.decode(generated_ids, skip_special_tokens=True)
         tool_call = json.loads(generated)
 
-        called_tool = tool_call["tool_call"]
+        called_tool = tool_call["tool"]
         if tool := self.tools.get(called_tool):
             args = tool_call["args"]
             result = tool(**args)
@@ -60,7 +55,7 @@ class MenuService(Service):
         "menu": MenuTools.tool_menu
     }
 
-    system_prompt_path = "system_prompts/menu_service_system_prompt"
+    system_prompt_file_name = "menu_service_system_prompt"
 
 class RegulationService(Service):
 
@@ -68,4 +63,4 @@ class RegulationService(Service):
         "search_regulation": RegulationTools.tool_search_regulation
     }
 
-    system_prompt_path = "system_prompts/menu_service_system_prompt"
+    system_prompt_file_name = "menu_service_system_prompt"

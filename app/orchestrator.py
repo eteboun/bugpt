@@ -1,11 +1,11 @@
 from typing import ClassVar
-from services import MenuService, RegulationService, Service
+from app.services import MenuService, RegulationService, Service
 
 class Orchestrator:
 
     SERVICE_MAPPINGS: ClassVar[dict[str, type[Service]]] = {
-        "menu": MenuService,
-        "regulation": RegulationService,
+        "menu_service": MenuService,
+        "regulation_service": RegulationService,
     }
 
     def __init__(self, model, tokenizer):

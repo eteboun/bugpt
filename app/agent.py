@@ -1,27 +1,31 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
-from router import Router
-from orchestrator import Orchestrator
+from app.router import Router
+from app.orchestrator import Orchestrator
+from app.formatter import Formatter
 
 class Agent:
     def __init__(self,
-                 control_model_name: str,
-                 response_model_name: str,
-                 response_model_quantization_config: BitsAndBytesConfig
+                 model_name: str,
+                 model_quantization_config: BitsAndBytesConfig
                  ) -> None:
 
-        self.control_model_name = control_model_name
-        self.response_model_name = response_model_name
-        self.response_model_quantization_config = response_model_quantization_config
+        self.model_name = model_name
+        self.model_quantization_config = model_quantization_config
 
-        self.control_model = AutoModelForCausalLM.from_pretrained(control_model_name,
-                                                                  device_map="auto")
-        self.control_tokenizer = AutoTokenizer.from_pretrained(control_model_name)
+        self.model = AutoModelForCausalLM.from_pretrained(model_name,
+                                                            device_map="auto")
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-        self.response_model = AutoModelForCausalLM.from_pretrained(response_model_name,
-                                                                   device_map="auto",
-                                                                   quantization_config=response_model_quantization_config)
-        self.response_tokenizer = AutoTokenizer.from_pretrained(response_model_name)
-
-        self.router = Router(model=self.control_model,
-                             tokenizer=self.control_tokenizer,)
-        self.orchestrator = Orchestrator()
+        self.router = Router(model=self.model,
+                             tokenizer=self.tokenizer)
+        self.orchestrator = Orchestrator(model=self.model,
+                                         tokenizer=self.tokenizer)
+        self.formatter = Formatter(model=self.model,
+                                   tokenizer=self.tokenizer)
+    def enter_prompt(self, user_prompt: str) -> str:
+        service_call = self.router.select_service(user_prompt=user_prompt)
+        tool_result = self.orchestrator.call_service(user_prompt=user_prompt,
+                                                     service_call=service_call)
+        response = self.formatter.format_tool_result(tool_result=tool_result,
+                                                             user_prompt=user_prompt)
+        return response

@@ -70,7 +70,7 @@ class MenuTools:
             return lunch_meal, dinner_meal
 
     @staticmethod
-    def _get_menu():
+    def _get_menu() -> list[dict]:
         soup = MenuTools._get_soup(MenuTools.URL)
         menu_scheme = {
             "lunch": {

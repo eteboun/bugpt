@@ -1,16 +1,9 @@
-from typing import ClassVar
+from app.model_runner import ModelRunner
 import torch
 
-class Formatter:
+class Formatter(ModelRunner):
 
-    system_prompt_path: ClassVar[str] = "system_prompts/formatter_system_prompt"
-
-    def __init__(self, model, tokenizer):
-        self.model = model
-        self.tokenizer = tokenizer
-
-        with open(self.system_prompt_path, 'r', encoding='utf8') as f:
-            self.system_prompt = f.read()
+    system_prompt_file_name = "formatter_system_prompt"
 
     def format_tool_result(self, user_prompt: str, tool_result: dict) -> str:
 
@@ -31,7 +24,9 @@ class Formatter:
             }
         ]
 
-        text = self.tokenizer.apply_chat_template(messages)
+        text = self.tokenizer.apply_chat_template(messages,
+                                                  tokenize=False,
+                                                  add_generation_prompt=True)
         inputs = self.tokenizer(text, return_tensors="pt").to(self.model.device)
 
         with torch.inference_mode():

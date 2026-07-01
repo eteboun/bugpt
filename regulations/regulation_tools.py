@@ -12,7 +12,8 @@ from regulations.pipelines import (dormitory_pipeline,
 
 class RegulationTools:
 
-    MODEL: ClassVar[SentenceTransformer] = SentenceTransformer("intfloat/multilingual-e5-base")
+    MODEL: ClassVar[SentenceTransformer] = SentenceTransformer("intfloat/multilingual-e5-base",
+                                                               device="cpu")
     COLLECTION: ClassVar[str] = "regulations"
 
     def __init__(self, path: str):
@@ -49,7 +50,7 @@ class RegulationTools:
             raise Exception("Path doesn't exist")
 
     @_run_client
-    def tool_search_regulation(self, client, query: str, limit: int = 5):
+    def tool_search_regulation(self, client, query: str, limit: int = 5) -> list[dict]:
 
         query = f"query: {query}"
         vector = self.MODEL.encode(query).tolist()
@@ -59,3 +60,13 @@ class RegulationTools:
             query=vector,
             limit=limit,
         ).points
+
+        result = []
+        for point in results:
+
+            result.append({
+                "score": point.score,
+                "text": point.payload.get("text")
+            })
+
+        return result
