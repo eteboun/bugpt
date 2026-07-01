@@ -3,7 +3,9 @@ from dataclasses import dataclass, field, asdict
 @dataclass
 class ItemIncluded:
     label: str
-    number: int
+    item_group_number: int
+    local_item_number: int
+    general_item_number: int
     sub_item_number: int | None
 
     def as_dict(self):

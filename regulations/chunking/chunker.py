@@ -40,9 +40,9 @@ class Chunker:
             item_ids = []
             for item_included in payload.items_included:
 
-                item_id = f"{item_included.number}.{item_included.sub_item_number}"\
+                item_id = f"{item_included.general_item_number}.{item_included.sub_item_number}"\
                     if item_included.sub_item_number \
-                    else str(item_included.number)
+                    else str(item_included.general_item_number)
 
                 item_ids.append(item_id)
 
@@ -68,9 +68,9 @@ class Chunker:
 
             for item_included in payload.items_included:
 
-                item_display = f"{item_included.number}.{item_included.sub_item_number}"\
+                item_display = f"{item_included.general_item_number}.{item_included.sub_item_number}"\
                     if item_included.sub_item_number \
-                    else str(item_included.number)
+                    else str(item_included.general_item_number)
 
                 item_displays.append(item_display)
 
@@ -149,7 +149,9 @@ class Chunker:
                                 items_included.append(
                                     ItemIncluded(label=item.label,
                                                  sub_item_number=sub_item.local_index+1,
-                                                 number=item.local_index+1)
+                                                 local_item_number=item.local_index+1,
+                                                 general_item_number=item.general_index+1,
+                                                 item_group_number=item_group.local_index + 1)
                                 )
                         else:
                             text_pieces.append(f"{item.text}")
@@ -157,7 +159,9 @@ class Chunker:
                             items_included.append(
                                 ItemIncluded(label=item.label,
                                              sub_item_number=None,
-                                             number=item.local_index+1)
+                                             local_item_number=item.local_index+1,
+                                             general_item_number=item.general_index+1,
+                                             item_group_number=item_group.local_index + 1)
                             )
 
                     text = "\n".join(text_pieces)

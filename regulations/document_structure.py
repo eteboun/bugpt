@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import Literal
 
 @dataclass
@@ -11,6 +11,7 @@ class Item:
     text: str
     label: str | None
     local_index: int
+    general_index: int
 
     sub_items: list[SubItem]
 
@@ -51,3 +52,6 @@ class Chapter:
 class Document:
     title: str
     chapters: list[Chapter]
+
+    def as_dict(self):
+        return asdict(self)

@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, ClassVar
 from dataclasses import dataclass
 
 @dataclass
@@ -9,8 +9,16 @@ class ChunkerOption:
 
 class ChunkerConfig:
 
+    DEFAULT_OPTION_KEY: ClassVar[tuple[int, int, int, int]] = (0, 0, 0, 0)
+
     def __init__(self):
-        self.options: dict[tuple[int, int, int, int], ChunkerOption] = {}
+        self.options: dict[tuple[int, int, int, int], ChunkerOption] = {
+            self.DEFAULT_OPTION_KEY: ChunkerOption(
+                item_merge="none",
+                item_group_sizes=None,
+                include_paragraph_content=True
+            )
+        }
 
     def add_option(
         self,
@@ -49,5 +57,4 @@ class ChunkerConfig:
 
         return self.options.get(
             (chapter_number, article_number, paragraph_number, item_group_number),
-            {"item_merge": "none", "item_group_sizes": None, "include_paragraph_content": True},
-        )
+        ) or self.options.get(self.DEFAULT_OPTION_KEY)

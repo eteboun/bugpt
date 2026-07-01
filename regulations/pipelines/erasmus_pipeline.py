@@ -1,3 +1,4 @@
+import json
 from regulations.normalizers.erasmus_normalizer import RegulationNormalizer
 from regulations.pipeline import Pipeline
 from sentence_transformers import SentenceTransformer
@@ -22,4 +23,4 @@ pipeline = Pipeline(
     normalizer=RegulationNormalizer,
     chunker_config_name="erasmus",
 )
-print(pipeline._get_document_tree())
+print(json.dumps([c.as_dict() for c in pipeline._get_chunks()], indent=4, ensure_ascii=False))

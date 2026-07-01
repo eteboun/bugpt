@@ -112,18 +112,18 @@ class HtmlDocumentTree:
             item_groups=self._parse_item_groups()
         )
 
-    def _parse_lettered_items(self) -> list[Item]:
+    def _parse_lettered_items(self, general_idx: int) -> list[Item]:
 
-        idx = 0
-        items = [self._parse_lettered_item(idx=idx)]
+        local_idx = 0
+        items = [self._parse_lettered_item(local_idx=local_idx, general_idx=general_idx+local_idx)]
 
         while ParserFunctions.is_lettered_item(self.cursor.peek()):
-            idx += 1
-            items.append(self._parse_lettered_item(idx))
+            local_idx += 1
+            items.append(self._parse_lettered_item(local_idx, general_idx=general_idx+local_idx))
 
         return items
 
-    def _parse_lettered_item(self, idx: int) -> Item:
+    def _parse_lettered_item(self, local_idx: int, general_idx: int) -> Item:
 
         item = self.cursor.next()
         label = ParserFunctions.get_lettered_item_letter(item)
@@ -131,45 +131,46 @@ class HtmlDocumentTree:
 
         sub_items = self._parse_sub_items()
 
-        return Item(text=text, label=label, sub_items=sub_items, local_index=idx)
+        return Item(text=text, label=label, sub_items=sub_items, local_index=local_idx, general_index=general_idx)
 
-    def _parse_item_list(self) -> list[Item]:
+    def _parse_item_list(self, general_idx: int) -> list[Item]:
 
         item_list = self.cursor.next()
         list_items = ParserFunctions.get_item_list_strings(item_list)
 
         return [
-            Item(text=text, label=None, local_index=idx, sub_items=[])
-            for idx, text in enumerate(list_items)
+            Item(text=text, label=None, local_index=local_idx, sub_items=[], general_index=general_idx+local_idx)
+            for local_idx, text in enumerate(list_items)
         ]
 
     def _parse_item_groups(self) -> list[ItemGroup]:
 
-        idx = 0
+        local_idx = 0
+        general_idx = 0
         item_groups = []
-
         while ParserFunctions.is_lettered_item(self.cursor.peek()) or ParserFunctions.is_item_list(self.cursor.peek()):
 
             if ParserFunctions.is_lettered_item(self.cursor.peek()):
-                items = self._parse_lettered_items()
+                items = self._parse_lettered_items(general_idx=general_idx)
 
             else:
-                items = self._parse_item_list()
+                items = self._parse_item_list(general_idx=general_idx)
 
             if ParserFunctions.is_sub_item_or_ending(self.cursor.peek()):
                 ending_tag = self.cursor.next()
                 ending = ParserFunctions.tag_to_text(ending_tag)
 
                 item_groups.append(
-                    ItemGroup(items=items, ending=ending, local_index=idx)
+                    ItemGroup(items=items, ending=ending, local_index=local_idx)
                 )
 
             else:
                 item_groups.append(
-                    ItemGroup(items=items, ending=None, local_index=idx)
+                    ItemGroup(items=items, ending=None, local_index=local_idx)
                 )
 
-            idx += 1
+            general_idx += len(items)
+            local_idx += 1
 
         return item_groups
 
