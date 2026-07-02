@@ -66,6 +66,20 @@ class ParserFunctions:
         return False
 
     @staticmethod
+    def is_listed_item(tag: Tag | None) -> bool:
+        if tag is None:
+            return False
+
+        return ParserFunctions.is_lettered_item(tag) or ParserFunctions.is_item_list(tag)
+
+    @staticmethod
+    def is_table(tag: Tag | None) -> bool:
+        if tag is None:
+            return False
+
+        return tag.name == "table"
+
+    @staticmethod
     def is_article(tag: Tag) -> bool:
 
         if tag is None:

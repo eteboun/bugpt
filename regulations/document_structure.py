@@ -1,5 +1,5 @@
-from dataclasses import dataclass, asdict
-from typing import Literal
+from dataclasses import dataclass, asdict, field
+from typing import Literal, TypeAlias
 
 @dataclass
 class SubItem:
@@ -16,11 +16,31 @@ class Item:
     sub_items: list[SubItem]
 
 @dataclass
-class ItemBlock:
-    items: list[Item]
-    ending: str | None
-
+class Row:
+    content: list[str]
     local_index: int
+
+@dataclass
+class Table:
+    row_titles: list[str]
+    rows: list[Row]
+
+@dataclass
+class BaseItemBlock:
+    local_index: int
+
+@dataclass
+class ListedItemBlock(BaseItemBlock):
+    content: list[Item]
+    ending: str | None
+    kind: Literal["listed"] = field(default="listed", init=False)
+
+@dataclass
+class TabularItemBlock(BaseItemBlock):
+    content: Table
+    kind: Literal["tabular"] = field(default="tabular", init=False)
+
+ItemBlock: TypeAlias = ListedItemBlock | TabularItemBlock
 
 @dataclass
 class Paragraph:

@@ -15,3 +15,11 @@ agent = Agent(
     model_name=model_name,
     model_quantization_config=model_quantization_config,
 )
+
+while True:
+    prompt = input("> ")
+    if prompt == "quit":
+        break
+    print(
+        agent.enter_prompt(prompt)
+    )

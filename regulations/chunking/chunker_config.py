@@ -1,60 +1,102 @@
 from typing import Literal, ClassVar
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from pathlib import Path
+import json
+
+@dataclass(frozen=True)
+class Location:
+    chapter_number: int
+    article_number: int
+    paragraph_number: int
+    item_block_number: int
 
 @dataclass
-class ChunkerOption:
+class ListedOption:
     include_paragraph_content: bool
     item_merge: Literal["full", "none", "partial"]
     item_group_sizes: tuple[int, ...] | None
 
+@dataclass
+class TabularOption:
+    row_text_format: str
+
+@dataclass
+class Options:
+    listed_options: dict[Location, ListedOption] = field(default_factory=dict)
+    tabular_options: dict[Location, TabularOption] = field(default_factory=dict)
+
 class ChunkerConfig:
 
-    DEFAULT_OPTION_KEY: ClassVar[tuple[int, int, int, int]] = (0, 0, 0, 0)
+    DEFAULT_TABULAR_OPTION: ClassVar[TabularOption] = TabularOption(
+                                                    row_text_format=""
+                                                )
 
-    def __init__(self):
-        self.options: dict[tuple[int, int, int, int], ChunkerOption] = {
-            self.DEFAULT_OPTION_KEY: ChunkerOption(
-                item_merge="none",
-                item_group_sizes=None,
-                include_paragraph_content=True
+    DEFAULT_LISTED_OPTION: ClassVar[ListedOption] = ListedOption(
+                                include_paragraph_content=True,
+                                item_merge="none",
+                                item_group_sizes=None
+                            )
+
+
+    def __init__(self, config_name: str) -> None:
+        self.options = Options()
+        self._load_options(config_name=config_name)
+
+    def _load_options(self, config_name: str) -> None:
+
+        path = Path(__file__).resolve().parent.parent / "configs" / f"{config_name}.json"
+        config = json.loads(path.read_text(encoding="utf-8"))\
+            if path.exists()\
+            else {}
+
+        for option in config.get("listed", []):
+            location = Location(
+                chapter_number=option["chapter_number"],
+                article_number=option["article_number"],
+                paragraph_number=option["paragraph_number"],
+                item_block_number=option.get("item_block_number", 1),
             )
-        }
 
-    def add_option(
-        self,
-        chapter_number: int,
-        article_number: int,
-        paragraph_number: int,
-        item_group_number: int = 1,
-        include_paragraph_content: bool = True,
-        item_merge: Literal["full", "none", "partial"] = "none",
-        item_group_sizes: tuple[int, ...] | None = None,
-    ) -> None:
+            self.options.listed_options[location] = ListedOption(
+                include_paragraph_content=option.get("include_paragraph_content", True),
+                item_merge=option.get("item_merge", "none"),
+                item_group_sizes=option.get("item_group_sizes", None),
+            )
 
-        key = (chapter_number, article_number, paragraph_number, item_group_number)
+        for option in config.get("tabular", []):
 
-        self.options[key] = ChunkerOption(
-            include_paragraph_content=include_paragraph_content,
-            item_merge=item_merge,
-            item_group_sizes=item_group_sizes,
-        )
+            location = Location(
+                chapter_number=option["chapter_number"],
+                article_number=option["article_number"],
+                paragraph_number=option["paragraph_number"],
+                item_block_number=option.get("item_block_number", 1),
+            )
 
-    def add_options(
-            self,
-            option_list: list[dict[str, int | bool | tuple[int, ...] | Literal["full", "none", "partial"] | None]]
-    ) -> None:
-
-        for option in option_list:
-            self.add_option(**option)
+            self.options.tabular_options[location] = TabularOption(
+                row_text_format=option.get("row_text_format", ""),
+            )
 
     def get_option(
         self,
+        kind: Literal["tabular", "listed"],
         chapter_number: int,
         article_number: int,
         paragraph_number: int,
         item_block_number: int = 1
-    ) -> ChunkerOption:
+    ) -> ListedOption | TabularOption:
 
-        return self.options.get(
-            (chapter_number, article_number, paragraph_number, item_block_number),
-        ) or self.options.get(self.DEFAULT_OPTION_KEY)
+        location = Location(
+            chapter_number=chapter_number,
+            article_number=article_number,
+            paragraph_number=paragraph_number,
+            item_block_number=item_block_number,
+        )
+
+        if kind == "tabular":
+            return self.options.tabular_options.get(location, self.DEFAULT_TABULAR_OPTION)
+
+        elif kind == "listed":
+            return self.options.listed_options.get(location, self.DEFAULT_LISTED_OPTION)
+
+        else:
+            raise Exception(f"Unknown option kind: {kind}")

@@ -16,7 +16,7 @@ class HtmlDocumentTree:
         self.content_container = content_container
 
         regulation_container = content_container.select_one(self.DESCRIPTION_SELECTOR)
-        elements = regulation_container.find_all(["p", "ol"], recursive=False)
+        elements = regulation_container.find_all(["p", "ol", "table"], recursive=False)
 
         cursor = Cursor(list(elements))
         self.cursor = cursor
@@ -143,33 +143,71 @@ class HtmlDocumentTree:
             for local_idx, text in enumerate(list_items)
         ]
 
+    def _parse_table(self) -> Table:
+
+        table = self.cursor.next()
+
+        row_title_tags = (table
+                          .find("tbody", recursive=False)
+                          .find("tr", recursive=False))
+        row_titles = [
+            ParserFunctions.tag_to_text(td)
+            for td in row_title_tags.find_all("td", recursive=False)
+        ]
+
+        rows_elements = row_title_tags.find_next_siblings("tr")
+        rows = [
+            Row(
+                content=[
+                    ParserFunctions.tag_to_text(td)
+                    for td in row_element.find_all("td", recursive=False)
+                ],
+                local_index=local_idx
+            ) for local_idx, row_element in enumerate(rows_elements)
+        ]
+
+        return Table(
+            row_titles=row_titles,
+            rows=rows
+        )
+
     def _parse_item_blocks(self) -> list[ItemBlock]:
 
         local_idx = 0
         general_idx = 0
         item_blocks = []
-        while ParserFunctions.is_lettered_item(self.cursor.peek()) or ParserFunctions.is_item_list(self.cursor.peek()):
+        while ParserFunctions.is_listed_item(self.cursor.peek()) or ParserFunctions.is_table(self.cursor.peek()):
 
-            if ParserFunctions.is_lettered_item(self.cursor.peek()):
-                items = self._parse_lettered_items(general_idx=general_idx)
+            if ParserFunctions.is_listed_item(self.cursor.peek()):
+
+                if ParserFunctions.is_lettered_item(self.cursor.peek()):
+                    content = self._parse_lettered_items(general_idx=general_idx)
+
+                else:
+                    content = self._parse_item_list(general_idx=general_idx)
+
+                if ParserFunctions.is_sub_item_or_ending(self.cursor.peek()):
+                    ending_tag = self.cursor.next()
+                    ending = ParserFunctions.tag_to_text(ending_tag)
+
+                    item_blocks.append(
+                        ListedItemBlock(content=content, ending=ending, local_index=local_idx)
+                    )
+
+                else:
+                    item_blocks.append(
+                        ListedItemBlock(content=content, ending=None, local_index=local_idx)
+                    )
+
+                general_idx += len(content)
 
             else:
-                items = self._parse_item_list(general_idx=general_idx)
 
-            if ParserFunctions.is_sub_item_or_ending(self.cursor.peek()):
-                ending_tag = self.cursor.next()
-                ending = ParserFunctions.tag_to_text(ending_tag)
-
+                table = self._parse_table()
                 item_blocks.append(
-                    ItemBlock(items=items, ending=ending, local_index=local_idx)
+                    TabularItemBlock(content=table, local_index=local_idx)
                 )
 
-            else:
-                item_blocks.append(
-                    ItemBlock(items=items, ending=None, local_index=local_idx)
-                )
-
-            general_idx += len(items)
             local_idx += 1
 
         return item_blocks
@@ -208,7 +246,7 @@ class HtmlDocumentTree:
 
         title_selector = self.content_container.select_one(self.HEADER_SELECTOR)
         title = ParserFunctions.tag_to_text(
-            title_selector.select_one("h2")
+            title_selector.find("h2", recursive=False)
         )
 
         return Document(

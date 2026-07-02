@@ -13,6 +13,7 @@ class Agent:
         self.model_quantization_config = model_quantization_config
 
         self.model = AutoModelForCausalLM.from_pretrained(model_name,
+                                                          quantization_config=model_quantization_config,
                                                             device_map="auto")
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
 

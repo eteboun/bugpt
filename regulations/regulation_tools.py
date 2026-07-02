@@ -2,61 +2,69 @@ from functools import wraps
 from typing import ClassVar
 from pathlib import Path
 import shutil
+import torch
 
 from qdrant_client import QdrantClient
 from sentence_transformers import SentenceTransformer
 
 from regulations.pipelines import (dormitory_pipeline,
                                    erasmus_pipeline,
-                                   major_pipeline)
+                                   major_pipeline,
+                                   undergraduate_pipeline)
 
 class RegulationTools:
 
     MODEL: ClassVar[SentenceTransformer] = SentenceTransformer("intfloat/multilingual-e5-base",
-                                                               device="cpu")
+                                                               model_kwargs={"torch_dtype": torch.float16},
+                                                               device="cuda")
     COLLECTION: ClassVar[str] = "regulations"
 
-    def __init__(self, path: str):
-        self.path = path
+    DB_NAME: ClassVar[str] = "storage"
 
     @staticmethod
     def _run_client(func):
         @wraps(func)
-        def wrapper(self, *args, **kwargs):
-            client = QdrantClient(path=self.path)
+        def wrapper(*args, **kwargs):
+            path = Path(__file__).resolve().parent / RegulationTools.DB_NAME
+            client = QdrantClient(path=str(path))
             try:
-                return func(self, client, *args, **kwargs)
+                return func(client, *args, **kwargs)
             finally:
                 client.close()
 
         return wrapper
 
+    @staticmethod
     @_run_client
-    def build_db(self, client: QdrantClient):
+    def build_db(client: QdrantClient):
 
-        dormitory_pipeline.run_pipeline(model=self.MODEL, client=client)
-        erasmus_pipeline.run_pipeline(model=self.MODEL, client=client)
-        major_pipeline.run_pipeline(model=self.MODEL, client=client)
+        dormitory_pipeline.run_pipeline(model=RegulationTools.MODEL, client=client)
+        erasmus_pipeline.run_pipeline(model=RegulationTools.MODEL, client=client)
+        major_pipeline.run_pipeline(model=RegulationTools.MODEL, client=client)
+        undergraduate_pipeline.run_pipeline(model=RegulationTools.MODEL, client=client)
 
-    def rebuild_db(self):
-        self.delete_db()
-        self.build_db()
+    @staticmethod
+    def rebuild_db():
+        RegulationTools.delete_db()
+        RegulationTools.build_db()
 
-    def delete_db(self):
-        path = Path(self.path)
+    @staticmethod
+    def delete_db():
+        path = Path(__file__).resolve().parent / RegulationTools.DB_NAME
         if path.exists():
             shutil.rmtree(path)
         else:
             raise Exception("Path doesn't exist")
 
+    @staticmethod
     @_run_client
-    def tool_search_regulation(self, client, query: str, limit: int = 5) -> list[dict]:
+    def tool_search_regulation(client: QdrantClient, query: str, limit: int = 2) -> list[dict]:
 
         query = f"query: {query}"
-        vector = self.MODEL.encode(query).tolist()
+        vector = RegulationTools.MODEL.encode(query).tolist()
 
         results = client.query_points(
-            collection_name=self.COLLECTION,
+            collection_name=RegulationTools.COLLECTION,
             query=vector,
             limit=limit,
         ).points
@@ -65,8 +73,10 @@ class RegulationTools:
         for point in results:
 
             result.append({
-                "score": point.score,
+                "score": round(point.score, 3),
                 "text": point.payload.get("text")
             })
 
         return result
+
+RegulationTools.rebuild_db()

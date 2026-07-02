@@ -2,10 +2,9 @@ import uuid
 import re
 
 from typing import ClassVar
-from regulations.chunking.chunk_structure import ItemIncluded, Payload, Chunk
-from regulations.chunking.chunker_config import ChunkerConfig, ChunkerOption
+from regulations.chunking.chunker_config import ChunkerConfig, ListedOption, TabularOption
+from regulations.chunking.chunk_structure import *
 from regulations.document_structure import *
-
 
 class Chunker:
 
@@ -36,9 +35,9 @@ class Chunker:
 
         id_items = [base_slug, chapter_id, article_id, paragraph_id]
 
-        if payload.items_included:
+        if payload.kind == "item_group":
             item_ids = []
-            for item_included in payload.items_included:
+            for item_included in payload.content:
 
                 item_id = f"{item_included.general_item_number}.{item_included.sub_item_number}"\
                     if item_included.sub_item_number \
@@ -48,6 +47,11 @@ class Chunker:
 
             final_item_id = f"items_{"_".join(item_ids)}"
             id_items.append(final_item_id)
+
+        elif payload.kind == "table":
+
+            table_id = f"table_{payload.content.table_number:02d}"
+            id_items.append(table_id)
 
         id_ = ":".join(id_items)
 
@@ -62,11 +66,11 @@ class Chunker:
             f'Madde {payload.article_number}: {payload.article_title}',
         ]
 
-        if payload.items_included:
+        if payload.kind == "item_group":
             parts.append(f'Paragraf {payload.paragraph_number}')
             item_displays = []
 
-            for item_included in payload.items_included:
+            for item_included in payload.content:
 
                 item_display = f"{item_included.general_item_number}.{item_included.sub_item_number}"\
                     if item_included.sub_item_number \
@@ -76,15 +80,23 @@ class Chunker:
 
             display_text = f"Bentler {", ".join(item_displays)}: {payload.text}"
             parts.append(display_text)
+
+        elif payload.kind == "table":
+            parts.append(f'Paragraf {payload.paragraph_number}')
+
+            table = payload.content
+            display_text = f"Tablo {table.table_number}: {payload.text}"
+            parts.append(display_text)
+
         else:
             parts.append(f'Paragraf {payload.paragraph_number}: {payload.text}')
 
         embedding_text = "\n".join(parts)
-        return embedding_text
+        return f"passage: {embedding_text}"
 
     @staticmethod
     def _create_chunked_items(
-            option: ChunkerOption,
+            option: ListedOption,
             items: list[Item],
     ) -> list[list[Item]]:
 
@@ -117,12 +129,27 @@ class Chunker:
             payload=payload,
         )
 
+    @staticmethod
+    def _create_table_text(
+            option: TabularOption,
+            table: Table) -> str:
+
+        row_texts = []
+        formattable = option.row_text_format
+        for row in table.rows:
+
+            row_text = formattable.format(*row.content)
+            row_texts.append(row_text)
+
+        return "\n".join(row_texts)
+
     def _create_payloads(self,
                          main_title: str,
                          chapter_name: str,
                          article_title:str,
                           chapter_number: int,
                           article_number: int,
+                         article_kind: Literal["temporary", "default"],
                           paragraph: Paragraph) -> list[Payload]:
 
         paragraph_number = paragraph.number
@@ -131,92 +158,110 @@ class Chunker:
         item_blocks = paragraph.item_blocks
 
         if item_blocks:
+
+            table_count = 0
             for item_block in item_blocks:
 
                 option = self.config.get_option(
+                    kind=item_block.kind,
                     chapter_number=chapter_number,
                     article_number=article_number,
                     paragraph_number=paragraph_number,
                     item_block_number=item_block.local_index + 1
                 )
 
-                items = item_block.items
-                chunked_items = Chunker._create_chunked_items(
-                    option=option,
-                    items=items
-                )
+                if item_block.kind == "listed":
 
-                for group in chunked_items:
-                    text_pieces = []
-                    items_included = []
-                    single_items_with_sub_items = []
+                    items = item_block.content
+                    chunked_items = Chunker._create_chunked_items(
+                        option=option,
+                        items=items
+                    )
 
-                    for item in group:
-                        if item.sub_items:
-                            if len(group) != 1:
+                    for group in chunked_items:
+                        text_pieces = []
+                        items_included = []
+                        single_items_with_sub_items = []
+
+                        for item in group:
+                            if item.sub_items:
+                                if len(group) != 1:
+                                    for sub_item in item.sub_items:
+                                        text_pieces.append(f"{item.text} {sub_item.text}")
+
+                                        items_included.append(
+                                            ItemIncluded(label=item.label,
+                                                         sub_item_number=sub_item.local_index+1,
+                                                         local_item_number=item.local_index+1,
+                                                         general_item_number=item.general_index+1,
+                                                         item_block_number=item_block.local_index+1)
+                                        )
+                                else:
+                                    single_items_with_sub_items.append(item)
+                            else:
+                                text_pieces.append(f"{item.text}")
+
+                                items_included.append(
+                                    ItemIncluded(label=item.label,
+                                                 sub_item_number=None,
+                                                 local_item_number=item.local_index+1,
+                                                 general_item_number=item.general_index+1,
+                                                 item_block_number=item_block.local_index+1)
+                                )
+
+                        text = "\n".join(text_pieces)
+                        if option.include_paragraph_content:
+                            text = f"{paragraph.text} {text}"
+                        if item_block.ending:
+                            text = f"{text} {item_block.ending}"
+
+                        payloads.append(ListedPayload(
+                            paragraph_number=paragraph.number,
+                            content=items_included,
+                            text=text,
+                        ))
+
+                        if single_items_with_sub_items:
+                            for item in single_items_with_sub_items:
                                 for sub_item in item.sub_items:
-                                    text_pieces.append(f"{item.text} {sub_item.text}")
-
-                                    items_included.append(
+                                    text = f"{paragraph.text} {item.text} {sub_item.text}"
+                                    items_included = [
                                         ItemIncluded(label=item.label,
                                                      sub_item_number=sub_item.local_index+1,
                                                      local_item_number=item.local_index+1,
                                                      general_item_number=item.general_index+1,
                                                      item_block_number=item_block.local_index+1)
-                                    )
-                            else:
-                                single_items_with_sub_items.append(item)
-                        else:
-                            text_pieces.append(f"{item.text}")
+                                    ]
 
-                            items_included.append(
-                                ItemIncluded(label=item.label,
-                                             sub_item_number=None,
-                                             local_item_number=item.local_index+1,
-                                             general_item_number=item.general_index+1,
-                                             item_block_number=item_block.local_index+1)
-                            )
+                                    payloads.append(ListedPayload(
+                                        paragraph_number=paragraph.number,
+                                        content=items_included,
+                                        text=text,
+                                    ))
 
-                    text = "\n".join(text_pieces)
-                    if option.include_paragraph_content:
-                        text = f"{paragraph.text} {text}"
-                    if item_block.ending:
-                        text = f"{text} {item_block.ending}"
+                    if not option.include_paragraph_content:
+                        payloads.append(EmptyPayload(
+                            paragraph_number=paragraph.number,
+                            text=paragraph.text,
+                        ))
+                else:
+                    table_text = self._create_table_text(table=item_block.content,
+                                                         option=option)
+                    text = f"{paragraph.text}\n{table_text}"
 
-                    payloads.append(Payload(
+                    payloads.append(TabularPayload(
                         paragraph_number=paragraph.number,
-                        items_included=items_included,
+                        content=TableIncluded(
+                            item_block_number=item_block.local_index+1,
+                            table_number=table_count+1
+                        ),
                         text=text,
                     ))
 
-                    if single_items_with_sub_items:
-                        for item in single_items_with_sub_items:
-                            for sub_item in item.sub_items:
-                                text = f"{paragraph.text} {item.text} {sub_item.text}"
-                                items_included = [
-                                    ItemIncluded(label=item.label,
-                                                 sub_item_number=sub_item.local_index+1,
-                                                 local_item_number=item.local_index+1,
-                                                 general_item_number=item.general_index+1,
-                                                 item_block_number=item_block.local_index+1)
-                                ]
-
-                                payloads.append(Payload(
-                                    paragraph_number=paragraph.number,
-                                    items_included=items_included,
-                                    text=text,
-                                ))
-
-                if not option.include_paragraph_content:
-                    payloads.append(Payload(
-                        paragraph_number=paragraph.number,
-                        items_included=[],
-                        text=paragraph.text,
-                    ))
+                    table_count += 1
         else:
-            payloads.append(Payload(
+            payloads.append(EmptyPayload(
                 paragraph_number=paragraph.number,
-                items_included=[],
                 text=paragraph.text,
             ))
 
@@ -226,6 +271,7 @@ class Chunker:
             payload.chapter_number = chapter_number
             payload.chapter_name = chapter_name
             payload.article_number = article_number
+            payload.article_kind = article_kind
             payload.id = self._create_id(payload)
 
         return payloads
@@ -246,6 +292,7 @@ class Chunker:
                             chapter_number=chapter.number,
                             article_title=title.name,
                             article_number=article.number,
+                            article_kind=article.kind,
                             paragraph=paragraph
                         )
 

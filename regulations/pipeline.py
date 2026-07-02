@@ -1,10 +1,8 @@
-import json
 import requests
 
 from sentence_transformers import SentenceTransformer
 from bs4 import BeautifulSoup, Tag
 from typing import ClassVar
-from pathlib import Path
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
 
@@ -28,18 +26,11 @@ class Pipeline:
                  normalizer: type[HtmlNormalizer],
                  chunker_config_name: str):
 
-        BASE_DIR = Path(__file__).resolve().parent
-        config_path = BASE_DIR / "configs" / f"{chunker_config_name}.json"
-
-        with open(config_path, "r") as f:
-            options = json.load(f)
+        chunker_config = ChunkerConfig(config_name=chunker_config_name)
+        self.chunker = Chunker(chunker_config)
 
         self.url = url
         self.normalizer = normalizer
-
-        chunker_config = ChunkerConfig()
-        chunker_config.add_options(options)
-        self.chunker = Chunker(chunker_config)
 
         response = requests.get(self.url, timeout=10)
         response.raise_for_status()
