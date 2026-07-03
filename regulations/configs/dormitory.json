@@ -1,5 +1,5 @@
 {
-  "listed": [
+  "item": [
     {"chapter_number": 2, "article_number": 5, "paragraph_number": 1, "item_merge": "full"},
     {"chapter_number": 2, "article_number": 6, "paragraph_number": 2, "item_merge": "full"},
     {"chapter_number": 2, "article_number": 7, "paragraph_number": 2, "item_merge": "full"},
@@ -7,13 +7,36 @@
     {"chapter_number": 2, "article_number": 10, "paragraph_number": 1, "item_merge": "full"},
     {"chapter_number": 2, "article_number": 11, "paragraph_number": 3, "item_merge": "full"},
     {"chapter_number": 2, "article_number": 12, "paragraph_number": 1, "item_merge": "full"},
-    {"chapter_number": 3, "article_number": 13, "paragraph_number": 1, "item_merge": "none", "include_paragraph_text": false},
+    {"chapter_number": 3, "article_number": 13, "paragraph_number": 1, "include_paragraph_text": false},
     {"chapter_number": 3, "article_number": 14, "paragraph_number": 2, "item_merge": "full"},
-    {"chapter_number": 3, "article_number": 15, "paragraph_number": 1, "item_merge": "none"},
-    {"chapter_number": 3, "article_number": 16, "paragraph_number": 1, "item_merge": "none"},
     {"chapter_number": 3, "article_number": 16, "paragraph_number": 2, "item_merge": "full"},
     {"chapter_number": 3, "article_number": 16, "paragraph_number": 3, "item_merge": "full"},
     {"chapter_number": 4, "article_number": 21, "paragraph_number": 1, "item_merge": "full"},
-    {"chapter_number": 4, "article_number": 26, "paragraph_number": 1, "item_block_number": 2, "include_paragraph_text": false}
+    {
+      "chapter_number": 4,
+      "article_number": 26,
+      "paragraph_number": 1,
+      "item_merge": "partial",
+      "item_pieces": [
+        {
+          "interval": [0, 3]
+        },
+        {
+          "interval": [3, 4],
+          "include_paragraph_text": false
+        }
+      ]
+    },
+    {
+      "chapter_number": 3,
+      "article_number": 17,
+      "paragraph_number": 1,
+      "sub_item_bindings": [
+        {
+          "item_number": 2,
+          "sub_item_merge": false
+        }
+      ]
+    }
   ]
 }

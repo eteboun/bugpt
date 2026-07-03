@@ -13,4 +13,3 @@ def run_pipeline(model: SentenceTransformer, client: QdrantClient) -> None:
     pipeline.run(model=model,
                  client=client)
 
-

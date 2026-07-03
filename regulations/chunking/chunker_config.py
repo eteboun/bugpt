@@ -72,10 +72,13 @@ class ChunkerConfig:
                 paragraph_number=option["paragraph_number"],
             )
 
+            include_paragraph_text = option.get("include_paragraph_text",
+                                                self.DEFAULT_ITEM_OPTION.include_paragraph_text)
+
             item_pieces = []
-            for item_piece in option["item_pieces"]:
+            for item_piece in option.get("item_pieces", []):
                 interval = item_piece["interval"]
-                include_paragraph_text = item_piece["include_paragraph_text"]
+                include_paragraph_text = item_piece.get("include_paragraph_text", include_paragraph_text)
 
                 item_pieces.append(ItemPiece(
                     start=interval[0],
@@ -84,17 +87,19 @@ class ChunkerConfig:
                 ))
 
             sub_item_bindings = {}
-            for sub_item_piece in option["sub_item_bindings"]:
+            for sub_item_piece in option.get("sub_item_bindings", []):
                 item_number = sub_item_piece["item_number"]
-                sub_item_merge = sub_item_piece["sub_item_merge"]
+                sub_item_merge = sub_item_piece.get("sub_item_merge",
+                                                    self.DEFAULT_SUB_ITEM_BINDING.sub_item_merge)
 
                 sub_item_bindings[item_number] = SubItemBinding(
                     sub_item_merge=sub_item_merge
                 )
 
             self.options.item_options[location] = ItemOption(
-                include_paragraph_text=option.get("include_paragraph_text", True),
-                item_merge=option.get("item_merge", "none"),
+                include_paragraph_text=include_paragraph_text,
+                item_merge=option.get("item_merge",
+                                      self.DEFAULT_ITEM_OPTION.item_merge),
 
                 item_pieces=item_pieces,
                 sub_item_bindings=sub_item_bindings
@@ -109,7 +114,8 @@ class ChunkerConfig:
             )
 
             self.options.table_options[location] = TableOption(
-                row_text_format=option.get("row_text_format", ""),
+                row_text_format=option.get("row_text_format",
+                                           self.DEFAULT_TABLE_OPTION.row_text_format),
             )
 
     def get_option(

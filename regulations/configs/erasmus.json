@@ -5,7 +5,14 @@
     "article_number": 13,
     "paragraph_number": 1,
     "item_merge": "partial",
-    "item_group_sizes": [3, 1]
+        "item_pieces": [
+          {
+            "interval": [0, 3]
+          },
+          {
+            "interval": [3, 4]
+          }
+        ]
     }
   ]
 }

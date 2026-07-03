@@ -1,5 +1,5 @@
 {
-  "tabular": [
+  "table": [
     {
       "chapter_number": 3,
       "article_number": 23,
@@ -13,7 +13,7 @@
       "row_text_format": "{} işareti {} anlamına gelir."
     }
   ],
-  "listed": [
+  "item": [
     {
       "chapter_number": 2,
       "article_number": 10,

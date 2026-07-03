@@ -220,7 +220,7 @@ class HtmlDocumentTree:
                 text = ParserFunctions.tag_to_text(sub_item)
 
                 sub_items.append(
-                    SubItem(text=text, local_index=idx)
+                    SubItem(text=text, local_index=idx, label=None)
                 )
 
                 idx += 1
@@ -229,7 +229,7 @@ class HtmlDocumentTree:
             text = ParserFunctions.tag_to_text(sub_item)
 
             sub_items.append(
-                SubItem(text=text, local_index=idx)
+                SubItem(text=text, local_index=idx, label=None)
             )
 
         return sub_items

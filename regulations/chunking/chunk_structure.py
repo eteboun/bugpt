@@ -22,7 +22,12 @@ class ItemGroup:
     include_paragraph_text: bool
 
 @dataclass
-class ChunkedPiece:
+class FlattenedItemGroup:
+    items: list[FlattenedItem]
+    include_paragraph_text: bool
+
+@dataclass
+class ChunkedItem:
     text: str
     flattened_items: list[FlattenedItem]
 

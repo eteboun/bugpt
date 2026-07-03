@@ -35,13 +35,17 @@ class Chunker:
 
         id_items = [base_slug, chapter_id, article_id, paragraph_id]
 
-        if payload.kind == "item_group":
+        if payload.kind == "item":
             item_ids = []
             for item_included in payload.content:
 
-                item_id = f"{item_included.general_item_number}.{item_included.sub_item_number}"\
-                    if item_included.sub_item_number \
-                    else str(item_included.general_item_number)
+                sub_item_ids = [
+                    str(sub_item.sub_item_number)
+                    for sub_item in item_included.included_sub_items
+                ]
+
+                item_id = (f"{item_included.item_number:02d}"
+                           f"{'.' + f"({','.join(sub_item_ids)})" if sub_item_ids else ''}")
 
                 item_ids.append(item_id)
 
@@ -99,10 +103,10 @@ class Chunker:
             paragraph_text: str,
             option: ItemOption,
             items: list[Item],
-    ) -> list[ChunkedPiece]:
+    ) -> list[ChunkedItem]:
 
         if not items:
-            return [ChunkedPiece(
+            return [ChunkedItem(
                 text=paragraph_text,
                 flattened_items=[]
             )]
@@ -125,6 +129,7 @@ class Chunker:
 
         else:
             for piece in option.item_pieces:
+
                 start = piece.start
                 end = piece.end
                 include_paragraph_text = piece.include_paragraph_text
@@ -133,9 +138,10 @@ class Chunker:
                     items=items[start:end],
                     include_paragraph_text=include_paragraph_text,
                 )
+
                 item_groups.append(group)
 
-        chunked_pieces = []
+        flattened_item_groups: list[FlattenedItemGroup] = []
         consumed_paragraph_text = False
         for group in item_groups:
             flattened_items = []
@@ -143,12 +149,12 @@ class Chunker:
 
             for item in group.items:
                 if item.sub_items:
-                    sub_item_merge = self.config.get_sub_item_binding(
+                    sub_item_binding = self.config.get_sub_item_binding(
                         option=option,
                         item_number=item.general_index+1
                     )
 
-                    if sub_item_merge:
+                    if sub_item_binding.sub_item_merge:
 
                         included_sub_items = []
                         sub_item_texts = []
@@ -181,12 +187,24 @@ class Chunker:
                             flattened_item_text = (f"{item.text}\n"
                                                    f"{sub_item.text}"
                                                    f"{"\n" + item.ending if item.ending else ''}")
-                            flattened_items.append(FlattenedItem(
-                                text=flattened_item_text,
-                                label=item.label,
-                                item_number=item.general_index+1,
-                                included_sub_items=included_sub_items
-                            ))
+
+                            if len(group.items) == 1:
+                                flattened_item_groups.append(FlattenedItemGroup(
+                                    items=[FlattenedItem(
+                                            text=flattened_item_text,
+                                            label=item.label,
+                                            item_number=item.general_index+1,
+                                            included_sub_items=included_sub_items
+                                        )],
+                                    include_paragraph_text=group.include_paragraph_text
+                                ))
+                            else:
+                                flattened_items.append(FlattenedItem(
+                                    text=flattened_item_text,
+                                    label=item.label,
+                                    item_number=item.general_index+1,
+                                    included_sub_items=included_sub_items
+                                ))
                 else:
                     flattened_item_text = (f"{item.text}"
                                            f"{" " + item.ending if item.ending else ''}")
@@ -197,21 +215,30 @@ class Chunker:
                         included_sub_items=[]
                     ))
 
-            chunked_piece_text = (f"{paragraph_text + "\n" if group.include_paragraph_text else ''}\n"
-                                  f"{"\n\n".join([item.text for item in flattened_items])}")
+            if flattened_items:
+                flattened_item_groups.append(FlattenedItemGroup(
+                    items=flattened_items,
+                    include_paragraph_text=group.include_paragraph_text,
+                ))
 
-            chunked_pieces.append(ChunkedPiece(
+        chunked_items: list[ChunkedItem] = []
+        for flattened_items in flattened_item_groups:
+
+            chunked_piece_text = (f"{paragraph_text + "\n" if flattened_items.include_paragraph_text else ''}\n"
+                                  f"{"\n\n".join([item.text for item in flattened_items.items])}")
+
+            chunked_items.append(ChunkedItem(
                 text=chunked_piece_text,
-                flattened_items=flattened_items
+                flattened_items=flattened_items.items
             ))
 
         if not consumed_paragraph_text:
-            chunked_pieces.append(ChunkedPiece(
+            chunked_items.append(ChunkedItem(
                 text=paragraph_text,
                 flattened_items=[]
             ))
 
-        return chunked_pieces
+        return chunked_items
 
     def _create_chunk(self, payload: Payload) -> Chunk:
 
