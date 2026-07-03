@@ -76,7 +76,7 @@ class RegulationTools:
                 "score": round(point.score, 3),
                 "text": point.payload.get("text")
             })
-
+        print(result)
         return result
 
 RegulationTools.rebuild_db()

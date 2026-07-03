@@ -48,7 +48,16 @@ class RegulationNormalizer(HtmlNormalizer):
                     ending.append(suffix)
 
                     element.insert_after(ending)
+                    reached_article_26 = False
 
+            if ParserFunctions.is_article(element) and ParserFunctions.get_article_number(element) == 17:
+                items = element.find_next_siblings("p")
+
+                first_item = items[2]
+                last_item = items[3]
+
+                first_item.string = f'1) {ParserFunctions.UNLABELED_SUB_ITEM_SELECTOR} ' + first_item.string
+                last_item.string = f'2) {ParserFunctions.UNLABELED_SUB_ITEM_SELECTOR} ' + last_item.string
 
             if ParserFunctions.is_article(element) and ParserFunctions.get_article_number(element) == 26:
                 reached_article_26 = True

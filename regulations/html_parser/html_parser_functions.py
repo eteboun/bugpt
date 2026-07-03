@@ -5,7 +5,10 @@ import re
 class ParserFunctions:
 
     LETTERED_ITEM_PATTERN: ClassVar[re.Pattern[str]] = re.compile(r"^\s*\(?([a-zçğıöşü]+)\)\s*")
-    PARAGRAPH_PATTERN: ClassVar[re.Pattern[str]] = re.compile(r"^\s*\(?(\d+)\)\s*")
+    PARAGRAPH_PATTERN: ClassVar[re.Pattern[str]] = re.compile(r"^\s*\((\d+)\)\s*")
+    SUB_ITEM_PATTERN: ClassVar[re.Pattern[str]] = re.compile(r"^\s*(\d+)\)\s*")
+
+    UNLABELED_SUB_ITEM_SELECTOR: ClassVar[str] = "__unlabeled__"
 
     CHAPTER_NUMBER_MAPPING: ClassVar[dict[str, int]] = {
         "BİRİNCİ": 1,
@@ -136,16 +139,31 @@ class ParserFunctions:
         return bool(match)
 
     @staticmethod
-    def is_sub_item_or_ending(tag: Tag) -> bool:
+    def is_sub_item(tag: Tag) -> bool:
+
         is_valid = ParserFunctions.is_plain_text(tag)
         if not is_valid:
             return False
 
         text = ParserFunctions.tag_to_text(tag)
+        match = ParserFunctions.SUB_ITEM_PATTERN.match(text)
+
+        return bool(match)
+
+
+    @staticmethod
+    def is_ending(tag: Tag) -> bool:
+        is_valid = ParserFunctions.is_plain_text(tag)
+        if not is_valid:
+            return False
+
+        text = ParserFunctions.tag_to_text(tag)
+
         lettered_item_match = ParserFunctions.LETTERED_ITEM_PATTERN.match(text)
+        sub_item_match = ParserFunctions.SUB_ITEM_PATTERN.match(text)
         paragraph_match = ParserFunctions.PARAGRAPH_PATTERN.match(text)
 
-        return not bool(lettered_item_match) and not bool(paragraph_match)
+        return not bool(lettered_item_match) and not bool(paragraph_match) and not bool(sub_item_match)
 
     @staticmethod
     def get_item_list_strings(item_list: Tag) -> list[str]:
@@ -199,6 +217,7 @@ class ParserFunctions:
         match = ParserFunctions.PARAGRAPH_PATTERN.match(text)
 
         if match is None:
+            print(text)
             raise ValueError("Could not extract paragraph number")
 
         return int(match.group(1))
@@ -220,5 +239,30 @@ class ParserFunctions:
 
         text = ParserFunctions.tag_to_text(item)
 
-        cleaned_text = ParserFunctions.LETTERED_ITEM_PATTERN.sub("", text)
+        cleaned_text = (ParserFunctions.LETTERED_ITEM_PATTERN.sub("", text)
+                        .strip())
         return cleaned_text
+
+    @staticmethod
+    def get_sub_item_label(sub_item: Tag) -> str | None:
+
+        text = ParserFunctions.tag_to_text(sub_item)
+        if ParserFunctions.UNLABELED_SUB_ITEM_SELECTOR in text:
+            return None
+
+        match = ParserFunctions.SUB_ITEM_PATTERN.match(text)
+        if match is None:
+            raise ValueError("Could not extract sub item label")
+
+        return match.group(1)
+
+    @staticmethod
+    def get_sub_item_string(sub_item: Tag) -> str:
+
+        text = ParserFunctions.tag_to_text(sub_item)
+
+        cleaned_text = (ParserFunctions.SUB_ITEM_PATTERN.sub("", text)
+                        .replace(ParserFunctions.UNLABELED_SUB_ITEM_SELECTOR, "")
+                        .strip())
+        return cleaned_text
+

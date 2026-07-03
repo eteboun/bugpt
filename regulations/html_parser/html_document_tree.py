@@ -187,7 +187,7 @@ class HtmlDocumentTree:
                 else:
                     items = self._parse_item_list(general_idx=general_idx)
 
-                if ParserFunctions.is_sub_item_or_ending(self.cursor.peek()):
+                if ParserFunctions.is_ending(self.cursor.peek()):
                     ending_tag = self.cursor.next()
                     ending = ParserFunctions.tag_to_text(ending_tag)
 
@@ -209,28 +209,18 @@ class HtmlDocumentTree:
 
         sub_items = []
 
-        if (ParserFunctions.is_sub_item_or_ending(self.cursor.peek())
-                and ParserFunctions.is_sub_item_or_ending(self.cursor.peek(2))):
-
-            idx = 0
-            while (ParserFunctions.is_sub_item_or_ending(self.cursor.peek())
-                   and ParserFunctions.is_sub_item_or_ending(self.cursor.peek(2))):
-
-                sub_item = self.cursor.next()
-                text = ParserFunctions.tag_to_text(sub_item)
-
-                sub_items.append(
-                    SubItem(text=text, local_index=idx, label=None)
-                )
-
-                idx += 1
+        idx = 0
+        while ParserFunctions.is_sub_item(self.cursor.peek()):
 
             sub_item = self.cursor.next()
-            text = ParserFunctions.tag_to_text(sub_item)
+            text = ParserFunctions.get_sub_item_string(sub_item)
+            label = ParserFunctions.get_sub_item_label(sub_item)
 
             sub_items.append(
-                SubItem(text=text, local_index=idx, label=None)
+                SubItem(text=text, local_index=idx, label=label)
             )
+
+            idx += 1
 
         return sub_items
 
