@@ -1,24 +1,51 @@
 from dataclasses import dataclass, field, asdict
 from typing import Literal, TypeAlias
+from regulations.document_structure import Item
+
+@dataclass
+class FlattenedSubItem:
+    text: str
+    label: str | None
+    sub_item_number: int
+
+@dataclass
+class FlattenedItem:
+    text: str
+    label: str | None
+
+    item_number: int
+    included_sub_items: list[FlattenedSubItem]
+
+@dataclass
+class ItemGroup:
+    items: list[Item]
+    include_paragraph_text: bool
+
+@dataclass
+class ChunkedPiece:
+    text: str
+    flattened_items: list[FlattenedItem]
+
+@dataclass
+class SubItemIncluded:
+    label: str | None
+    sub_item_number: int
 
 @dataclass
 class ItemIncluded:
-    label: str
-    item_block_number: int
-    local_item_number: int
-    general_item_number: int
-    sub_item_number: int | None
+    label: str | None
+    item_number: int
+    included_sub_items: list[SubItemIncluded]
 
 @dataclass
 class TableIncluded:
     table_number: int
-    item_block_number: int
 
 @dataclass
 class BasePayload:
 
     text: str
-    paragraph_number: int
+    paragraph_number: int = field(init=False)
     main_title: str = field(init=False)
     chapter_name: str = field(init=False)
     chapter_number: int = field(init=False)
@@ -31,21 +58,21 @@ class BasePayload:
         return asdict(self)
 
 @dataclass
-class ListedPayload(BasePayload):
+class ItemPayload(BasePayload):
     content: list[ItemIncluded]
-    kind: Literal["listed"] = "listed"
+    kind: Literal["item"] = "item"
 
 @dataclass
-class TabularPayload(BasePayload):
+class TablePayload(BasePayload):
     content: TableIncluded
-    kind: Literal["tabular"] = "tabular"
+    kind: Literal["table"] = "table"
 
 @dataclass
 class EmptyPayload(BasePayload):
     content: None = None
     kind: Literal["empty"] = "empty"
 
-Payload: TypeAlias = TabularPayload | ListedPayload | EmptyPayload
+Payload: TypeAlias = TablePayload | ItemPayload | EmptyPayload
 
 @dataclass
 class Chunk:

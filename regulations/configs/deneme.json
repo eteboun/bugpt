@@ -1,0 +1,26 @@
+{
+  "items": [
+    {
+      "chapter_number": 2,
+      "article_number": 10,
+      "paragraph_number": 2,
+
+      "item_merge": "full",
+      "include_paragraph_text": true,
+
+      "item_pieces": [
+        {
+          "interval": [0, 2],
+          "include_paragraph_text": true
+        }
+      ],
+
+      "sub_item_bindings": [
+        {
+          "item_number": 2,
+          "sub_item_merge": true
+        }
+      ]
+    }
+  ]
+}

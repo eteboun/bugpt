@@ -109,21 +109,21 @@ class HtmlDocumentTree:
         return Paragraph(
             text=text,
             number=number,
-            item_blocks=self._parse_item_blocks()
+            content=self._parse_paragraph_content()
         )
 
     def _parse_lettered_items(self, general_idx: int) -> list[Item]:
 
         local_idx = 0
-        items = [self._parse_lettered_item(local_idx=local_idx, general_idx=general_idx+local_idx)]
+        items = [self._parse_lettered_item(general_idx=general_idx+local_idx)]
 
         while ParserFunctions.is_lettered_item(self.cursor.peek()):
             local_idx += 1
-            items.append(self._parse_lettered_item(local_idx, general_idx=general_idx+local_idx))
+            items.append(self._parse_lettered_item(general_idx=general_idx+local_idx))
 
         return items
 
-    def _parse_lettered_item(self, local_idx: int, general_idx: int) -> Item:
+    def _parse_lettered_item(self, general_idx: int) -> Item:
 
         item = self.cursor.next()
         label = ParserFunctions.get_lettered_item_letter(item)
@@ -131,7 +131,7 @@ class HtmlDocumentTree:
 
         sub_items = self._parse_sub_items()
 
-        return Item(text=text, label=label, sub_items=sub_items, local_index=local_idx, general_index=general_idx)
+        return Item(text=text, label=label, sub_items=sub_items, general_index=general_idx)
 
     def _parse_item_list(self, general_idx: int) -> list[Item]:
 
@@ -139,11 +139,11 @@ class HtmlDocumentTree:
         list_items = ParserFunctions.get_item_list_strings(item_list)
 
         return [
-            Item(text=text, label=None, local_index=local_idx, sub_items=[], general_index=general_idx+local_idx)
+            Item(text=text, label=None, sub_items=[], general_index=general_idx+local_idx)
             for local_idx, text in enumerate(list_items)
         ]
 
-    def _parse_table(self) -> Table:
+    def _parse_table(self, general_idx: int) -> Table:
 
         table = self.cursor.next()
 
@@ -168,49 +168,42 @@ class HtmlDocumentTree:
 
         return Table(
             row_titles=row_titles,
-            rows=rows
+            rows=rows,
+            general_index=general_idx
         )
 
-    def _parse_item_blocks(self) -> list[ItemBlock]:
+    def _parse_paragraph_content(self) -> ParagraphContent:
 
-        local_idx = 0
         general_idx = 0
-        item_blocks = []
+
+        content = ParagraphContent()
         while ParserFunctions.is_listed_item(self.cursor.peek()) or ParserFunctions.is_table(self.cursor.peek()):
 
             if ParserFunctions.is_listed_item(self.cursor.peek()):
 
                 if ParserFunctions.is_lettered_item(self.cursor.peek()):
-                    content = self._parse_lettered_items(general_idx=general_idx)
+                    items = self._parse_lettered_items(general_idx=general_idx)
 
                 else:
-                    content = self._parse_item_list(general_idx=general_idx)
+                    items = self._parse_item_list(general_idx=general_idx)
 
                 if ParserFunctions.is_sub_item_or_ending(self.cursor.peek()):
                     ending_tag = self.cursor.next()
                     ending = ParserFunctions.tag_to_text(ending_tag)
 
-                    item_blocks.append(
-                        ListedItemBlock(content=content, ending=ending, local_index=local_idx)
-                    )
+                    for item in items:
+                        item.ending = ending
 
-                else:
-                    item_blocks.append(
-                        ListedItemBlock(content=content, ending=None, local_index=local_idx)
-                    )
-
-                general_idx += len(content)
+                content.items.extend(items)
+                general_idx += len(items)
 
             else:
 
-                table = self._parse_table()
-                item_blocks.append(
-                    TabularItemBlock(content=table, local_index=local_idx)
-                )
+                table = self._parse_table(general_idx=general_idx)
+                content.tables.append(table)
+                general_idx += 1
 
-            local_idx += 1
-
-        return item_blocks
+        return content
 
     def _parse_sub_items(self) -> list[SubItem]:
 

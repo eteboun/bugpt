@@ -10,5 +10,6 @@ def run_pipeline(model: SentenceTransformer, client: QdrantClient) -> None:
         chunker_config_name="undergraduate",
     )
 
-    pipeline.run(model=model,
-                 client=client)
+    return pipeline._get_document_tree()
+
+print(run_pipeline(2,2))

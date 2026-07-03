@@ -1,19 +1,20 @@
 from dataclasses import dataclass, asdict, field
-from typing import Literal, TypeAlias
+from typing import Literal
 
 @dataclass
 class SubItem:
     text: str
+    label: str | None
     local_index: int
 
 @dataclass
 class Item:
     text: str
     label: str | None
-    local_index: int
     general_index: int
 
     sub_items: list[SubItem]
+    ending: str | None = None
 
 @dataclass
 class Row:
@@ -24,30 +25,19 @@ class Row:
 class Table:
     row_titles: list[str]
     rows: list[Row]
+    general_index: int
 
 @dataclass
-class BaseItemBlock:
-    local_index: int
-
-@dataclass
-class ListedItemBlock(BaseItemBlock):
-    content: list[Item]
-    ending: str | None
-    kind: Literal["listed"] = field(default="listed", init=False)
-
-@dataclass
-class TabularItemBlock(BaseItemBlock):
-    content: Table
-    kind: Literal["tabular"] = field(default="tabular", init=False)
-
-ItemBlock: TypeAlias = ListedItemBlock | TabularItemBlock
+class ParagraphContent:
+    items: list[Item] = field(default_factory=list)
+    tables: list[Table] = field(default_factory=list)
 
 @dataclass
 class Paragraph:
     number: int
     text: str
 
-    item_blocks: list[ItemBlock]
+    content: ParagraphContent
 
 @dataclass
 class Article:

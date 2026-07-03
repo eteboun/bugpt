@@ -8,34 +8,50 @@ class Location:
     chapter_number: int
     article_number: int
     paragraph_number: int
-    item_block_number: int
 
 @dataclass
-class ListedOption:
-    include_paragraph_content: bool
+class ItemPiece:
+    start: int
+    end: int
+    include_paragraph_text: bool
+
+@dataclass
+class SubItemBinding:
+    sub_item_merge: bool
+
+@dataclass
+class ItemOption:
+    include_paragraph_text: bool
     item_merge: Literal["full", "none", "partial"]
-    item_group_sizes: tuple[int, ...] | None
+
+    item_pieces: list[ItemPiece]
+    sub_item_bindings: dict[int, SubItemBinding]
 
 @dataclass
-class TabularOption:
+class TableOption:
     row_text_format: str
 
 @dataclass
 class Options:
-    listed_options: dict[Location, ListedOption] = field(default_factory=dict)
-    tabular_options: dict[Location, TabularOption] = field(default_factory=dict)
+    item_options: dict[Location, ItemOption] = field(default_factory=dict)
+    table_options: dict[Location, TableOption] = field(default_factory=dict)
 
 class ChunkerConfig:
 
-    DEFAULT_TABULAR_OPTION: ClassVar[TabularOption] = TabularOption(
+    DEFAULT_TABLE_OPTION: ClassVar[TableOption] = TableOption(
                                                     row_text_format=""
                                                 )
 
-    DEFAULT_LISTED_OPTION: ClassVar[ListedOption] = ListedOption(
-                                include_paragraph_content=True,
+    DEFAULT_ITEM_OPTION: ClassVar[ItemOption] = ItemOption(
+                                include_paragraph_text=True,
                                 item_merge="none",
-                                item_group_sizes=None
+                                item_pieces=[],
+                                sub_item_bindings={},
                             )
+
+    DEFAULT_SUB_ITEM_BINDING: ClassVar[SubItemBinding] = SubItemBinding(
+        sub_item_merge=False,
+    )
 
 
     def __init__(self, config_name: str) -> None:
@@ -49,54 +65,80 @@ class ChunkerConfig:
             if path.exists()\
             else {}
 
-        for option in config.get("listed", []):
+        for option in config.get("item", []):
             location = Location(
                 chapter_number=option["chapter_number"],
                 article_number=option["article_number"],
                 paragraph_number=option["paragraph_number"],
-                item_block_number=option.get("item_block_number", 1),
             )
 
-            self.options.listed_options[location] = ListedOption(
-                include_paragraph_content=option.get("include_paragraph_content", True),
+            item_pieces = []
+            for item_piece in option["item_pieces"]:
+                interval = item_piece["interval"]
+                include_paragraph_text = item_piece["include_paragraph_text"]
+
+                item_pieces.append(ItemPiece(
+                    start=interval[0],
+                    end=interval[1],
+                    include_paragraph_text=include_paragraph_text
+                ))
+
+            sub_item_bindings = {}
+            for sub_item_piece in option["sub_item_bindings"]:
+                item_number = sub_item_piece["item_number"]
+                sub_item_merge = sub_item_piece["sub_item_merge"]
+
+                sub_item_bindings[item_number] = SubItemBinding(
+                    sub_item_merge=sub_item_merge
+                )
+
+            self.options.item_options[location] = ItemOption(
+                include_paragraph_text=option.get("include_paragraph_text", True),
                 item_merge=option.get("item_merge", "none"),
-                item_group_sizes=option.get("item_group_sizes", None),
+
+                item_pieces=item_pieces,
+                sub_item_bindings=sub_item_bindings
             )
 
-        for option in config.get("tabular", []):
+        for option in config.get("table", []):
 
             location = Location(
                 chapter_number=option["chapter_number"],
                 article_number=option["article_number"],
                 paragraph_number=option["paragraph_number"],
-                item_block_number=option.get("item_block_number", 1),
             )
 
-            self.options.tabular_options[location] = TabularOption(
+            self.options.table_options[location] = TableOption(
                 row_text_format=option.get("row_text_format", ""),
             )
 
     def get_option(
         self,
-        kind: Literal["tabular", "listed"],
+        kind: Literal["table", "item"],
         chapter_number: int,
         article_number: int,
         paragraph_number: int,
-        item_block_number: int = 1
-    ) -> ListedOption | TabularOption:
+    ) -> ItemOption | TableOption:
 
         location = Location(
             chapter_number=chapter_number,
             article_number=article_number,
             paragraph_number=paragraph_number,
-            item_block_number=item_block_number,
         )
 
-        if kind == "tabular":
-            return self.options.tabular_options.get(location, self.DEFAULT_TABULAR_OPTION)
+        if kind == "table":
+            return self.options.table_options.get(location, self.DEFAULT_TABLE_OPTION)
 
-        elif kind == "listed":
-            return self.options.listed_options.get(location, self.DEFAULT_LISTED_OPTION)
+        elif kind == "item":
+            return self.options.item_options.get(location, self.DEFAULT_ITEM_OPTION)
 
         else:
             raise Exception(f"Unknown option kind: {kind}")
+
+    def get_sub_item_binding(
+            self,
+            option: ItemOption,
+            item_number: int
+    ) -> SubItemBinding:
+
+        return option.sub_item_bindings.get(item_number, self.DEFAULT_SUB_ITEM_BINDING)

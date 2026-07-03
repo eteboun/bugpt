@@ -7,13 +7,13 @@
     {"chapter_number": 2, "article_number": 10, "paragraph_number": 1, "item_merge": "full"},
     {"chapter_number": 2, "article_number": 11, "paragraph_number": 3, "item_merge": "full"},
     {"chapter_number": 2, "article_number": 12, "paragraph_number": 1, "item_merge": "full"},
-    {"chapter_number": 3, "article_number": 13, "paragraph_number": 1, "item_merge": "none", "include_paragraph_content": false},
+    {"chapter_number": 3, "article_number": 13, "paragraph_number": 1, "item_merge": "none", "include_paragraph_text": false},
     {"chapter_number": 3, "article_number": 14, "paragraph_number": 2, "item_merge": "full"},
     {"chapter_number": 3, "article_number": 15, "paragraph_number": 1, "item_merge": "none"},
     {"chapter_number": 3, "article_number": 16, "paragraph_number": 1, "item_merge": "none"},
     {"chapter_number": 3, "article_number": 16, "paragraph_number": 2, "item_merge": "full"},
     {"chapter_number": 3, "article_number": 16, "paragraph_number": 3, "item_merge": "full"},
     {"chapter_number": 4, "article_number": 21, "paragraph_number": 1, "item_merge": "full"},
-    {"chapter_number": 4, "article_number": 26, "paragraph_number": 1, "item_block_number": 2, "include_paragraph_content": false}
+    {"chapter_number": 4, "article_number": 26, "paragraph_number": 1, "item_block_number": 2, "include_paragraph_text": false}
   ]
 }
