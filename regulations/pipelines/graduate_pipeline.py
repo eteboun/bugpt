@@ -10,7 +10,9 @@ def run_pipeline(model: SentenceTransformer, client: QdrantClient) -> None:
         chunker_config_name="graduate",
     )
 
-    pipeline.run(model=model,
-                 client=client,)
+    return pipeline._get_chunks()
+
+import json
+print(json.dumps([c.as_dict() for c in run_pipeline(2, 2)], indent=4, ensure_ascii=False))
 
 

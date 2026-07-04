@@ -1,5 +1,5 @@
 from bs4 import Tag, BeautifulSoup
-from regulations.html_parser.html_parser_functions import ParserFunctions
+from regulations.html_parser.operations import Operations
 import re
 
 class HtmlNormalizer:
@@ -10,7 +10,7 @@ class HtmlNormalizer:
         elements = regulation_container.find_all("p", recursive=False)
 
         for element in list(elements):
-            if not ParserFunctions.has_text(element):
+            if not Operations.has_text(element):
                 element.decompose()
 
     @staticmethod
@@ -23,13 +23,13 @@ class HtmlNormalizer:
         elements = regulation_container.find_all("p", recursive=False)
 
         for element in elements:
-            if ParserFunctions.is_article(element):
+            if Operations.is_article(element):
 
                 header = element.find("strong")
-                text = ParserFunctions.get_string(element)
+                text = Operations.get_string(element)
 
                 cleared_header_string = HtmlNormalizer.remove_hyphen(
-                    ParserFunctions.tag_to_text(header)
+                    Operations.tag_to_text(header)
                 )
 
                 cleared_text_string = HtmlNormalizer.remove_hyphen(text)
@@ -41,9 +41,9 @@ class HtmlNormalizer:
                 element.append(cleared_header)
                 element.append(cleared_text_string)
 
-            elif ParserFunctions.is_plain_text(element):
+            elif Operations.is_plain_text(element):
                 cleared_text_string = HtmlNormalizer.remove_hyphen(
-                    ParserFunctions.tag_to_text(element)
+                    Operations.tag_to_text(element)
                 )
 
                 element.clear()
@@ -57,9 +57,9 @@ class HtmlNormalizer:
             return
 
         merged_text = sep.join(
-            ParserFunctions.tag_to_text(strong)
+            Operations.tag_to_text(strong)
             for strong in strongs
-            if ParserFunctions.tag_to_text(strong)
+            if Operations.tag_to_text(strong)
         )
 
         first_strong = strongs[0]

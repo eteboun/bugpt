@@ -1,7 +1,7 @@
 from bs4 import Tag, BeautifulSoup
-from regulations.html_parser.html_normalizer import HtmlNormalizer
+from regulations.html_parser.normalizer import HtmlNormalizer
 from typing import override
-from regulations.html_parser.html_parser_functions import ParserFunctions
+from regulations.html_parser.operations import Operations
 
 class RegulationNormalizer(HtmlNormalizer):
 
@@ -13,14 +13,14 @@ class RegulationNormalizer(HtmlNormalizer):
 
         reached_article_26 = False
         for element in elements:
-            if ParserFunctions.is_lettered_item(element):
-                item_letter = ParserFunctions.get_lettered_item_letter(element)
-                item_string = ParserFunctions.get_lettered_item_string(element)
+            if Operations.is_lettered_item(element):
+                item_letter = Operations.get_lettered_item_letter(element)
+                item_string = Operations.get_lettered_item_string(element)
 
                 if item_letter == 'h' and item_string.startswith('Depozito:'):
 
                     suffix = "ifade eder."
-                    cleaned_text = (ParserFunctions
+                    cleaned_text = (Operations
                                     .get_string(element)
                                     .removesuffix(suffix) + ",")
 
@@ -37,7 +37,7 @@ class RegulationNormalizer(HtmlNormalizer):
                     suffix = "tarafından verilir."
 
                     used_suffix = " tarafından verilir,"
-                    cleaned_text = (ParserFunctions
+                    cleaned_text = (Operations
                                     .get_string(element)
                                     .removesuffix(used_suffix) + ",")
 
@@ -50,14 +50,14 @@ class RegulationNormalizer(HtmlNormalizer):
                     element.insert_after(ending)
                     reached_article_26 = False
 
-            if ParserFunctions.is_article(element) and ParserFunctions.get_article_number(element) == 17:
+            if Operations.is_article(element) and Operations.get_article_number(element) == 17:
                 items = element.find_next_siblings("p")
 
                 first_item = items[2]
                 last_item = items[3]
 
-                first_item.string = f'1) {ParserFunctions.UNLABELED_SUB_ITEM_SELECTOR} ' + first_item.string
-                last_item.string = f'2) {ParserFunctions.UNLABELED_SUB_ITEM_SELECTOR} ' + last_item.string
+                first_item.string = f'1) {Operations.UNLABELED_SUB_ITEM_SELECTOR} ' + first_item.string
+                last_item.string = f'2) {Operations.UNLABELED_SUB_ITEM_SELECTOR} ' + last_item.string
 
-            if ParserFunctions.is_article(element) and ParserFunctions.get_article_number(element) == 26:
+            if Operations.is_article(element) and Operations.get_article_number(element) == 26:
                 reached_article_26 = True

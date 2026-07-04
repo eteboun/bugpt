@@ -4,10 +4,15 @@ from pathlib import Path
 import json
 
 @dataclass(frozen=True)
-class Location:
+class ParagraphLocation:
     chapter_number: int
     article_number: int
     paragraph_number: int
+
+@dataclass(frozen=True)
+class TableLocation:
+    paragraph_location: ParagraphLocation
+    table_number: int
 
 @dataclass
 class ItemPiece:
@@ -33,8 +38,8 @@ class TableOption:
 
 @dataclass
 class Options:
-    item_options: dict[Location, ItemOption] = field(default_factory=dict)
-    table_options: dict[Location, TableOption] = field(default_factory=dict)
+    item_options: dict[ParagraphLocation, ItemOption] = field(default_factory=dict)
+    table_options: dict[TableLocation, TableOption] = field(default_factory=dict)
 
 class ChunkerConfig:
 
@@ -50,7 +55,7 @@ class ChunkerConfig:
                             )
 
     DEFAULT_SUB_ITEM_BINDING: ClassVar[SubItemBinding] = SubItemBinding(
-        sub_item_merge=False,
+        sub_item_merge=True,
     )
 
 
@@ -66,11 +71,14 @@ class ChunkerConfig:
             else {}
 
         for option in config.get("item", []):
-            location = Location(
-                chapter_number=option["chapter_number"],
-                article_number=option["article_number"],
-                paragraph_number=option["paragraph_number"],
-            )
+
+            for full_item in option["full"]:
+
+                paragraph_location = ParagraphLocation(
+                    chapter_number=full_item["chapter_number"],
+                    article_number=full_item["article_number"],
+                    paragraph_number=full_item["paragraph_number"],
+                )
 
             include_paragraph_text = option.get("include_paragraph_text",
                                                 self.DEFAULT_ITEM_OPTION.include_paragraph_text)
@@ -96,7 +104,7 @@ class ChunkerConfig:
                     sub_item_merge=sub_item_merge
                 )
 
-            self.options.item_options[location] = ItemOption(
+            self.options.item_options[paragraph_location] = ItemOption(
                 include_paragraph_text=include_paragraph_text,
                 item_merge=option.get("item_merge",
                                       self.DEFAULT_ITEM_OPTION.item_merge),
@@ -107,39 +115,55 @@ class ChunkerConfig:
 
         for option in config.get("table", []):
 
-            location = Location(
+            paragraph_location = ParagraphLocation(
                 chapter_number=option["chapter_number"],
                 article_number=option["article_number"],
                 paragraph_number=option["paragraph_number"],
             )
 
-            self.options.table_options[location] = TableOption(
+            table_location = TableLocation(
+                paragraph_location=paragraph_location,
+                table_number=option["table_number"],
+            )
+
+            self.options.table_options[table_location] = TableOption(
                 row_text_format=option.get("row_text_format",
                                            self.DEFAULT_TABLE_OPTION.row_text_format),
             )
 
-    def get_option(
-        self,
-        kind: Literal["table", "item"],
-        chapter_number: int,
-        article_number: int,
-        paragraph_number: int,
-    ) -> ItemOption | TableOption:
+    def get_item_option(self,
+                        chapter_number: int,
+                        article_number: int,
+                        paragraph_number: int,
+    ) -> ItemOption:
 
-        location = Location(
+        paragraph_location = ParagraphLocation(
             chapter_number=chapter_number,
             article_number=article_number,
             paragraph_number=paragraph_number,
         )
 
-        if kind == "table":
-            return self.options.table_options.get(location, self.DEFAULT_TABLE_OPTION)
+        return self.options.item_options.get(paragraph_location, self.DEFAULT_ITEM_OPTION)
 
-        elif kind == "item":
-            return self.options.item_options.get(location, self.DEFAULT_ITEM_OPTION)
+    def get_table_option(self,
+                         chapter_number: int,
+                         article_number: int,
+                         paragraph_number: int,
+                         table_number: int,
+    ) -> TableOption:
 
-        else:
-            raise Exception(f"Unknown option kind: {kind}")
+        paragraph_location = ParagraphLocation(
+            chapter_number=chapter_number,
+            article_number=article_number,
+            paragraph_number=paragraph_number,
+        )
+
+        table_location = TableLocation(
+            paragraph_location=paragraph_location,
+            table_number=table_number,
+        )
+
+        return self.options.table_options.get(table_location, self.DEFAULT_TABLE_OPTION)
 
     def get_sub_item_binding(
             self,

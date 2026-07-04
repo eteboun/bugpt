@@ -1,7 +1,7 @@
 from bs4 import Tag, BeautifulSoup
 from typing import override
-from regulations.html_parser.html_normalizer import HtmlNormalizer
-from regulations.html_parser.html_parser_functions import ParserFunctions
+from regulations.html_parser.normalizer import HtmlNormalizer
+from regulations.html_parser.operations import Operations
 
 class RegulationNormalizer(HtmlNormalizer):
 
@@ -52,7 +52,7 @@ class RegulationNormalizer(HtmlNormalizer):
                 table = soup.new_tag("table")
                 body = soup.new_tag("tbody")
 
-                texts = [ParserFunctions.tag_to_text(u)
+                texts = [Operations.tag_to_text(u)
                          for u in element.find_all("u", recursive=False)]
                 title_row = RegulationNormalizer._create_tr(texts, soup)
                 body.append(title_row)
@@ -63,7 +63,7 @@ class RegulationNormalizer(HtmlNormalizer):
                     row_tag = current_row.find_next_sibling("p")
                     current_row.decompose()
 
-                    texts = (ParserFunctions
+                    texts = (Operations
                              .tag_to_text(row_tag)
                              .split())
 
@@ -85,7 +85,7 @@ class RegulationNormalizer(HtmlNormalizer):
                 table = soup.new_tag("table")
                 body = soup.new_tag("tbody")
 
-                texts = [ParserFunctions.tag_to_text(u)
+                texts = [Operations.tag_to_text(u)
                          for u in element.find_all("u", recursive=False)]
                 title_row = RegulationNormalizer._create_tr(texts, soup)
                 body.append(title_row)
@@ -96,9 +96,9 @@ class RegulationNormalizer(HtmlNormalizer):
                     row_tag = current_row.find_next_sibling("p")
                     current_row.decompose()
 
-                    text_pieces = (ParserFunctions
-                                     .tag_to_text(row_tag)
-                                     .split())
+                    text_pieces = (Operations
+                                   .tag_to_text(row_tag)
+                                   .split())
                     sign = text_pieces[0]
                     description = " ".join(text_pieces[1:])
                     texts = [sign, description]
@@ -113,11 +113,11 @@ class RegulationNormalizer(HtmlNormalizer):
                 current_row.insert_after(table)
                 current_row.decompose()
 
-            if "(4 Değişik : RG-20/07/2017-30129)" in ParserFunctions.tag_to_text(element):
+            if "(4 Değişik : RG-20/07/2017-30129)" in Operations.tag_to_text(element):
                 element.string = element.string.replace("(4 Değişik : RG-20/07/2017-30129)", "(4)")
 
-            if ParserFunctions.is_article(element) and ParserFunctions.get_article_number(element) == 32:
-                text = ParserFunctions.get_paragraph_string(element)
+            if Operations.is_article(element) and Operations.get_article_number(element) == 32:
+                text = Operations.get_paragraph_string(element)
                 text = text.replace("(1 Değişik : RG-20/07/2017-30129)", "(1)")
 
                 for string in element.find_all(string=True, recursive=False):

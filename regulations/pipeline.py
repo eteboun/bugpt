@@ -6,12 +6,12 @@ from typing import ClassVar
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
 
-from regulations.chunking.chunk_structure import Chunk
-from regulations.chunking.chunker_config import ChunkerConfig
-from regulations.document_structure import Document
-from regulations.html_parser.html_document_tree import HtmlDocumentTree
-from regulations.html_parser.html_normalizer import HtmlNormalizer
-from regulations.chunking.chunker import Chunker
+from regulations.chunker.models import Chunk
+from regulations.chunker.config import ChunkerConfig
+from regulations.models import Document
+from regulations.html_parser.document_tree import HtmlDocumentTree
+from regulations.html_parser.normalizer import HtmlNormalizer
+from regulations.chunker.engine import Chunker
 
 class Pipeline:
 

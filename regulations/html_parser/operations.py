@@ -2,7 +2,7 @@ from typing import ClassVar, Literal
 from bs4 import Tag, NavigableString
 import re
 
-class ParserFunctions:
+class Operations:
 
     LETTERED_ITEM_PATTERN: ClassVar[re.Pattern[str]] = re.compile(r"^\s*\(?([a-zçğıöşü]+)\)\s*")
     PARAGRAPH_PATTERN: ClassVar[re.Pattern[str]] = re.compile(r"^\s*\((\d+)\)\s*")
@@ -44,7 +44,7 @@ class ParserFunctions:
 
     @staticmethod
     def has_text(tag: Tag | None) -> bool:
-        return tag is not None and bool(ParserFunctions.tag_to_text(tag))
+        return tag is not None and bool(Operations.tag_to_text(tag))
 
     @staticmethod
     def has_strong(tag: Tag | None) -> bool:
@@ -52,7 +52,7 @@ class ParserFunctions:
             return False
 
         for header in tag.select("strong"):
-            if ParserFunctions.tag_to_text(header):
+            if Operations.tag_to_text(header):
                 return True
 
         return False
@@ -73,7 +73,7 @@ class ParserFunctions:
         if tag is None:
             return False
 
-        return ParserFunctions.is_lettered_item(tag) or ParserFunctions.is_item_list(tag)
+        return Operations.is_lettered_item(tag) or Operations.is_item_list(tag)
 
     @staticmethod
     def is_table(tag: Tag | None) -> bool:
@@ -88,7 +88,7 @@ class ParserFunctions:
         if tag is None:
             return False
 
-        return ParserFunctions.has_string(tag) and ParserFunctions.has_strong(tag)
+        return Operations.has_string(tag) and Operations.has_strong(tag)
 
     @staticmethod
     def is_title(tag: Tag) -> bool:
@@ -96,7 +96,7 @@ class ParserFunctions:
         if tag is None:
             return False
 
-        return not ParserFunctions.has_string(tag) and ParserFunctions.has_strong(tag)
+        return not Operations.has_string(tag) and Operations.has_strong(tag)
 
     @staticmethod
     def is_plain_text(tag: Tag) -> bool:
@@ -104,17 +104,17 @@ class ParserFunctions:
         if tag is None:
             return False
 
-        return ParserFunctions.has_string(tag) and not ParserFunctions.has_strong(tag)
+        return Operations.has_string(tag) and not Operations.has_strong(tag)
 
     @staticmethod
     def is_paragraph(tag: Tag) -> bool:
 
-        is_valid = ParserFunctions.is_plain_text(tag)
+        is_valid = Operations.is_plain_text(tag)
         if not is_valid:
             return False
 
-        text = ParserFunctions.tag_to_text(tag)
-        match = ParserFunctions.PARAGRAPH_PATTERN.match(text)
+        text = Operations.tag_to_text(tag)
+        match = Operations.PARAGRAPH_PATTERN.match(text)
 
         return bool(match)
 
@@ -129,46 +129,46 @@ class ParserFunctions:
     @staticmethod
     def is_lettered_item(tag: Tag) -> bool:
 
-        is_valid = ParserFunctions.is_plain_text(tag)
+        is_valid = Operations.is_plain_text(tag)
         if not is_valid:
             return False
 
-        text = ParserFunctions.tag_to_text(tag)
-        match = ParserFunctions.LETTERED_ITEM_PATTERN.match(text)
+        text = Operations.tag_to_text(tag)
+        match = Operations.LETTERED_ITEM_PATTERN.match(text)
 
         return bool(match)
 
     @staticmethod
     def is_sub_item(tag: Tag) -> bool:
 
-        is_valid = ParserFunctions.is_plain_text(tag)
+        is_valid = Operations.is_plain_text(tag)
         if not is_valid:
             return False
 
-        text = ParserFunctions.tag_to_text(tag)
-        match = ParserFunctions.SUB_ITEM_PATTERN.match(text)
+        text = Operations.tag_to_text(tag)
+        match = Operations.SUB_ITEM_PATTERN.match(text)
 
         return bool(match)
 
 
     @staticmethod
     def is_ending(tag: Tag) -> bool:
-        is_valid = ParserFunctions.is_plain_text(tag)
+        is_valid = Operations.is_plain_text(tag)
         if not is_valid:
             return False
 
-        text = ParserFunctions.tag_to_text(tag)
+        text = Operations.tag_to_text(tag)
 
-        lettered_item_match = ParserFunctions.LETTERED_ITEM_PATTERN.match(text)
-        sub_item_match = ParserFunctions.SUB_ITEM_PATTERN.match(text)
-        paragraph_match = ParserFunctions.PARAGRAPH_PATTERN.match(text)
+        lettered_item_match = Operations.LETTERED_ITEM_PATTERN.match(text)
+        sub_item_match = Operations.SUB_ITEM_PATTERN.match(text)
+        paragraph_match = Operations.PARAGRAPH_PATTERN.match(text)
 
         return not bool(lettered_item_match) and not bool(paragraph_match) and not bool(sub_item_match)
 
     @staticmethod
     def get_item_list_strings(item_list: Tag) -> list[str]:
 
-        return [ParserFunctions.tag_to_text(li)
+        return [Operations.tag_to_text(li)
                 for li in item_list.find_all("li", recursive=False)]
 
     @staticmethod
@@ -180,13 +180,13 @@ class ParserFunctions:
             if isinstance(child, NavigableString)
         ])
 
-        cleaned_text = ParserFunctions.PARAGRAPH_PATTERN.sub("", text)
+        cleaned_text = Operations.PARAGRAPH_PATTERN.sub("", text)
         return cleaned_text
 
     @staticmethod
     def get_article_number(article: Tag) -> int:
 
-        text = " ".join(ParserFunctions.tag_to_text(element)
+        text = " ".join(Operations.tag_to_text(element)
                         for element in article.select("strong"))
 
         match = re.search(r"\d+", text)
@@ -199,7 +199,7 @@ class ParserFunctions:
     @staticmethod
     def get_article_kind(article: Tag) -> Literal["temporary", "default"]:
 
-        text = " ".join(ParserFunctions.tag_to_text(element)
+        text = " ".join(Operations.tag_to_text(element)
                         for element in article.select("strong"))
 
         if "GEÇİCİ" in text:
@@ -214,7 +214,7 @@ class ParserFunctions:
             for child in paragraph.contents
             if isinstance(child, NavigableString)
         ])
-        match = ParserFunctions.PARAGRAPH_PATTERN.match(text)
+        match = Operations.PARAGRAPH_PATTERN.match(text)
 
         if match is None:
             print(text)
@@ -225,9 +225,9 @@ class ParserFunctions:
     @staticmethod
     def get_lettered_item_letter(item: Tag) -> str:
 
-        text = ParserFunctions.tag_to_text(item)
+        text = Operations.tag_to_text(item)
 
-        match = ParserFunctions.LETTERED_ITEM_PATTERN.match(text)
+        match = Operations.LETTERED_ITEM_PATTERN.match(text)
 
         if match is None:
             raise ValueError("Could not extract item letter")
@@ -237,20 +237,20 @@ class ParserFunctions:
     @staticmethod
     def get_lettered_item_string(item: Tag) -> str:
 
-        text = ParserFunctions.tag_to_text(item)
+        text = Operations.tag_to_text(item)
 
-        cleaned_text = (ParserFunctions.LETTERED_ITEM_PATTERN.sub("", text)
+        cleaned_text = (Operations.LETTERED_ITEM_PATTERN.sub("", text)
                         .strip())
         return cleaned_text
 
     @staticmethod
     def get_sub_item_label(sub_item: Tag) -> str | None:
 
-        text = ParserFunctions.tag_to_text(sub_item)
-        if ParserFunctions.UNLABELED_SUB_ITEM_SELECTOR in text:
+        text = Operations.tag_to_text(sub_item)
+        if Operations.UNLABELED_SUB_ITEM_SELECTOR in text:
             return None
 
-        match = ParserFunctions.SUB_ITEM_PATTERN.match(text)
+        match = Operations.SUB_ITEM_PATTERN.match(text)
         if match is None:
             raise ValueError("Could not extract sub item label")
 
@@ -259,10 +259,10 @@ class ParserFunctions:
     @staticmethod
     def get_sub_item_string(sub_item: Tag) -> str:
 
-        text = ParserFunctions.tag_to_text(sub_item)
+        text = Operations.tag_to_text(sub_item)
 
-        cleaned_text = (ParserFunctions.SUB_ITEM_PATTERN.sub("", text)
-                        .replace(ParserFunctions.UNLABELED_SUB_ITEM_SELECTOR, "")
+        cleaned_text = (Operations.SUB_ITEM_PATTERN.sub("", text)
+                        .replace(Operations.UNLABELED_SUB_ITEM_SELECTOR, "")
                         .strip())
         return cleaned_text
 

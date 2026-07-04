@@ -26,6 +26,7 @@ class Table:
     row_titles: list[str]
     rows: list[Row]
     general_index: int
+    local_index: int
 
 @dataclass
 class ParagraphContent:

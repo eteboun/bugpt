@@ -2,9 +2,9 @@ import uuid
 import re
 
 from typing import ClassVar
-from regulations.chunking.chunker_config import ChunkerConfig, ItemOption, TableOption
-from regulations.chunking.chunk_structure import *
-from regulations.document_structure import *
+from regulations.chunker.config import ChunkerConfig, ItemOption, TableOption
+from regulations.chunker.models import *
+from regulations.models import *
 
 class Chunker:
 
@@ -37,20 +37,23 @@ class Chunker:
 
         if payload.kind == "item":
             item_ids = []
+            sub_item_ids = []
             for item_included in payload.content:
 
-                sub_item_ids = [
-                    str(sub_item.sub_item_number)
-                    for sub_item in item_included.included_sub_items
-                ]
+                for sub_item in item_included.included_sub_items:
+                    sub_item_ids.append(
+                        f"{item_included.item_number:02d}.{sub_item.sub_item_number:02d}"
+                    )
 
-                item_id = (f"{item_included.item_number:02d}"
-                           f"{'.' + f"({','.join(sub_item_ids)})" if sub_item_ids else ''}")
-
+                item_id = f"{item_included.item_number:02d}"
                 item_ids.append(item_id)
 
             final_item_id = f"items_{"_".join(item_ids)}"
             id_items.append(final_item_id)
+
+            if sub_item_ids:
+                final_sub_item_id = f"sub_items_{"_".join(sub_item_ids)}"
+                id_items.append(final_sub_item_id)
 
         elif payload.kind == "table":
 
@@ -70,20 +73,25 @@ class Chunker:
             f'Madde {payload.article_number}: {payload.article_title}',
         ]
 
-        if payload.kind == "item_group":
+        if payload.kind == "item":
             parts.append(f'Paragraf {payload.paragraph_number}')
             item_displays = []
+            sub_item_displays = []
 
             for item_included in payload.content:
+                item_displays.append(f"{item_included.item_number:02d}")
+                for sub_item in item_included.included_sub_items:
+                    sub_item_displays.append(f"{item_included.item_number:02d}.{sub_item.sub_item_number:02d}")
 
-                item_display = f"{item_included.general_item_number}.{item_included.sub_item_number}"\
-                    if item_included.sub_item_number \
-                    else str(item_included.general_item_number)
+            if sub_item_displays:
+                item_display_text = f"Bentler {", ".join(item_displays)}"
+                sub_item_display_text = f"Alt Bentler {", ".join(sub_item_displays)}: {payload.text}"
 
-                item_displays.append(item_display)
-
-            display_text = f"Bentler {", ".join(item_displays)}: {payload.text}"
-            parts.append(display_text)
+                parts.append(item_display_text)
+                parts.append(sub_item_display_text)
+            else:
+                item_display_text = f"Bentler {", ".join(item_displays)}: {payload.text}"
+                parts.append(item_display_text)
 
         elif payload.kind == "table":
             parts.append(f'Paragraf {payload.paragraph_number}')
@@ -104,12 +112,6 @@ class Chunker:
             option: ItemOption,
             items: list[Item],
     ) -> list[ChunkedItem]:
-
-        if not items:
-            return [ChunkedItem(
-                text=paragraph_text,
-                flattened_items=[]
-            )]
 
         item_groups: list[ItemGroup] = []
         if option.item_merge == "full":
@@ -142,10 +144,8 @@ class Chunker:
                 item_groups.append(group)
 
         flattened_item_groups: list[FlattenedItemGroup] = []
-        consumed_paragraph_text = False
         for group in item_groups:
             flattened_items = []
-            consumed_paragraph_text |= group.include_paragraph_text
 
             for item in group.items:
                 if item.sub_items:
@@ -232,12 +232,6 @@ class Chunker:
                 flattened_items=flattened_items.items
             ))
 
-        if not consumed_paragraph_text:
-            chunked_items.append(ChunkedItem(
-                text=paragraph_text,
-                flattened_items=[]
-            ))
-
         return chunked_items
 
     def _create_chunk(self, payload: Payload) -> Chunk:
@@ -277,8 +271,7 @@ class Chunker:
         items = paragraph.content.items
         tables = paragraph.content.tables
 
-        item_option = self.config.get_option(
-            kind="item",
+        item_option = self.config.get_item_option(
             chapter_number=chapter_number,
             article_number=article_number,
             paragraph_number=paragraph.number
@@ -301,19 +294,26 @@ class Chunker:
                 ) for sub_item in flattened_item.included_sub_items]
             ) for flattened_item in chunked_item.flattened_items]
 
-            payloads.append(ItemPayload(
-                text=text,
-                content=items_included
-            ))
+            if items_included:
+                payloads.append(ItemPayload(
+                    text=text,
+                    content=items_included
+                ))
+            else:
+                payloads.append(EmptyPayload(
+                    text=text,
+                ))
 
-        table_option = self.config.get_option(
-            kind="table",
-            chapter_number=chapter_number,
-            article_number=article_number,
-            paragraph_number=paragraph.number
-        )
+        for table in tables:
+            table_number = table.local_index+1
 
-        for idx, table in enumerate(tables):
+            table_option = self.config.get_table_option(
+                chapter_number=chapter_number,
+                article_number=article_number,
+                paragraph_number=paragraph.number,
+                table_number=table_number
+            )
+
             table_text = self._create_table_text(
                 table=table,
                 option=table_option,
@@ -321,7 +321,7 @@ class Chunker:
             text = f"{paragraph.text}\n{table_text}"
 
             table_included = TableIncluded(
-                    table_number=idx+1
+                    table_number=table_number
                 )
 
             payloads.append(TablePayload(

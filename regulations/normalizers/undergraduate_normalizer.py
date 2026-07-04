@@ -1,7 +1,7 @@
 from bs4 import Tag, BeautifulSoup
 from typing import override
-from regulations.html_parser.html_parser_functions import ParserFunctions
-from regulations.html_parser.html_normalizer import HtmlNormalizer
+from regulations.html_parser.operations import Operations
+from regulations.html_parser.normalizer import HtmlNormalizer
 
 class RegulationNormalizer(HtmlNormalizer):
 
@@ -17,8 +17,8 @@ class RegulationNormalizer(HtmlNormalizer):
 
         elements = regulation_container.find_all("p", recursive=False)
         for element in list(elements):
-            if ParserFunctions.is_article(element):
-                article_number = ParserFunctions.get_article_number(element)
+            if Operations.is_article(element):
+                article_number = Operations.get_article_number(element)
 
                 if article_number == 24:
 

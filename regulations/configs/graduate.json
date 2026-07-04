@@ -1,0 +1,60 @@
+{
+  "item": [
+    {
+      "chapter_number": 2,
+      "article_number": 11,
+      "paragraph_number": 3,
+
+      "item_merge": "full"
+    },
+    {
+      "chapter_number": 2,
+      "article_number": 12,
+      "paragraph_number": 1,
+
+      "item_merge": "full"
+    },
+    {
+      "chapter_number": 2,
+      "article_number": 16,
+      "paragraph_number": 2,
+
+      "item_merge": "full"
+    },
+    {
+      "chapter_number": 3,
+      "article_number": 17,
+      "paragraph_number": 2,
+
+      "item_merge": "full"
+    },
+    {
+      "chapter_number": 5,
+      "article_number": 28,
+      "paragraph_number": 3,
+
+      "item_merge": "full"
+    },
+    {
+      "chapter_number": 6,
+      "article_number": 36,
+      "paragraph_number": 4,
+
+      "item_merge": "full"
+    },
+    {
+      "chapter_number": 6,
+      "article_number": 44,
+      "paragraph_number": 5,
+
+      "item_merge": "full"
+    },
+    {
+      "chapter_number": 7,
+      "article_number": 45,
+      "paragraph_number": 1,
+
+      "item_merge": "full"
+    }
+  ]
+}

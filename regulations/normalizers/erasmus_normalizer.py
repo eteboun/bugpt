@@ -1,6 +1,6 @@
 from bs4 import Tag, BeautifulSoup
-from regulations.html_parser.html_normalizer import HtmlNormalizer
-from regulations.html_parser.html_parser_functions import ParserFunctions
+from regulations.html_parser.normalizer import HtmlNormalizer
+from regulations.html_parser.operations import Operations
 from typing import ClassVar, override
 
 class RegulationNormalizer(HtmlNormalizer):
@@ -15,8 +15,8 @@ class RegulationNormalizer(HtmlNormalizer):
 
         elements = regulation_container.find_all("p", recursive=False)
         for element in list(elements):
-            if ParserFunctions.is_article(element):
-                article_number = ParserFunctions.get_article_number(element)
+            if Operations.is_article(element):
+                article_number = Operations.get_article_number(element)
 
                 if article_number == 9:
 
@@ -34,11 +34,11 @@ class RegulationNormalizer(HtmlNormalizer):
                     ol_2.decompose()
                     p.decompose()
 
-            elif (not ParserFunctions.is_title(element)
-                  and ParserFunctions.tag_to_text(element) in RegulationNormalizer.NON_BOLD_TITLES):
+            elif (not Operations.is_title(element)
+                  and Operations.tag_to_text(element) in RegulationNormalizer.NON_BOLD_TITLES):
 
                 strong = soup.new_tag("strong")
-                strong.string = ParserFunctions.tag_to_text(element)
+                strong.string = Operations.tag_to_text(element)
 
                 element.clear()
                 element.append(strong)

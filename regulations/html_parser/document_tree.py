@@ -1,8 +1,8 @@
 from bs4 import Tag
 from regulations.utils import Cursor
 from typing import ClassVar
-from regulations.html_parser.html_parser_functions import ParserFunctions
-from regulations.document_structure import *
+from regulations.html_parser.operations import Operations
+from regulations.models import *
 
 import re
 
@@ -33,14 +33,14 @@ class HtmlDocumentTree:
 
     def _parse_chapter(self) -> Chapter:
 
-        chapter_label = ParserFunctions.tag_to_text(self.cursor.next())
+        chapter_label = Operations.tag_to_text(self.cursor.next())
 
         chapter_number_str = (re.sub(r"\s+BÖLÜM\s*$", "", chapter_label)
                               .strip()
                               .upper())
-        number = ParserFunctions.CHAPTER_NUMBER_MAPPING[chapter_number_str]
+        number = Operations.CHAPTER_NUMBER_MAPPING[chapter_number_str]
 
-        name = ParserFunctions.tag_to_text(self.cursor.next())
+        name = Operations.tag_to_text(self.cursor.next())
         titles = self._parse_titles()
 
         return Chapter(
@@ -53,7 +53,7 @@ class HtmlDocumentTree:
 
         titles = [self._parse_title()]
 
-        while ParserFunctions.is_title(self.cursor.peek()) and ParserFunctions.is_article(self.cursor.peek(n=2)):
+        while Operations.is_title(self.cursor.peek()) and Operations.is_article(self.cursor.peek(n=2)):
 
             titles.append(self._parse_title())
 
@@ -61,7 +61,7 @@ class HtmlDocumentTree:
 
     def _parse_title(self) -> Title:
 
-        name = ParserFunctions.tag_to_text(self.cursor.next())
+        name = Operations.tag_to_text(self.cursor.next())
         articles = self._parse_articles()
 
         return Title(
@@ -72,7 +72,7 @@ class HtmlDocumentTree:
 
         articles = [self._parse_article()]
 
-        while ParserFunctions.is_article(self.cursor.peek()):
+        while Operations.is_article(self.cursor.peek()):
             articles.append(self._parse_article())
 
         return articles
@@ -80,8 +80,8 @@ class HtmlDocumentTree:
     def _parse_article(self) -> Article:
 
         article_tag = self.cursor.peek()
-        number = ParserFunctions.get_article_number(article_tag)
-        kind = ParserFunctions.get_article_kind(article_tag)
+        number = Operations.get_article_number(article_tag)
+        kind = Operations.get_article_kind(article_tag)
         paragraphs = self._parse_paragraphs()
 
         return Article(
@@ -94,7 +94,7 @@ class HtmlDocumentTree:
 
         paragraphs = [self._parse_paragraph()]
 
-        while ParserFunctions.is_paragraph(self.cursor.peek()):
+        while Operations.is_paragraph(self.cursor.peek()):
 
             paragraphs.append(self._parse_paragraph())
 
@@ -103,8 +103,8 @@ class HtmlDocumentTree:
     def _parse_paragraph(self) -> Paragraph:
 
         paragraph_tag = self.cursor.next()
-        text = ParserFunctions.get_paragraph_string(paragraph_tag)
-        number = ParserFunctions.get_paragraph_number(paragraph_tag)
+        text = Operations.get_paragraph_string(paragraph_tag)
+        number = Operations.get_paragraph_number(paragraph_tag)
 
         return Paragraph(
             text=text,
@@ -117,7 +117,7 @@ class HtmlDocumentTree:
         local_idx = 0
         items = [self._parse_lettered_item(general_idx=general_idx+local_idx)]
 
-        while ParserFunctions.is_lettered_item(self.cursor.peek()):
+        while Operations.is_lettered_item(self.cursor.peek()):
             local_idx += 1
             items.append(self._parse_lettered_item(general_idx=general_idx+local_idx))
 
@@ -126,8 +126,8 @@ class HtmlDocumentTree:
     def _parse_lettered_item(self, general_idx: int) -> Item:
 
         item = self.cursor.next()
-        label = ParserFunctions.get_lettered_item_letter(item)
-        text = ParserFunctions.get_lettered_item_string(item)
+        label = Operations.get_lettered_item_letter(item)
+        text = Operations.get_lettered_item_string(item)
 
         sub_items = self._parse_sub_items()
 
@@ -136,14 +136,14 @@ class HtmlDocumentTree:
     def _parse_item_list(self, general_idx: int) -> list[Item]:
 
         item_list = self.cursor.next()
-        list_items = ParserFunctions.get_item_list_strings(item_list)
+        list_items = Operations.get_item_list_strings(item_list)
 
         return [
             Item(text=text, label=None, sub_items=[], general_index=general_idx+local_idx)
             for local_idx, text in enumerate(list_items)
         ]
 
-    def _parse_table(self, general_idx: int) -> Table:
+    def _parse_table(self, general_idx: int, local_idx: int) -> Table:
 
         table = self.cursor.next()
 
@@ -151,7 +151,7 @@ class HtmlDocumentTree:
                           .find("tbody", recursive=False)
                           .find("tr", recursive=False))
         row_titles = [
-            ParserFunctions.tag_to_text(td)
+            Operations.tag_to_text(td)
             for td in row_title_tags.find_all("td", recursive=False)
         ]
 
@@ -159,7 +159,7 @@ class HtmlDocumentTree:
         rows = [
             Row(
                 content=[
-                    ParserFunctions.tag_to_text(td)
+                    Operations.tag_to_text(td)
                     for td in row_element.find_all("td", recursive=False)
                 ],
                 local_index=local_idx
@@ -169,27 +169,29 @@ class HtmlDocumentTree:
         return Table(
             row_titles=row_titles,
             rows=rows,
-            general_index=general_idx
+            general_index=general_idx,
+            local_index=local_idx
         )
 
     def _parse_paragraph_content(self) -> ParagraphContent:
 
         general_idx = 0
+        table_count = 0
 
         content = ParagraphContent()
-        while ParserFunctions.is_listed_item(self.cursor.peek()) or ParserFunctions.is_table(self.cursor.peek()):
+        while Operations.is_listed_item(self.cursor.peek()) or Operations.is_table(self.cursor.peek()):
 
-            if ParserFunctions.is_listed_item(self.cursor.peek()):
+            if Operations.is_listed_item(self.cursor.peek()):
 
-                if ParserFunctions.is_lettered_item(self.cursor.peek()):
+                if Operations.is_lettered_item(self.cursor.peek()):
                     items = self._parse_lettered_items(general_idx=general_idx)
 
                 else:
                     items = self._parse_item_list(general_idx=general_idx)
 
-                if ParserFunctions.is_ending(self.cursor.peek()):
+                if Operations.is_ending(self.cursor.peek()):
                     ending_tag = self.cursor.next()
-                    ending = ParserFunctions.tag_to_text(ending_tag)
+                    ending = Operations.tag_to_text(ending_tag)
 
                     for item in items:
                         item.ending = ending
@@ -199,9 +201,11 @@ class HtmlDocumentTree:
 
             else:
 
-                table = self._parse_table(general_idx=general_idx)
+                table = self._parse_table(general_idx=general_idx, local_idx=table_count)
                 content.tables.append(table)
+
                 general_idx += 1
+                table_count += 1
 
         return content
 
@@ -210,11 +214,11 @@ class HtmlDocumentTree:
         sub_items = []
 
         idx = 0
-        while ParserFunctions.is_sub_item(self.cursor.peek()):
+        while Operations.is_sub_item(self.cursor.peek()):
 
             sub_item = self.cursor.next()
-            text = ParserFunctions.get_sub_item_string(sub_item)
-            label = ParserFunctions.get_sub_item_label(sub_item)
+            text = Operations.get_sub_item_string(sub_item)
+            label = Operations.get_sub_item_label(sub_item)
 
             sub_items.append(
                 SubItem(text=text, local_index=idx, label=label)
@@ -228,7 +232,7 @@ class HtmlDocumentTree:
         chapters = self._parse_chapters()
 
         title_selector = self.content_container.select_one(self.HEADER_SELECTOR)
-        title = ParserFunctions.tag_to_text(
+        title = Operations.tag_to_text(
             title_selector.find("h2", recursive=False)
         )
 

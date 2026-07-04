@@ -4,12 +4,14 @@
       "chapter_number": 3,
       "article_number": 23,
       "paragraph_number": 1,
+      "table_number": 1,
       "row_text_format": "{} notunun ağırlığı {}, açıklaması {}'dir."
     },
     {
       "chapter_number": 3,
       "article_number": 24,
       "paragraph_number": 1,
+      "table_number": 1,
       "row_text_format": "{} işareti {} anlamına gelir."
     }
   ],
