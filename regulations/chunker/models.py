@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, asdict
-from typing import Literal, TypeAlias
+from typing import Literal
 from regulations.models import Item
 
 @dataclass
@@ -32,6 +32,11 @@ class ChunkedItem:
     flattened_items: list[FlattenedItem]
 
 @dataclass
+class ChunkedItemGroup:
+    items: list[ChunkedItem]
+    consumed_paragraph_text: bool
+
+@dataclass
 class SubItemIncluded:
     label: str | None
     sub_item_number: int
@@ -47,9 +52,12 @@ class TableIncluded:
     table_number: int
 
 @dataclass
-class BasePayload:
+class Payload:
+
+    kind: Literal["item", "table", "paragraph"]
 
     text: str
+    content: list[ItemIncluded] | TableIncluded | None
     paragraph_number: int = field(init=False)
     main_title: str = field(init=False)
     chapter_name: str = field(init=False)
@@ -61,23 +69,6 @@ class BasePayload:
 
     def as_dict(self):
         return asdict(self)
-
-@dataclass
-class ItemPayload(BasePayload):
-    content: list[ItemIncluded]
-    kind: Literal["item"] = "item"
-
-@dataclass
-class TablePayload(BasePayload):
-    content: TableIncluded
-    kind: Literal["table"] = "table"
-
-@dataclass
-class EmptyPayload(BasePayload):
-    content: None = None
-    kind: Literal["empty"] = "empty"
-
-Payload: TypeAlias = TablePayload | ItemPayload | EmptyPayload
 
 @dataclass
 class Chunk:

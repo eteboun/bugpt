@@ -10,7 +10,8 @@ from sentence_transformers import SentenceTransformer
 from regulations.pipelines import (dormitory_pipeline,
                                    erasmus_pipeline,
                                    major_pipeline,
-                                   undergraduate_pipeline)
+                                   undergraduate_pipeline,
+                                   graduate_pipeline)
 
 class RegulationTools:
 
@@ -42,6 +43,7 @@ class RegulationTools:
         erasmus_pipeline.run_pipeline(model=RegulationTools.MODEL, client=client)
         major_pipeline.run_pipeline(model=RegulationTools.MODEL, client=client)
         undergraduate_pipeline.run_pipeline(model=RegulationTools.MODEL, client=client)
+        graduate_pipeline.run_pipeline(model=RegulationTools.MODEL, client=client)
 
     @staticmethod
     def rebuild_db():

@@ -1,11 +1,12 @@
 {
-  "listed": [
+  "item": {
+    "partial": [
       {
-    "chapter_number": 3,
-    "article_number": 13,
-    "paragraph_number": 1,
-    "item_merge": "partial",
-        "item_pieces": [
+        "chapter_number": 3,
+        "article_number": 13,
+        "paragraph_number": 1,
+
+        "parts": [
           {
             "interval": [0, 3]
           },
@@ -13,6 +14,7 @@
             "interval": [3, 4]
           }
         ]
-    }
-  ]
+      }
+    ]
+  }
 }

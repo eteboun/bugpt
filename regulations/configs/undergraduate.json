@@ -1,4 +1,23 @@
 {
+  "item": {
+    "full": [
+      {
+        "chapter_number": 2,
+        "article_number": 10,
+        "paragraph_number": 2
+      },
+      {
+        "chapter_number": 3,
+        "article_number": 31,
+        "paragraph_number": 1
+      },
+      {
+        "chapter_number": 4,
+        "article_number": 35,
+        "paragraph_number": 1
+      }
+    ]
+  },
   "table": [
     {
       "chapter_number": 3,
@@ -13,26 +32,6 @@
       "paragraph_number": 1,
       "table_number": 1,
       "row_text_format": "{} işareti {} anlamına gelir."
-    }
-  ],
-  "item": [
-    {
-      "chapter_number": 2,
-      "article_number": 10,
-      "paragraph_number": 2,
-      "item_merge": "full"
-    },
-    {
-      "chapter_number": 3,
-      "article_number": 31,
-      "paragraph_number": 1,
-      "item_merge": "full"
-    },
-    {
-      "chapter_number": 4,
-      "article_number": 35,
-      "paragraph_number": 1,
-      "item_merge": "full"
     }
   ]
 }

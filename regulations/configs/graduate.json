@@ -1,60 +1,62 @@
 {
-  "item": [
+  "item": {
+    "full": [
+      {
+        "chapter_number": 2,
+        "article_number": 11,
+        "paragraph_number": 3
+      },
+      {
+        "chapter_number": 2,
+        "article_number": 12,
+        "paragraph_number": 1
+      },
+      {
+        "chapter_number": 2,
+        "article_number": 16,
+        "paragraph_number": 2
+      },
+      {
+        "chapter_number": 3,
+        "article_number": 17,
+        "paragraph_number": 2
+      },
+      {
+        "chapter_number": 5,
+        "article_number": 28,
+        "paragraph_number": 3
+      },
+      {
+        "chapter_number": 6,
+        "article_number": 36,
+        "paragraph_number": 4
+      },
+      {
+        "chapter_number": 6,
+        "article_number": 44,
+        "paragraph_number": 5
+      },
+      {
+        "chapter_number": 7,
+        "article_number": 45,
+        "paragraph_number": 1
+      }
+    ]
+  },
+  "table": [
     {
-      "chapter_number": 2,
-      "article_number": 11,
-      "paragraph_number": 3,
-
-      "item_merge": "full"
-    },
-    {
-      "chapter_number": 2,
-      "article_number": 12,
+      "chapter_number": 4,
+      "article_number": 22,
       "paragraph_number": 1,
-
-      "item_merge": "full"
+      "table_number": 1,
+      "row_text_format": "{} notu {} anlamına gelir, ağırlığı {}'dir."
     },
     {
-      "chapter_number": 2,
-      "article_number": 16,
-      "paragraph_number": 2,
-
-      "item_merge": "full"
-    },
-    {
-      "chapter_number": 3,
-      "article_number": 17,
-      "paragraph_number": 2,
-
-      "item_merge": "full"
-    },
-    {
-      "chapter_number": 5,
-      "article_number": 28,
-      "paragraph_number": 3,
-
-      "item_merge": "full"
-    },
-    {
-      "chapter_number": 6,
-      "article_number": 36,
-      "paragraph_number": 4,
-
-      "item_merge": "full"
-    },
-    {
-      "chapter_number": 6,
-      "article_number": 44,
-      "paragraph_number": 5,
-
-      "item_merge": "full"
-    },
-    {
-      "chapter_number": 7,
-      "article_number": 45,
+      "chapter_number": 4,
+      "article_number": 22,
       "paragraph_number": 1,
-
-      "item_merge": "full"
+      "table_number": 2,
+      "row_text_format": "{}, şu anlama gelir: '{}'"
     }
   ]
 }
