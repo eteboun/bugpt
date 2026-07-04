@@ -11,7 +11,8 @@ from regulations.pipelines import (dormitory_pipeline,
                                    erasmus_pipeline,
                                    major_pipeline,
                                    undergraduate_pipeline,
-                                   graduate_pipeline)
+                                   graduate_pipeline,
+                                   minor_pipeline)
 
 class RegulationTools:
 
@@ -44,6 +45,7 @@ class RegulationTools:
         major_pipeline.run_pipeline(model=RegulationTools.MODEL, client=client)
         undergraduate_pipeline.run_pipeline(model=RegulationTools.MODEL, client=client)
         graduate_pipeline.run_pipeline(model=RegulationTools.MODEL, client=client)
+        minor_pipeline.run_pipeline(model=RegulationTools.MODEL, client=client)
 
     @staticmethod
     def rebuild_db():

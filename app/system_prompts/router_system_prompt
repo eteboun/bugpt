@@ -29,7 +29,7 @@ General Rules:
 {
     "service": "menu_service"
 }
-- If the user is asking about university regulations, policies, rules, procedures, rights, obligations, exchange programs, dormitories, or double major programs, return:
+- If the user is asking about any university regulation, policy, rule, procedure, official requirement, or academic process (such as exchange programs, dormitories, undergraduate or graduate programs, course credit system, double major, minor, admissions, registration, graduation, or disciplinary matters), return:
 {
     "service": "regulation_service"
 }

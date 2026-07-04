@@ -6,10 +6,10 @@ from typing import ClassVar, override
 class RegulationNormalizer(HtmlNormalizer):
 
     INCOMPATIBLE_TITLES: ClassVar[set] = {"Dayanak",
-                                          "Çift ana dal Programında Başarı Şartı, Ders Yükü ve Süre",
+                                          "Yan Dal Programı",
                                           "Başvuru Süreci ve Kabul",
-                                          "Çift ana dal Programından Ayrılma ve Çıkarılma"}
-
+                                          "Yandal Programına Devam, Ders Yükü, Başarı Şartı ve Süre",
+                                          "Mezuniyet"}
 
     @override
     @staticmethod
@@ -34,3 +34,17 @@ class RegulationNormalizer(HtmlNormalizer):
                     title_p.append(new_title_tag)
 
                     element.insert_before(title_p)
+
+                elif Operations.get_article_number(element) == 13:
+
+                    header = element.find("strong")
+                    string = Operations.get_paragraph_string(element)
+
+                    header.extract()
+                    element.clear()
+
+                    header.string = header.string.removesuffix("(1)")
+                    string = f"(1) {string}"
+
+                    element.append(header)
+                    element.append(string)
