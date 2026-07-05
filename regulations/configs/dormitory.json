@@ -79,6 +79,70 @@
             "include_paragraph_text": false
           }
         ]
+      },
+      {
+        "chapter_number": 4,
+        "article_number": 22,
+        "paragraph_number": 2,
+        "parts": [
+          {
+            "interval": [0, 5]
+          },
+          {
+            "interval": [5, 11]
+          }
+        ]
+      },
+      {
+        "chapter_number": 4,
+        "article_number": 23,
+        "paragraph_number": 2,
+        "parts": [
+          {
+            "interval": [0, 5]
+          },
+          {
+            "interval": [5, 10]
+          },
+          {
+            "interval": [10, 15]
+          },
+          {
+            "interval": [15, 18]
+          }
+        ]
+      },
+      {
+        "chapter_number": 4,
+        "article_number": 24,
+        "paragraph_number": 2,
+        "parts": [
+          {
+            "interval": [0, 3]
+          },
+          {
+            "interval": [3, 7]
+          }
+        ]
+      },
+      {
+        "chapter_number": 4,
+        "article_number": 25,
+        "paragraph_number": 2,
+        "parts": [
+          {
+            "interval": [0, 5]
+          },
+          {
+            "interval": [5, 10]
+          },
+          {
+            "interval": [10, 15]
+          },
+          {
+            "interval": [15, 20]
+          }
+        ]
       }
     ]
   },
