@@ -106,94 +106,116 @@ class Chunker:
         embedding_text = "\n".join(parts)
         return f"passage: {embedding_text}"
 
+    @staticmethod
+    def _flatten_nonsingular_item_to_flattened_item(item: Item) -> FlattenedItem:
+
+        if item.sub_items:
+
+            included_sub_items = []
+            sub_item_texts = []
+            for sub_item in item.sub_items:
+                included_sub_items.append(FlattenedSubItem(
+                    text=sub_item.text,
+                    label=sub_item.label,
+                    sub_item_number=sub_item.local_index + 1
+                ))
+                sub_item_texts.append(sub_item.text)
+
+            flattened_item_text = (f"{item.text}\n"
+                                   f"{"\n".join(sub_item_texts)}"
+                                   f"{"\n" + item.ending if item.ending else ''}")
+
+            return FlattenedItem(
+                text=flattened_item_text,
+                label=item.label,
+                item_number=item.general_index + 1,
+                included_sub_items=included_sub_items
+            )
+
+        else:
+
+            flattened_item_text = (f"{item.text}"
+                                   f"{" " + item.ending if item.ending else ''}")
+
+            return FlattenedItem(
+                text=flattened_item_text,
+                label=item.label,
+                item_number=item.general_index + 1,
+                included_sub_items=[]
+            )
+
+    @staticmethod
+    def _flatten_nonsingular_item_group_to_flattened_item_group(group: ItemGroup) -> FlattenedItemGroup:
+
+        flattened_items: list[FlattenedItem] = []
+        for item in group.items:
+            flattened_items.append(
+                Chunker._flatten_nonsingular_item_to_flattened_item(item=item)
+            )
+
+        return FlattenedItemGroup(
+            items=flattened_items,
+            include_paragraph_text=group.include_paragraph_text
+        )
+
+    @staticmethod
+    def _flatten_singular_item_group_to_flattened_item_groups(group: ItemGroup) -> list[FlattenedItemGroup]:
+
+        item = group.items[0]
+        flattened_item_groups: list[FlattenedItemGroup] = []
+        for sub_item in item.sub_items:
+            included_sub_items = [FlattenedSubItem(
+                text=sub_item.text,
+                label=sub_item.label,
+                sub_item_number=sub_item.local_index + 1
+            )]
+            flattened_item_text = (f"{item.text}\n"
+                                   f"{sub_item.text}"
+                                   f"{"\n" + item.ending if item.ending else ''}")
+
+            flattened_item_groups.append(FlattenedItemGroup(
+                items=[FlattenedItem(
+                    text=flattened_item_text,
+                    label=item.label,
+                    item_number=item.general_index + 1,
+                    included_sub_items=included_sub_items
+                )],
+                include_paragraph_text=group.include_paragraph_text
+            ))
+
+        return flattened_item_groups
+
     def _flatten_item_groups(self,
                              chapter_number: int,
                              article_number: int,
-                             paragraph: Paragraph,
+                             paragraph_number: int,
                              item_groups: list[ItemGroup]
                              ) -> list[FlattenedItemGroup]:
 
         flattened_item_groups: list[FlattenedItemGroup] = []
+
         for group in item_groups:
-            flattened_items = []
 
-            for item in group.items:
+            is_singleton = len(group.items) == 1
+            has_sub_items = bool(group.items[0].sub_items)
+            merge = self.config.get_sub_item_option(
+                chapter_number=chapter_number,
+                article_number=article_number,
+                paragraph_number=paragraph_number,
+                item_number=group.items[0].general_index+1
+            ).merge
 
-                if item.sub_items:
+            if is_singleton and has_sub_items and not merge:
 
-                    sub_item_option = self.config.get_sub_item_option(
-                        chapter_number=chapter_number,
-                        article_number=article_number,
-                        paragraph_number=paragraph.number,
-                        item_number=item.general_index + 1,
-                    )
+                flattened_item_groups.extend(
+                    self._flatten_singular_item_group_to_flattened_item_groups(group=group)
+                )
 
-                    if sub_item_option.merge:
+            else:
 
-                        included_sub_items = []
-                        sub_item_texts = []
-                        for sub_item in item.sub_items:
-
-                            included_sub_items.append(FlattenedSubItem(
-                                text=sub_item.text,
-                                label=sub_item.label,
-                                sub_item_number=sub_item.local_index+1
-                            ))
-                            sub_item_texts.append(sub_item.text)
-
-                        flattened_item_text = (f"{item.text}\n"
-                                               f"{"\n".join(sub_item_texts)}"
-                                               f"{"\n" + item.ending if item.ending else ''}")
-                        flattened_items.append(FlattenedItem(
-                            text=flattened_item_text,
-                            label=item.label,
-                            item_number=item.general_index+1,
-                            included_sub_items=included_sub_items
-                        ))
-
-                    else:
-                        for sub_item in item.sub_items:
-                            included_sub_items = [FlattenedSubItem(
-                                text=sub_item.text,
-                                label=sub_item.label,
-                                sub_item_number=sub_item.local_index+1
-                            )]
-                            flattened_item_text = (f"{item.text}\n"
-                                                   f"{sub_item.text}"
-                                                   f"{"\n" + item.ending if item.ending else ''}")
-
-                            if len(group.items) == 1:
-                                flattened_item_groups.append(FlattenedItemGroup(
-                                    items=[FlattenedItem(
-                                            text=flattened_item_text,
-                                            label=item.label,
-                                            item_number=item.general_index+1,
-                                            included_sub_items=included_sub_items
-                                        )],
-                                    include_paragraph_text=group.include_paragraph_text
-                                ))
-                            else:
-                                flattened_items.append(FlattenedItem(
-                                    text=flattened_item_text,
-                                    label=item.label,
-                                    item_number=item.general_index+1,
-                                    included_sub_items=included_sub_items
-                                ))
-                else:
-                    flattened_item_text = (f"{item.text}"
-                                           f"{" " + item.ending if item.ending else ''}")
-                    flattened_items.append(FlattenedItem(
-                        text=flattened_item_text,
-                        label=item.label,
-                        item_number=item.general_index+1,
-                        included_sub_items=[]
-                    ))
-
-            if flattened_items:
-                flattened_item_groups.append(FlattenedItemGroup(
-                    items=flattened_items,
-                    include_paragraph_text=group.include_paragraph_text,
-                ))
+                flattened_item_groups.append(
+                    self._flatten_nonsingular_item_group_to_flattened_item_group(group=group)
+                )
 
         return flattened_item_groups
 
@@ -260,7 +282,7 @@ class Chunker:
             item_groups=item_groups,
             chapter_number=chapter_number,
             article_number=article_number,
-            paragraph=paragraph
+            paragraph_number=paragraph.number
         )
 
         chunked_items: list[ChunkedItem] = []
