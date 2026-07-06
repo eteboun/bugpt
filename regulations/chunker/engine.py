@@ -107,7 +107,7 @@ class Chunker:
         return f"passage: {embedding_text}"
 
     @staticmethod
-    def _flatten_nonsingular_item_to_flattened_item(item: Item) -> FlattenedItem:
+    def _flatten_unsplittable_item_to_flattened_item(item: Item) -> FlattenedItem:
 
         if item.sub_items:
 
@@ -145,12 +145,12 @@ class Chunker:
             )
 
     @staticmethod
-    def _flatten_nonsingular_item_group_to_flattened_item_group(group: ItemGroup) -> FlattenedItemGroup:
+    def _flatten_unsplittable_item_group_to_flattened_item_group(group: ItemGroup) -> FlattenedItemGroup:
 
         flattened_items: list[FlattenedItem] = []
         for item in group.items:
             flattened_items.append(
-                Chunker._flatten_nonsingular_item_to_flattened_item(item=item)
+                Chunker._flatten_unsplittable_item_to_flattened_item(item=item)
             )
 
         return FlattenedItemGroup(
@@ -159,7 +159,7 @@ class Chunker:
         )
 
     @staticmethod
-    def _flatten_singular_item_group_to_flattened_item_groups(group: ItemGroup) -> list[FlattenedItemGroup]:
+    def _flatten_splittable_item_group_to_item_groups(group: ItemGroup) -> list[FlattenedItemGroup]:
 
         item = group.items[0]
         flattened_item_groups: list[FlattenedItemGroup] = []
@@ -208,13 +208,13 @@ class Chunker:
             if is_singleton and has_sub_items and not merge:
 
                 flattened_item_groups.extend(
-                    self._flatten_singular_item_group_to_flattened_item_groups(group=group)
+                    self._flatten_splittable_item_group_to_item_groups(group=group)
                 )
 
             else:
 
                 flattened_item_groups.append(
-                    self._flatten_nonsingular_item_group_to_flattened_item_group(group=group)
+                    self._flatten_unsplittable_item_group_to_flattened_item_group(group=group)
                 )
 
         return flattened_item_groups

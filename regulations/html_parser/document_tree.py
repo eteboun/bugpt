@@ -1,5 +1,5 @@
 from bs4 import Tag
-from regulations.utils import Cursor
+from regulations.cursor import Cursor
 from typing import ClassVar
 from regulations.html_parser.operations import Operations
 from regulations.models import *
