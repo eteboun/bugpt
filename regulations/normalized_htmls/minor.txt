@@ -1,0 +1,87 @@
+<div class="inner-page__content">
+<div class="inner-page__content-header">
+<h2 class="title">
+                                Boğaziçi Üniversitesi Yan Dal Programları Yönergesi                            </h2>
+</div>
+<div class="inner-page__content-description">
+<p style="text-align: justify;"><strong>BİRİNCİ BÖLÜM</strong></p>
+<p style="text-align: justify;"><strong>Amaç, Kapsam, Dayanak ve Tanımlar</strong></p>
+<p style="text-align: justify;"><strong>Amaç</strong></p>
+<p style="text-align: justify;"><strong>MADDE 1</strong>(1) Bu Yönergenin amacı, bir lisans programına kayıtlı öğrencinin üniversite içinde başka bir lisans programında belirli bir alana yönelik eğitim almasını sağlamayı amaçlayan yan dal programlarına ilişkin esasları düzenlemektir.</p>
+<p style="text-align: justify;"><strong>Kapsam</strong></p>
+<p style="text-align: justify;"><strong>MADDE 2</strong>(1) Bu Yönerge Boğaziçi Üniversitesi’nde yürütülen yan dal programlarına öğrenci kabul ve kayıt işlemleri ile yan dal programlarının uygulamalarına ilişkin hükümleri kapsar.</p>
+<p><strong>Dayanak</strong></p><p style="text-align: justify;"><strong>MADDE 3</strong>(1) Bu Yönerge, 24 Nisan 2010 tarih ve 27561 sayılı Resmi Gazete’de yayımlanmış olan “Yükseköğretim Kurumlarında Ön Lisans ve Lisans Düzeyindeki Programlar Arasında Geçiş, Çift Ana Dal, Yan Dal ile Kurumlar Arası Kredi Transferi Yapılması Esaslarına İlişkin Yönetmeliğe” dayanarak hazırlanmıştır.</p>
+<p style="text-align: justify;"><strong>Tanımlar</strong></p>
+<p style="text-align: justify;"><strong>MADDE 4</strong>(1) Bu Yönergede geçen;</p>
+<p style="text-align: justify;">a) Ana dal programı: Öğrencilerin Öğrenci Seçme ve Yerleştirme Sınavları (ÖSYS) veya eşdeğeri bir sınavla yerleştirilerek veya yatay geçiş yolu ile kabul edilerek Boğaziçi Üniversitesi’nde kayıtlı oldukları lisans programını,</p>
+<p style="text-align: justify;">b) GNO: Ana dal programının genel not ortalamasını,</p>
+<p style="text-align: justify;">c) Yan dal GNO: Yan dal programını oluşturan derslerin not ortalamasını,</p>
+<p style="text-align: justify;">c) İlgili yönetim kurulu: Fakülte ve Yüksekokul Yönetim Kurullarını,</p>
+<p style="text-align: justify;">ç) Öğrenci: Boğaziçi Üniversitesi diplomalı lisans programlarına kayıtlı öğrenciyi,</p>
+<p style="text-align: justify;">d) Rektör: Boğaziçi Üniversitesi Rektörünü,</p>
+<p style="text-align: justify;">e) Senato: Boğaziçi Üniversitesi Senatosunu,</p>
+<p style="text-align: justify;">f) Üniversite: Boğaziçi Üniversitesini</p>
+<p style="text-align: justify;">g) Üniversite Yönetim Kurulu: Boğaziçi Üniversitesi Yönetim Kurulunu,</p>
+<p style="text-align: justify;">ifade eder.</p>
+<p style="text-align: justify;"><strong>İKİNCİ BÖLÜM</strong></p>
+<p style="text-align: justify;"><strong>Eğitim Öğretime İlişkin Esaslar</strong></p>
+<p><strong>Yan Dal Programı</strong></p><p style="text-align: justify;"><strong>MADDE 5</strong>(1) Yan dal programı Üniversitede bir lisans programına kayıtlı öğrencinin öngörülen şartları taşımak kaydıyla, Üniversite içinde başka bir lisans programında belirli bir alana yönelik sınırlı sayıda dersi tamamlamak suretiyle, diploma yerine geçmeyen bir yan dal sertifikası alabilmesini sağlayan programdır.</p>
+<p style="text-align: justify;">(2) Yan dal dersleri öğrencinin kendi ana dal programı dışında belirli bir alanda bilgi ve yetkinlik oluşturmak için alacağı derslerden oluşur. Bu ders grubu farklı programların derslerinden oluşabilir.</p>
+<p style="text-align: justify;">(3)  Yan dal programının dersleri bu yönerge esasları doğrultusunda, yan dal programını yürütecek olan bölüm tarafından belirlenir ve yan dal programı, ilgili Fakülte/ Yüksekokul Kurullarının önerisi ve Senatonun onayı ile kesinleşir.</p>
+<p style="text-align: justify;">(4) Bir yan dal programı en az 15 kredi ve 5 ders, en fazla 21 kredi ve 7 dersten oluşur.</p>
+<p style="text-align: justify;">(5) Yan dal programı ile ana dal programı arasında ortak dersler olabilir. Yan dal programında, ana dal programı ile ortak olan dersler hariç olmak üzere toplam 12 krediden az olmamak kaydı ile en az 4 ders alınması zorunludur.</p>
+<p style="text-align: justify;">(6) Yan dal programına başvuru koşulu olarak belirlenen dersler yan dal programının seçmeli derslerine sayılamaz.</p>
+<p style="text-align: justify;"><strong>Kontenjanlar</strong></p>
+<p style="text-align: justify;"><strong>MADDE 6</strong>(1) Kontenjanlar, yan dal programının bağlı olduğu bölümün önerisiyle ilgili yönetim kurulu tarafından belirlenir.</p>
+<p style="text-align: justify;">(2) Tüm öğrencilere açık genel kontenjan bulundurmak şartıyla, değişik fakültelere veya bölümlere ayrı kontenjan belirlenebilir.</p>
+<p style="text-align: justify;"><strong>Başvuru Koşulları</strong></p>
+<p style="text-align: justify;"><strong>MADDE 7</strong>(1) Yan dal başvurusu yapan öğrencinin;</p>
+<ol>
+<li style="text-align: justify;">ana dal programının en erken üçüncü, en geç altıncı yarıyılı başında olması,</li>
+<li style="text-align: justify;">başvuru yaptığı yarıyıla kadar aldığı tüm kredili  ve  kredisiz dersleri en az DD veya P notu ile tamamlamış olması,</li>
+<li style="text-align: justify;">2,75’den az olmamak kaydıyla, ilgili bölüm tarafından önerilen ve ilgili yönetim kurulu tarafından onaylanan asgari GNO koşulunu  sağlaması,</li>
+<li style="text-align: justify;">ilgili bölümün önerisi ve ilgili yönetim kurulu kararı ile belirlenen ek başvuru koşullarını sağlaması,</li>
+</ol>
+<p style="text-align: justify;">gerekir.</p>
+<p style="text-align: justify;">(2) Yan dal programlarına başvuru koşulları ve başvuru için gerekli belgeler ilgili bölümler tarafından ilan edilir.</p>
+<p><strong>Başvuru Süreci ve Kabul</strong></p><p style="text-align: justify;"><strong>MADDE 8</strong>(1) Başvurular, Akademik Takvimde ilan edilen tarihlerde, başvuru formu, not belgesi (transkript) ve diğer belgeler ile birlikte yan dal programını açan bölüme yapılır.</p>
+<p style="text-align: justify;">(2) Öğrenci aynı anda birden fazla yan dal programına başvurabilir.</p>
+<p style="text-align: justify;">(3) Başvuru koşullarını sağlamış olan öğrencilerin başvuruları işleme konulur.</p>
+<p style="text-align: justify;">(4) Başvurular, yan dal programını yürüten bölüm tarafından değerlendirilir; başvuru sonuçları ilgili yönetim kurulu kararı ile kesinleşir ve ilan edilir.</p>
+<p style="text-align: justify;"><strong>Çift Ana Dal Programından İlgili Yan dal Programına Geçiş</strong></p>
+<p style="text-align: justify;"><strong>MADDE 9</strong>(1) ÇAP programından ayrılan ve ilgili bir yan dal programına geçiş yapmak isteyen öğrencilerden altıncı yarıyılını tamamlamış olanların başvurularında Yönergenin 7. Maddesinin (1) fıkrasında belirtilen süre kısıtı gözönüne alınmaz. Bu başvurular bu yönergedeki hükümler uyarınca ilgili yönetim kurulları tarafından kontenjan dışı değerlendirilir.</p>
+<p style="text-align: justify;"><strong>Yan Dal Programına Kayıt</strong></p>
+<p style="text-align: justify;"><strong>MADDE 10</strong>(1) Öğrenci, yan dal programına kabul edildiği yarıyılda, akademik takvimde ilan edilen tarihlerde Kayıt İşleri Şube Müdürlüğü’ne başvurarak kayıt işlemlerini tamamlamalıdır. Belirtilen sürede yan dal programına kayıt işlemini tamamlamayan öğrenci kayıt hakkını kaybetmiş sayılır.</p>
+<p style="text-align: justify;">(2) Öğrenci aynı anda birden fazla yan dal programına kayıtlı olamaz.</p>
+<p style="text-align: justify;">(3) Öğrenci aynı anda hem çift ana dal hem de yan dal programına kayıtlı olamaz.</p>
+<p style="text-align: justify;"><strong>Yan Dal Danışmanı</strong></p>
+<p style="text-align: justify;"><strong>MADDE 11</strong>(1) Yan dal programını yürüten bölüm tarafından öğrenciye, programdaki dersleri ve bunların alınacağı dönemleri planlamak, program süresince öğrencinin başarı durumunu ve programın mezuniyet koşullarının tamamlanıp tamamlanmadığını takip etmek üzere bir danışman atanır.</p>
+<p style="text-align: justify;">(2) Yan dal danışmanı, yan dal programının amacına uygun biçimde yürütülmesini sağlamak üzere öğrencinin ana dal programı akademik danışmanları ile iletişim ve işbirliğinde bulunur.</p>
+<p style="text-align: justify;">(3) Öğrencinin yarıyıl kayıt onayı ana dal danışmanı tarafından yapılır.</p>
+<p><strong>Yandal Programına Devam, Ders Yükü, Başarı Şartı ve Süre</strong></p><p style="text-align: justify;"><strong>MADDE  12</strong>(1) Yan dal programına kayıtlı öğrenci programda yer alan derslerin önkoşullarını sağlamakla yükümlüdür. Bu önkoşul  dersleri yan dal programı ders yükümlülüğüne sayılmaz.</p>
+<p style="text-align: justify;">(2) Boğaziçi Üniversitesi Lisans Eğitim Öğretim Yönetmeliği’nde belirtilen ders yükü kuralları yan dal programına kayıtlı öğrenciler için de geçerlidir.</p>
+<p style="text-align: justify;">(3) Yan dal programına devam edebilmesi için öğrencinin ana dal programındaki GNO’sunun en az 2,75 olması şarttır. Tüm yan dal eğitimi süresince ana dal veya yan dal GNO’su bir defaya mahsus olmak üzere 2,50’ye kadar düşebilir. GNO başarı şartını sağlayamayan öğrenci yan dal programından çıkarılır. Değişim programlarında geçen yarıyıllar GNO şartı takibinde dikkate alınmaz.</p>
+<p style="text-align: justify;">(4) İlgili yönetim kurullarının kararı ile yan dal programı derslerinin en fazla ikisi Üniversite dışından alınan dersler ile tamamlanabilir. Ders saydırma işlemleri Boğaziçi Üniversitesi Lisans Eğitim ve Öğretim Yönetmeliğinin ilgili hükümleri uyarınca yapılır.</p>
+<p style="text-align: justify;">(5) Ana dal ve yan dal not belgeleri ayrı hazırlanır.</p>
+<p style="text-align: justify;">(6) İki programa birden saydırılan dersler öğrencinin her iki programındaki not belgelerinde gösterilir.</p>
+<p style="text-align: justify;">(7) Ana dal programından izinli sayılan öğrenci,  yan dal programından da izinli sayılır.</p>
+<p style="text-align: justify;">(8) Yan dal ve ana dal programının ortak bir dersinden çekilme işlemi her iki program için uygulanır. Ortak dersler tek bir ders olarak değerlendirilir.</p>
+<p style="text-align: justify;">(9) Yan dal öğrencisi yan dal ve ana dal programları gereklerini en geç toplam 9 yarıyılda tamamlamak zorundadır. Bu süre içinde hem ana dal hem yan dal gereklerini tamamlayamayan öğrenciler yan dal programından çıkarılır. Değişim programlarında geçirilen en fazla bir yarıyıl bu süreye sayılmaz.</p>
+<p style="text-align: justify;"><strong>Yan Dal Programından Ayrılma ve Çıkarılma</strong></p>
+<p style="text-align: justify;"><strong>MADDE 13 –(1)</strong>(1) İki yarıyıl üst üste yandal programı dersi almayan öğrenci, yan dal programına devam hakkını kaybeder. Ders çakışması veya dersin açılmaması gibi nedenlerle ders alamayan öğrenciler, yan dal programını yürüten bölümün önerisiyle ve ilgili yönetim kurulu kararı ile ilgili yarıyıl için bu hükümden muaf tutulabilir.</p>
+<p style="text-align: justify;">(2) Yandal programından ayrılmak isteyen öğrenci, programı yürüten bölüme herhangi bir yarıyılda dilekçe ile başvurur. Öğrencinin programdan ayrılması, ilgili yönetim kurulu kararı ile kesinleşir. Bu karar, ilgili yönetim kurulu tarafından öğrencinin bağlı olduğu Fakülte veya Yüksekokula bildirilir.</p>
+<p style="text-align: justify;">(3) Bu yönergenin 12. Maddesi ya da 13. Maddesinin 1. Fıkrasındaki şartları yerine getiremeyen öğrenci, yan dal programını yürüten bölümün beyanı ve ilgili yönetim kurulu kararı ile yan dal  programından çıkarılır. Karar öğrencinin bağlı olduğu Fakülte veya Yüksekokula bildirilir.</p>
+<p style="text-align: justify;">(4) Yan dal programından ayrılan veya çıkarılan öğrenci aynı yan dal programına tekrar kayıt yaptıramaz.</p>
+<p style="text-align: justify;">(5) Öğrenci, yan dal programından ayrılması veya çıkarılması durumunda,</p>
+<p style="text-align: justify;">(a) ana dal ile ortak olan dersler dışındaki başarısız olduğu yan dal derslerini tekrarlamak zorunda değildir.</p>
+<p style="text-align: justify;">(b) yan dal programında aldığı derslerin ana dal programına transfer edilmesi için en geç yan dal programından çıkarıldığı yarıyılı takip eden yarıyıl sonuna kadar başvurabilir. Derslerin kredili veya kredisiz transferine ilgili yönetim kurulu tarafından karar verilir.</p>
+<p><strong>Mezuniyet</strong></p><p style="text-align: justify;"><strong>MADDE 14</strong>(1) Yan dal programı kapsamındaki tüm dersleri geçer not (en az P veya DD) ve en az 2.75 yan dal GNO’su ile yönergenin 11. Maddesinin 9. Fıkrasında belirtilen koşullarda tamamlayan öğrenciler yan dal sertifikası almaya hak kazanır.</p>
+<p style="text-align: justify;">(2) Yan dal programlarını tamamlayan öğrencilere eğitim aldıkları alanda yan dal sertifikası düzenlenir. Yan dal sertifikasına ana dal diplomasında yer alan mezuniyet tarihi yazılır. Bu belge diploma yerine geçmez.</p>
+<p style="text-align: justify;">(3) Ana dal diploması ve yan dal sertifikası aynı anda verilir.</p>
+<p style="text-align: justify;">(4) Ana dal ve yan dal programlarını bu yönergenin 12. Maddesinin 9. Fıkrasında belirtilen süre içinde tamamlayan öğrenciler ana dal programında başarı sıralamasına alınırlar.  Bu sıralamada sadece ana dal GNO’ları dikkate alınır. Bu öğrencilerden, ana dal GNO'ları 3.50 veya daha fazla olanlar "Yüksek Onur", 3.00 ile 3.49 arasında olanlar "Onur" listelerine alınırlar. Ancak, disiplin cezası almış olan öğrenciler bu listelere alınamazlar.</p>
+<p style="text-align: justify;">(5) Yan dal programını tamamlayan öğrencinin ana dal not belgesine yan dal programının tamamlandığına dair bir açıklama eklenir.</p>
+<p style="text-align: justify;">(6) Çift ana dal programından ayrılan veya çıkarılan bir öğrenci programdan ayrıldığı veya ilişiğinin kesildiği döneme kadar almış olduğu dersler ile ilgili bir yan dal programının tüm gereklerini (ders ve ortalama) yerine getirmişse, yan dal programını yürüten bölümün onayı ve ilgili yönetim kurulu kararı ile, yan dal sertifikası almaya hak kazanır.</p>
+</div>
+<div class="footer-date">
+</div>
+</div>

@@ -1,99 +1,136 @@
 import requests
+import os
 
-from sentence_transformers import SentenceTransformer
-from bs4 import BeautifulSoup, Tag
-from typing import ClassVar
-from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct
+from pathlib import Path
+from dataclasses import dataclass
 
 from regulations.chunker.models import Chunk
 from regulations.chunker.config import ChunkerConfig
 from regulations.models import Document
 from regulations.html_parser.document_tree import HtmlDocumentTree
-from regulations.html_parser.normalizer import HtmlNormalizer
 from regulations.chunker.engine import Chunker
+from regulations.normalizers import *
+
+@dataclass
+class PipelineConfig:
+    chunker: Chunker
+    normalizer: type[HtmlNormalizer]
+    url: str
 
 class Pipeline:
+    PIPELINE_NAME_MAPPING: ClassVar[dict[str, PipelineConfig]] = {
+        "dormitory": PipelineConfig(
+            chunker=Chunker(ChunkerConfig("dormitory")),
+            normalizer=DormitoryNormalizer,
+            url="https://bogazici.edu.tr/tr/pages/bogazici-universitesi-ogrenci-yurtlari-yonerg/669",
+        ),
+        "erasmus": PipelineConfig(
+            chunker=Chunker(ChunkerConfig("erasmus")),
+            normalizer=ErasmusNormalizer,
+            url="https://bogazici.edu.tr/tr/pages/bogazici-universitesi-degisim-programlari-yon/662",
+        ),
+        "undergraduate": PipelineConfig(
+            chunker=Chunker(ChunkerConfig("undergraduate")),
+            normalizer=UndergraduateNormalizer,
+            url="https://bogazici.edu.tr/tr/pages/bogazici-universitesi-lisans-egitim-ve-ogreti/657",
+        ),
+        "graduate": PipelineConfig(
+            chunker=Chunker(ChunkerConfig("graduate")),
+            normalizer=GraduateNormalizer,
+            url="https://bogazici.edu.tr/tr/pages/bogazici-universitesi-lisansustu-egitim-ve-og/656",
+        ),
+        "major": PipelineConfig(
+            chunker=Chunker(ChunkerConfig("major")),
+            normalizer=MajorNormalizer,
+            url="https://bogazici.edu.tr/tr/pages/bogazici-universitesi-cift-ana-dal-programlar/661",
+        ),
+        "minor": PipelineConfig(
+            chunker=Chunker(ChunkerConfig("minor")),
+            normalizer=MinorNormalizer,
+            url="https://bogazici.edu.tr/tr/pages/bogazici-universitesi-yan-dal-programlari-yon/668",
+        ),
+    }
 
     CONTENT_SELECTOR: ClassVar[str] = "div.inner-page__content"
-
     DESCRIPTION_SELECTOR: ClassVar[str] = "div.inner-page__content-description"
-    HEADER_SELECTOR: ClassVar[str] = "div.inner-page__content-header"
 
-    COLLECTION: ClassVar[str] = "regulations"
+    def __init__(self,
+                 regulation_name: str,
+                 collection_name: str,
+                 use_cache: bool = True
+                 ) -> None:
 
-    def __init__(self, url: str,
-                 normalizer: type[HtmlNormalizer],
-                 chunker_config_name: str):
+        pipe_info = self.PIPELINE_NAME_MAPPING.get(regulation_name)
+        if not pipe_info:
+            raise Exception(f"Unknown pipeline: {regulation_name}")
 
-        chunker_config = ChunkerConfig(config_name=chunker_config_name)
-        self.chunker = Chunker(chunker_config)
+        cached_dir = Path(__file__).resolve().parent / "normalized_htmls" / f"{regulation_name}.txt"
+        if use_cache:
 
-        self.url = url
-        self.normalizer = normalizer
+            if os.path.exists(cached_dir):
+                normalized_html_text = cached_dir.read_text(encoding="utf-8")
+            else:
+                raise Exception(f"Cache does not exist: {regulation_name}")
 
-        response = requests.get(self.url, timeout=10)
-        response.raise_for_status()
+        else:
 
-        self.soup = BeautifulSoup(response.text, "html.parser")
+            response = requests.get(pipe_info.url, timeout=10)
+            response.raise_for_status()
 
-    def _get_content_container(self) -> Tag:
+            html_text = response.text
+            temp_soup = BeautifulSoup(html_text, "html.parser")
 
-        content_container = self.soup.select_one(self.CONTENT_SELECTOR, recursive=False)
+            normalized_soup = self._normalize_soup(pipe_info.normalizer, temp_soup)
+            normalized_content_container = self._get_content_container(normalized_soup)
+
+            normalized_html_text = str(normalized_content_container)
+            with open(cached_dir, "w", encoding="utf-8") as f:
+                f.write(normalized_html_text)
+
+        self.soup = BeautifulSoup(normalized_html_text, "html.parser")
+        self.regulation_name = regulation_name
+        self.collection_name = collection_name
+
+    @staticmethod
+    def _get_content_container(soup: BeautifulSoup) -> Tag:
+
+        content_container = soup.select_one(Pipeline.CONTENT_SELECTOR, recursive=False)
 
         if content_container is not None:
             return content_container
         else:
+            raise ValueError("No content found")
+
+    @staticmethod
+    def _normalize_soup(normalizer: type[HtmlNormalizer], soup: BeautifulSoup) -> BeautifulSoup:
+
+        content_container = Pipeline._get_content_container(soup)
+        regulation_container = content_container.select_one(Pipeline.DESCRIPTION_SELECTOR)
+
+        if regulation_container is not None:
+            normalizer.run(regulation_container, soup)
+        else:
             raise ValueError("No regulations found")
 
-    def _normalize_content_container(self, content_container: Tag):
-        regulation_container = content_container.select_one(self.DESCRIPTION_SELECTOR)
-        self.normalizer.run(regulation_container, self.soup)
+        return soup
 
     def _get_document_tree(self) -> Document:
-
-        content_container = self._get_content_container()
-        self._normalize_content_container(content_container)
-
+        content_container = self._get_content_container(self.soup)
         parser = HtmlDocumentTree(content_container)
-
         document = parser.run()
 
         return document
 
     def _get_chunks(self) -> list[Chunk]:
 
+        chunker = (self.PIPELINE_NAME_MAPPING
+                   .get(self.regulation_name)
+                   .chunker)
+
         document = self._get_document_tree()
-        chunks = self.chunker.run(document)
+        chunks = chunker.run(document)
 
         return chunks
 
-    def _save_chunks(self, model: SentenceTransformer, client: QdrantClient) -> None:
-
-        chunks = self._get_chunks()
-
-        if not client.collection_exists(self.COLLECTION):
-
-            client.create_collection(
-                collection_name=self.COLLECTION,
-                vectors_config=VectorParams(
-                    size=model.get_embedding_dimension(),
-                    distance=Distance.COSINE
-                )
-            )
-
-        points = [
-            PointStruct(
-                id=chunk.id,
-                vector=model.encode(chunk.embedding_text).tolist(),
-                payload=chunk.payload.as_dict()
-            ) for chunk in chunks
-        ]
-
-        client.upsert(
-            collection_name=self.COLLECTION,
-            points=points
-        )
-
-    def run(self, model: SentenceTransformer, client: QdrantClient) -> None:
-        self._save_chunks(model=model, client=client)
+    def run(self) -> list[Chunk]:
+        return self._get_chunks()

@@ -1,17 +1,11 @@
 from app.model_runner import ModelRunner
 import torch
 
-class Formatter(ModelRunner):
+class QueryRewriter(ModelRunner):
 
-    system_prompt_file_name = "formatter_system_prompt"
+    system_prompt_file_name = "query_rewriter_system_prompt"
 
-    def format_tool_result(self, query: str, tool_result: dict) -> str:
-
-        formatting_prompt = f"""
-        User request: {query}\n
-        Tool result: {tool_result}\n
-        Answer:\n
-        """
+    def rewrite_query(self, query):
 
         messages = [
             {
@@ -20,7 +14,7 @@ class Formatter(ModelRunner):
             },
             {
                 "role": "user",
-                "content": formatting_prompt,
+                "content": query,
             }
         ]
 
@@ -33,12 +27,13 @@ class Formatter(ModelRunner):
         with torch.inference_mode():
             outputs = self.model.generate(
                 **inputs,
-                max_new_tokens=500,
+                max_new_tokens=100,
                 do_sample=False,
             )
 
         input_len = inputs["input_ids"].shape[-1]
         generated_ids = outputs[0][input_len:]
 
-        formatted_result = self.tokenizer.decode(generated_ids, skip_special_tokens=True)
-        return formatted_result
+        new_query = self.tokenizer.decode(generated_ids, skip_special_tokens=True)
+
+        return new_query

@@ -1,0 +1,277 @@
+[
+    {
+        "query": "Değişim programına başvurmak için minimum GNO kaç olmalı?",
+        "selected_tool": "regulation_search",
+        "rewritten_query": "değişim programına başvuru için asgari GNO şartı\n",
+        "tool_result": {
+            "status": "success",
+            "result": [
+                {
+                    "score": 0.887,
+                    "text": "Yan dal başvurusu yapan öğrencinin;\n\n2,75’den az olmamak kaydıyla, ilgili bölüm tarafından önerilen ve ilgili yönetim kurulu tarafından onaylanan asgari GNO koşulunu  sağlaması, gerekir."
+                },
+                {
+                    "score": 0.879,
+                    "text": "Çift ana dal programı başvurusu yapan öğrencinin;\n\n3,20 asgari GNO koşulunu sağlaması, gerekir."
+                }
+            ]
+        },
+        "response": "Değişim programına başvurmak için GNO şartı başvuru türüne göre değişir:\n\n*   **Yan dal başvurusu:** İlgili bölüm tarafından önerilen ve ilgili yönetim kurulu tarafından onaylanan asgari GNO koşulu en az **2,75** olmalıdır.\n*   **Çift ana dal programı başvurusu:** En az **3,20** GNO koşulu sağan öğrenciler başvurabilir.\n\nMevcut bilgiler bu soruyu yanıtlamak için yeterli değildir.\n"
+    },
+    {
+        "query": "Değişim programına başvuru için dil şartı nedir?",
+        "selected_tool": "regulation_search",
+        "rewritten_query": "değişim programına başvuru için dil şartları\n",
+        "tool_result": {
+            "status": "success",
+            "result": [
+                {
+                    "score": 0.904,
+                    "text": "Değişim programları kapsamında öğrenim hareketliliğine katılmak üzere başvuru yapacak öğrencilerin:\n\ndeğişim programı kapsamında kurumlar arasında imzalanmış olan anlaşmada belirtilen dil yeterliği, not ortalaması ve benzeri ek koşulları sağlamaları, gerekir."
+                },
+                {
+                    "score": 0.9,
+                    "text": "Değişim programları kapsamında eğitim hareketliliğine katılmak üzere başvuru yapacak öğrencilerin:\n\neğitim hareketliliği faaliyetini İngilizce dışında bir dilde yeterlik isteyen kurumlarda gerçekleştirebilmek için o dilde yeterlik koşulunu sağlamaları, gerekir."
+                }
+            ]
+        },
+        "response": "Değişim programına başvuru için dil şartı, değişim programı kapsamında kurumlar arasında imzalanmış olan anlaşmada belirtilen dil yeterliğidir. Ayrıca, eğitim hareketliliği faaliyetini İngilizce dışında bir dilde yeterlik isteyen kurumlarda gerçekleştirebilmek için o dilde yeterlik koşulunu sağlaması gerekebilir.\n"
+    },
+    {
+        "query": "Değişim öğrencileri konaklamayı kendileri mi ayarlamak zorunda?",
+        "selected_tool": "regulation_search",
+        "rewritten_query": "değişim öğrencilerinin konaklama işlemlerinin kendileri tarafından yapılması\n",
+        "tool_result": {
+            "status": "success",
+            "result": [
+                {
+                    "score": 0.875,
+                    "text": "Konaklama, ulaşım, sağlık sigortası ve benzeri kişisel harcamalar öğrencilerin sorumluluğundadır."
+                },
+                {
+                    "score": 0.861,
+                    "text": "Seyahat ve vize işlemleri öğrencinin sorumluluğundadır."
+                }
+            ]
+        },
+        "response": "Evet, değişim öğrencileri konaklamayı kendileri ayarlamak zorundadır. Mevcut düzenlemelere göre konaklama, ulaşım, sağlık sigortası ve benzeri kişisel harcamalar öğrencilerin sorumluluğundadır.\n"
+    },
+    {
+        "query": "Bir dönemde alınabilecek maksimum kredi sayısı kaçtır?",
+        "selected_tool": "regulation_search",
+        "rewritten_query": "bir dönemde alınabilecek maksimum kredi sayısı\n",
+        "tool_result": {
+            "status": "success",
+            "result": [
+                {
+                    "score": 0.845,
+                    "text": "Kredi yükü, herhangi bir yarıyılda 15 krediden az olamaz. Özel durumlarda, danışmanın onayıyla kredi yükü 13 krediye, ilgili yönetim kurulu kararıyla 9 krediye kadar düşürülebilir."
+                },
+                {
+                    "score": 0.843,
+                    "text": "Çift ana dal programı için gerekli olan mezuniyet kredisi, ana dal programının mezuniyet kredisinden en az 15 kredi fazla olmalıdır."
+                }
+            ]
+        },
+        "response": "Mevcut bilgiler bu soruyu yanıtlamak için yeterli değildir.\n"
+    },
+    {
+        "query": "Bir dönemde alınabilecek minimum kredi sayısı kaçtır?",
+        "selected_tool": "regulation_search",
+        "rewritten_query": "bir dönemde alınabilecek minimum kredi sayısı\n",
+        "tool_result": {
+            "status": "success",
+            "result": [
+                {
+                    "score": 0.856,
+                    "text": "Kredi yükü, herhangi bir yarıyılda 15 krediden az olamaz. Özel durumlarda, danışmanın onayıyla kredi yükü 13 krediye, ilgili yönetim kurulu kararıyla 9 krediye kadar düşürülebilir."
+                },
+                {
+                    "score": 0.85,
+                    "text": "Çift ana dal programı için gerekli olan mezuniyet kredisi, ana dal programının mezuniyet kredisinden en az 15 kredi fazla olmalıdır."
+                }
+            ]
+        },
+        "response": "Bir dönemde alınabilecek minimum kredi sayısı, herhangi bir yarıyılda 15 kredidir. Özel durumlarda, danışmanın onayıyla bu sayı 13 krediye, ilgili yönetim kurulu kararıyla ise 9 krediye kadar düşülebilir.\n"
+    },
+    {
+        "query": "Danışman onayıyla kredi yükü kaça kadar düşürülebilir?",
+        "selected_tool": "unsure",
+        "rewritten_query": null,
+        "tool_result": {
+            "status": "unsure"
+        },
+        "response": "Mevcut bilgiler bu soruyu yanıtlamak için yeterli değil.\n"
+    },
+    {
+        "query": "BB aldığım bir dersi tekrar alabilir miyim?",
+        "selected_tool": "regulation_search",
+        "rewritten_query": "ders tekrarı alma hakkı\n",
+        "tool_result": {
+            "status": "success",
+            "result": [
+                {
+                    "score": 0.879,
+                    "text": "Öğrenciler F notu aldıkları zorunlu dersleri ilk açıldıklarında tekrarlamak zorundadırlar. Özel durumlarda ve danışmanın olumlu görüşü alınmak koşuluyla, ilgili enstitü yönetim kurulu F alınmış zorunlu bir dersin başka bir dersle ikame edilmesine, ders tekrarının ertelenmesine, ders alınmışsa öğrencinin dersten çekilmesine izin verebilir."
+                },
+                {
+                    "score": 0.877,
+                    "text": "Öğrenciler, 30 ve 31 inci maddelerde yer alan hükümler saklı kalmak kaydıyla, DD ve DC almış oldukları derslerden en çok altısını bir defaya mahsus olmak üzere danışman onayı ile tekrarlayabilirler. Ancak, bu dersler ilk alınışlarını izleyen dört yarıyıl içinde ve her yarıyılda en çok bir tane olmak üzere tekrarlanabilir."
+                }
+            ]
+        },
+        "response": "Evet, BB (F) notu aldığınız zorunlu dersleri tekrar alabileceğiniz durumlar mevcuttur, ancak bu durumun koşulları şunlardır:\n\n*   **Genel Kural:** Öğrenciler F notu aldıkları zorunlu dersleri ilk açıldıklarında tekrarlamak zorundadır.\n*   **İstisna ve Koşullar:** Özel durumlarda ve danışmanın olumlu görüşü alınmak koşuluyla, ilgili enstitü yönetim kurulu:\n    *   F alınmış zorunlu bir dersin başka bir dersle ikame edilmesine,\n    *   Ders tekrarının ertelenmesine,\n    *   Ders alınmışsa öğrencinin dersten çekilmesine\n    izin verebilir.\n*   **Sınırlama:** Bu izinler, 30 ve 31. maddelerde yer alan hükümler saklı kalmak kaydıyla geçerlidir. Ayrıca, DD ve DC (B ve C) notu aldığınız dersler için de danışman onayı ile tekrarlanabilir; ancak bu dersler ilk alınışlarını izleyen dört yarıyıl içinde ve her yarıyılda en çok bir tane olmak üzere tekrarlanabilir.\n\n*Not: Sorunuzdaki \"BB\" notu için doğrudan bir kural bulunmamaktadır. Mevcut bilgiler sadece F (BB), DD ve DC notları için geçerlidir.*\n"
+    },
+    {
+        "query": "Çift ana dal öğrencileri yurtta en fazla kaç yıl kalabilir?",
+        "selected_tool": "regulation_search",
+        "rewritten_query": "çift ana dal öğrencilerinin yurtta azami kalma süresi\n",
+        "tool_result": {
+            "status": "success",
+            "result": [
+                {
+                    "score": 0.874,
+                    "text": "Yurtlarda kalma süresi koşulları şunlardır:\n\nYurtlarda maksimum kalma süresi;\nLisans Öğrencileri: Dört yıllık programlarda, programa başladıkları dönemden itibaren normal süresi içinde toplam sekiz yarıyıl, beş yıllık ve çift ana dal programlarında ise, programa başladıkları dönemden itibaren normal süresi içinde toplam on yarıyıldır. İngilizce hazırlık döneminde yurtta kalma süresi iki yarıyıl olup, bu süre lisans dönemlerinin dışında tutulur."
+                },
+                {
+                    "score": 0.865,
+                    "text": "Yurtlarda kalma süresi koşulları şunlardır:\n\nYurtlarda maksimum kalma süresi;\nLisansüstü Öğrencileri: Doktora öğrencileri için, programa başladıkları dönemden itibaren normal süresi içinde toplam dört yarıyıl, yüksek lisans öğrencileri için ise, programa başladıkları dönemden itibaren normal süresi içinde toplam iki yarıyıldır. İngilizce hazırlık döneminde yurtta kalma süresi iki yarıyıl olup, bu süre lisansüstü dönemlerinin dışında tutulur."
+                }
+            ]
+        },
+        "response": "Çift ana dal programlarında yurtta maksimum kalma süresi, programa başladıkları dönemden itibaren normal süresi içinde toplam on yarıyıldır. İngilizce hazırlık döneminde yurtta kalma süresi iki yarıyıl olup, bu süre lisans dönemlerinin dışında tutulur.\n"
+    },
+    {
+        "query": "Yüksek lisans öğrencileri yurtta kaç yıl kalabilir?",
+        "selected_tool": "regulation_search",
+        "rewritten_query": "yüksek lisans öğrencilerinin yurtta azami kalma süresi\n",
+        "tool_result": {
+            "status": "success",
+            "result": [
+                {
+                    "score": 0.89,
+                    "text": "Yurtlarda kalma süresi koşulları şunlardır:\n\nLisans öğrencileri 25 yaşını, yüksek lisans öğrencileri 28 yaşını, doktora öğrencileri 30 yaşını doldurmamış olmaları kaydı ile yurtlarda barınma süresi bir öğrenim yılıdır. Yurtlarda barınan öğrencilerin yeni eğitim-öğretim döneminde yurtta kalmak istemeleri halinde, Yurtlar İdari Takviminde belirtilen tarihler içerisinde başvuru yapmaları gerekir,"
+                },
+                {
+                    "score": 0.886,
+                    "text": "Yurtlarda kalma süresi koşulları şunlardır:\n\nYurtlarda maksimum kalma süresi;\nLisansüstü Öğrencileri: Doktora öğrencileri için, programa başladıkları dönemden itibaren normal süresi içinde toplam dört yarıyıl, yüksek lisans öğrencileri için ise, programa başladıkları dönemden itibaren normal süresi içinde toplam iki yarıyıldır. İngilizce hazırlık döneminde yurtta kalma süresi iki yarıyıl olup, bu süre lisansüstü dönemlerinin dışında tutulur."
+                }
+            ]
+        },
+        "response": "Yüksek lisans öğrencileri için yurtta maksimum kalma süresi, programa başladıkları dönemden itibaren normal süresi içinde toplam iki yarıyıldır. İngilizce hazırlık döneminde yurtta kalma süresi iki yarıyıl olup, bu süre lisansüstü dönemlerinin dışında tutulur.\n"
+    },
+    {
+        "query": "Doktora öğrencileri yurtta en fazla kaç yıl kalabilir?",
+        "selected_tool": "regulation_search",
+        "rewritten_query": "doktora öğrencilerinin yurtta azami kalma süresi\n",
+        "tool_result": {
+            "status": "success",
+            "result": [
+                {
+                    "score": 0.884,
+                    "text": "Yurtlarda kalma süresi koşulları şunlardır:\n\nLisans öğrencileri 25 yaşını, yüksek lisans öğrencileri 28 yaşını, doktora öğrencileri 30 yaşını doldurmamış olmaları kaydı ile yurtlarda barınma süresi bir öğrenim yılıdır. Yurtlarda barınan öğrencilerin yeni eğitim-öğretim döneminde yurtta kalmak istemeleri halinde, Yurtlar İdari Takviminde belirtilen tarihler içerisinde başvuru yapmaları gerekir,"
+                },
+                {
+                    "score": 0.882,
+                    "text": "Yurtlarda kalma süresi koşulları şunlardır:\n\nYurtlarda maksimum kalma süresi;\nLisansüstü Öğrencileri: Doktora öğrencileri için, programa başladıkları dönemden itibaren normal süresi içinde toplam dört yarıyıl, yüksek lisans öğrencileri için ise, programa başladıkları dönemden itibaren normal süresi içinde toplam iki yarıyıldır. İngilizce hazırlık döneminde yurtta kalma süresi iki yarıyıl olup, bu süre lisansüstü dönemlerinin dışında tutulur."
+                }
+            ]
+        },
+        "response": "Doktora öğrencileri için yurtta maksimum kalma süresi, programa başladıkları dönemden itibaren normal süresi içinde toplam dört yarıyıldır. İngilizce hazırlık döneminde yurtta kalma süresi iki yarıyıl olup, bu süre lisansüstü dönemlerinin dışında tutulur.\n"
+    },
+    {
+        "query": "Mezun olduktan sonra yurtta kalmaya devam edebilir miyim?",
+        "selected_tool": "regulation_search",
+        "rewritten_query": "mezun olduktan sonra yurtta azami kalma süresi\n",
+        "tool_result": {
+            "status": "success",
+            "result": [
+                {
+                    "score": 0.867,
+                    "text": "Yurtlarda kalma süresi koşulları şunlardır:\n\nLisans öğrencileri 25 yaşını, yüksek lisans öğrencileri 28 yaşını, doktora öğrencileri 30 yaşını doldurmamış olmaları kaydı ile yurtlarda barınma süresi bir öğrenim yılıdır. Yurtlarda barınan öğrencilerin yeni eğitim-öğretim döneminde yurtta kalmak istemeleri halinde, Yurtlar İdari Takviminde belirtilen tarihler içerisinde başvuru yapmaları gerekir,"
+                },
+                {
+                    "score": 0.858,
+                    "text": "Yurtlarda kalma süresi koşulları şunlardır:\n\nYurtlarda maksimum kalma süresi;\nLisans Öğrencileri: Dört yıllık programlarda, programa başladıkları dönemden itibaren normal süresi içinde toplam sekiz yarıyıl, beş yıllık ve çift ana dal programlarında ise, programa başladıkları dönemden itibaren normal süresi içinde toplam on yarıyıldır. İngilizce hazırlık döneminde yurtta kalma süresi iki yarıyıl olup, bu süre lisans dönemlerinin dışında tutulur."
+                }
+            ]
+        },
+        "response": "Mevcut bilgiler mezun olduktan sonra yurtta kalmayı mümkün kılan veya engelliyen bir kural içermediği için bu soruyu yanıtlamak için yeterli değildir.\n"
+    },
+    {
+        "query": "Doktora programında bilimsel hazırlık var mı?",
+        "selected_tool": "regulation_search",
+        "rewritten_query": "doktora programında bilimsel hazırlık programı\n",
+        "tool_result": {
+            "status": "success",
+            "result": [
+                {
+                    "score": 0.892,
+                    "text": "Bilimsel hazırlık programı, öğrencilerin kabul edildikleri lisansüstü programa başlamadan önce eksikliklerini gidermek amacıyla almak zorunda oldukları bilimsel hazırlık derslerinden oluşur."
+                },
+                {
+                    "score": 0.886,
+                    "text": "Aşağıdaki niteliklere sahip aday öğrenciler bilimsel hazırlık programına alınabilir:\n\nLisans derecelerini kabul edildikleri yüksek lisans veya doktora programından farklı alanlarda almış olanlar,\n\nLisans derecelerini kabul edildikleri yüksek lisans veya doktora programı ile aynı bilim dalında aldıkları halde farklı bir yükseköğretim kurumundan mezun olanlar,\n\nYüksek lisans derecelerini kabul edildikleri doktora programından farklı alanlarda almış olanlar,\n\nYüksek lisans derecelerini kabul edildikleri doktora programıyla aynı bilim dalında aldıkları halde farklı bir yükseköğretim kurumundan mezun olanlar."
+                }
+            ]
+        },
+        "response": "Evet, Doktora programında bilimsel hazırlık vardır. Bilimsel hazırlık programı, öğrencilerin kabul edildikleri lisansüstü programa (Doktora programı da dahil) başlamadan önce eksikliklerini gidermek amacıyla almak zorunda oldukları bilimsel hazırlık derslerinden oluşur.\n\nAşağıdaki niteliklere sahip aday öğrenciler bilimsel hazırlık programına alınabilir:\n*   Lisans derecelerini kabul edildikleri yüksek lisans veya doktora programından farklı alanlarda almış olanlar.\n*   Lisans derecelerini kabul edildikleri yüksek lisans veya doktora programı ile aynı bilim dalında aldıkları halde farklı bir yükseköğretim kurumundan mezun olanlar.\n*   Yüksek lisans derecelerini kabul edildikleri doktora programından farklı alanlarda almış olanlar.\n*   Yüksek lisans derecelerini kabul edildikleri doktora programıyla aynı bilim dalında aldıkları halde farklı bir yükseköğretim kurumundan mezun olanlar.\n"
+    },
+    {
+        "query": "Doktora başvurusu için İngilizce yeterlilik şartı nedir?",
+        "selected_tool": "regulation_search",
+        "rewritten_query": "doktora programına başvuru için İngilizce yeterlilik şartları\n",
+        "tool_result": {
+            "status": "success",
+            "result": [
+                {
+                    "score": 0.88,
+                    "text": "Üniversitenin eğitim-öğretim dili İngilizce’dir. Değişim programları kapsamında Üniversiteye gelmek üzere yapılacak başvurularda:\n\n(a)'daki koşulları sağlamayan tüm adayların İngilizce dil yeterliklerinin en az B2 seviyesinde olduğunu TOEFL ya da IELTS sınavı, yetkili kurumlardan alınmış resmi dil sertifikası ya da kendi yükseköğretim kurumlarından aldıkları resmi yazı ile  belgelemeleri gerekir."
+                },
+                {
+                    "score": 0.876,
+                    "text": "Üniversitenin eğitim-öğretim dili İngilizce’dir. Değişim programları kapsamında Üniversiteye gelmek üzere yapılacak başvurularda:\n\nAnadili İngilizce olan ya da eğitim dili İngilizce olan bir yükseköğretim kurumunda eğitim gören adaylardan İngilizce dil yeterliklerini belgelemeleri istenmez."
+                }
+            ]
+        },
+        "response": "Değişim programları kapsamında Üniversiteye gelmek üzere doktora başvurusu yapacak adaylar için İngilizce yeterlilik şartı şöyledir:\n\n*   Anadili İngilizce olan ya da eğitim dili İngilizce olan bir yükseköğretim kurumunda eğitim gören adaylardan İngilizce dil yeterliklerini belgelemeleri istenmez.\n*   Bu koşulu sağlamayan tüm adayların İngilizce dil yeterliklerinin en az B2 seviyesinde olduğunu TOEFL ya da IELTS sınavı, yetkili kurumlardan alınmış resmi dil sertifikası ya da kendi yükseköğretim kurumlarından aldıkları resmi yazı ile belgelemeleri gerekir.\n"
+    },
+    {
+        "query": "İngilizce dışında bir dilde yapılan değişim programında hangi dil belgesi gerekir?",
+        "selected_tool": "regulation_search",
+        "rewritten_query": "İngilizce dışı dil değişim programı için gerekli dil belgesi\n",
+        "tool_result": {
+            "status": "success",
+            "result": [
+                {
+                    "score": 0.878,
+                    "text": "Değişim programları kapsamında öğrenim hareketliliğine katılmak üzere başvuru yapacak öğrencilerin:\n\nİngilizce dışında bir dilde öğretim veren kurumlar için o dilde yeterlik koşulunu sağlaması ya da karşı kuruma gitmeden önce sağlayabileceği biçimde hazırlık yapıyor olmaları, gerekir."
+                },
+                {
+                    "score": 0.874,
+                    "text": "Değişim programları kapsamında eğitim hareketliliğine katılmak üzere başvuru yapacak öğrencilerin:\n\neğitim hareketliliği faaliyetini İngilizce dışında bir dilde yeterlik isteyen kurumlarda gerçekleştirebilmek için o dilde yeterlik koşulunu sağlamaları, gerekir."
+                }
+            ]
+        },
+        "response": "İngilizce dışında bir dilde yapılan değişim programında, öğrencinin o dilde yeterlik koşulunu sağlaması veya karşı kuruma gitmeden önce o dilde hazırlık yapmış olması gerekir.\n"
+    },
+    {
+        "query": "ÇAP yapmak için gereken mezuniyet kredisi ana daldan kaç kredi fazla olmalıdır?",
+        "selected_tool": "regulation_search",
+        "rewritten_query": "çift ana dal programı için mezuniyet kredisi ana daldan asgari fark\n",
+        "tool_result": {
+            "status": "success",
+            "result": [
+                {
+                    "score": 0.902,
+                    "text": "Çift ana dal programı için gerekli olan mezuniyet kredisi, ana dal programının mezuniyet kredisinden en az 15 kredi fazla olmalıdır."
+                },
+                {
+                    "score": 0.878,
+                    "text": "Çift ana dal programı başvurusu yapan öğrencinin;\n\nbaşvuru yaptığı yarıyıla kadar ana dal lisans programında aldığı tüm kredili  ve kredisiz dersleri en az DD veya P notu ile tamamlamış olması, gerekir."
+                }
+            ]
+        },
+        "response": "Çift ana dal programı için mezuniyet kredisi, ana dal programının mezuniyet kredisinden en az 15 kredi fazla olmalıdır. Başka bir bilgi mevcut değildir.\n"
+    }
+]

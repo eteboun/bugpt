@@ -1,0 +1,171 @@
+<div class="inner-page__content">
+<div class="inner-page__content-header">
+<h2 class="title">
+                                Boğaziçi Üniversitesi Değişim Programları Yönergesi                            </h2>
+</div>
+<div class="inner-page__content-description">
+
+<p style="text-align: center;"><strong>BİRİNCİ BÖLÜM</strong></p>
+<p style="text-align: center;"><strong>Amaç, Kapsam, Dayanak ve Tanımlar</strong></p>
+<p style="text-align: justify;"><strong>Amaç</strong></p>
+<p style="text-align: justify;"><strong>MADDE 1</strong>(1) Bu yönergenin amacı, Boğaziçi Üniversitesi’nin taraf olduğu değişim programlarına ilişkin esasları düzenlemektir.</p>
+<p style="text-align: justify;"><strong>Kapsam</strong></p>
+<p style="text-align: justify;"><strong>MADDE 2</strong>(1) Bu yönerge, değişim programlarına ve bu programlara dayalı öğrenci hareketliliğine dair süreç ve uygulamalara ilişkin hükümleri kapsar.</p>
+<p style="text-align: justify;"><strong>Dayanak</strong></p>
+<p style="text-align: justify;"><strong>MADDE 3</strong>(1) Bu yönerge Boğaziçi Üniversitesi Lisans Eğitim ve Öğretim Yönetmeliği ile Lisansüstü Eğitim ve Öğretim Yönetmeliği’nin değişim programlarını düzenleyen maddelerine dayanılarak hazırlanmıştır.</p>
+<p style="text-align: justify;">(2) Yönerge hükümleri, 18.02.2009 tarih ve 27145 sayılı resmi gazetede yayınlanan Yükseköğretim Kurumları Arasında Öğrenci ve Öğretim Üyesi Değişim Programına İlişkin Yönetmelik,  Erasmus+ Programı ile ilgili Avrupa Komisyonu ve Türkiye Ulusal Ajansı tarafından belirtilen esasları ve Mevlana Programı ile ilgili Yükseköğretim Kurulu tarafından belirtilen esasları gözetir.</p>
+<p style="text-align: justify;"><strong>Tanımlar</strong></p>
+<p style="text-align: justify;"><strong>MADDE 4</strong>(1) Bu yönergede geçen;</p>
+<ol>
+<li style="text-align: justify;">Çerçeve anlaşma: Boğaziçi Üniversitesi ile yurtiçi ve yurtdışı kurumlar arasında işbirliğine temel oluşturan niyet ve genel koşulların yer aldığı, “Memorandum of Understanding” [MOU] olarak bilinen anlaşmayı,</li>
+<li style="text-align: justify;">Çerçeve program: Erasmus+, Mevlana ve benzeri programlarda olduğu gibi yurtiçi ve yurtdışı kurumlarla işbirliğine temel oluşturan, Boğaziçi Üniversitesi’nin katılımcı olarak yer aldığı programları,</li>
+<li style="text-align: justify;">Değişim programı: Bir yükseköğretim kurumunda lisans ya da lisansüstü programa kayıtlı öğrencinin çerçeve program ve çerçeve anlaşma kapsamında başka bir kurumda öğrenim ve eğitim faaliyetlerinde bulunmasına olanak sağlayan programı,</li>
+<li style="text-align: justify;">İkili anlaşma: Çerçeve anlaşma kapsamında kurumlar arası karşılıklı işbirliğinde geçerli olacak özel koşulları tanımlayan anlaşmayı,</li>
+<li style="text-align: justify;">Erasmus anlaşması: Erasmus+ çerçeve programı kapsamında, Avrupa Komisyonu tarafından verilen ‘Erasmus Charter for Higher Education’ belgesine sahip yükseköğretim kurumlarıyla imzalanan, ülkemizde Avrupa Komisyonu’nun ilgili programlarını yürüten Ulusal Ajans tarafından belirlenen kuralları gözeten, hareketlilik kontenjanlarının ve ilgili koşulların tanımlandığı anlaşmaları,</li>
+<li style="text-align: justify;">Mevlana anlaşması: Yükseköğretim Kurulu (YÖK) tarafından yürütülen Mevlana çerçeve programı kapsamında yükseköğretim kurumlarıyla imzalanan, hareketlilik kontenjanlarının ve ilgili koşulların tanımlandığı anlaşmaları,</li>
+<li style="text-align: justify;">Sözleşme dönemi: Çerçeve programlar kapsamında program yürütücüsü ve Boğaziçi Üniversitesi arasında imzalanan sözleşmenin geçerli olduğu süreyi,</li>
+<li style="text-align: justify;">Öğrenim hareketliliği: Ders alma amaç ve zorunluluğuyla gerçekleştirilen değişim programını,</li>
+<li style="text-align: justify;">Eğitim hareketliliği: Meslekî becerileri geliştirmek adına staj, uygulama, araştırma ve benzeri ders dışı amaçlarla gerçekleştirilen değişim programını,</li>
+<li style="text-align: justify;">Gelen öğrenci: Değişim programları kapsamında Boğaziçi Üniversitesi’ne gelen öğrenciyi,</li>
+<li style="text-align: justify;">Giden öğrenci: Değişim programları kapsamında karşı kuruma giden Boğaziçi Üniversitesi öğrencisini,</li>
+<li style="text-align: justify;">İlgili yönetim kurulu: Fakülte, Enstitü ve Yüksekokul Yönetim Kurullarını,</li>
+<li style="text-align: justify;">Rektör: Boğaziçi Üniversitesi Rektörü’nü</li>
+<li style="text-align: justify;">Senato: Boğaziçi Üniversitesi Senatosu’nu,</li>
+<li style="text-align: justify;">Üniversite: Boğaziçi Üniversitesi’ni,</li>
+<li style="text-align: justify;">ÜYK: Üniversite Yönetim Kurulunu,</li>
+<li style="text-align: justify;">ADİK: Akademik Dış İlişkiler Komisyonu’nu,</li>
+<li style="text-align: justify;">ÖDYK: Öğrenci Değişim ve Yerleştirme Komisyonu’nu</li>
+<li style="text-align: justify;">UİO: Uluslararası İlişkiler Ofisi’ni</li>
+</ol>
+<p style="text-align: justify;">ifade eder.</p>
+<p style="text-align: justify;"><strong>İKİNCİ BÖLÜM</strong></p>
+<p style="text-align: justify;"><strong>Programların Oluşturulması ve Yürütülmesi</strong></p>
+<p style="text-align: justify;"><strong>Yetkili Kişi ve Birimler</strong></p>
+<p style="text-align: justify;"><strong>MADDE 5</strong>(1) Uluslararası İlişkiler Koordinatörü: Rektör tarafından, tam zamanlı öğretim üyeleri arasından, Üniversitenin uluslararası ilişkilerini geliştirmek ve değişim programları ile ilgili Üniversite genelinde eşgüdümü sağlamak üzere atanır.</p>
+<p style="text-align: justify;">(2) Akademik Dış İlişkiler Komisyonu (ADİK): Senato tarafından, Üniversitenin uluslararası akademik işbirliklerini gözetmek ve değerlendirmek, yeni gelişmeleri takip ederek ilgili konularda strateji belirlemekle görevlendirilmiş alt komisyondur.</p>
+<p style="text-align: justify;">(3) Öğrenci Değişim ve Yerleştirme Komisyonu (ÖDYK): ÜYK tarafından, değişim programlarının işleyişini koordine etmek, giden öğrencilerin başvuru ve kabul süreçlerini yürütmek ve yerleştirmelerini yapmakla görevlendirilmiş alt komisyondur.</p>
+<p style="text-align: justify;">(4) Erasmus Kurum Koordinatörü: Rektörlük tarafından, Üniversitenin Erasmus programını yürütmek ve geliştirmek üzere atanan kişidir.</p>
+<p style="text-align: justify;">(5) Değişim Koordinatörü: Üniversitenin bölüm, program, fakülte, yüksekokul, enstitü gibi akademik birimlerinde değişim programlarının yürütülmesi ile ilgili olarak akademik birim tarafından görevlendirilen tam zamanlı öğretim üyesi veya doktoralı öğretim görevlisidir.</p>
+<p style="text-align: justify;">(6) Değişim Danışmanı: değişim programı ile ilgili konularda öğrencilere akademik danışmanlık yapmak üzere bölüm ve/veya program tarafından atanan tam zamanlı öğretim üyesi veya doktoralı öğretim görevlisidir.</p>
+<p style="text-align: justify;">(7) Uluslararası İlişkiler Ofisi (UİO): değişim programları ile ilgili idari işleri yürüten, Rektörlüğe bağlı idari birimdir.</p>
+<p style="text-align: justify;"><strong>Değişim Programlarının Oluşturulması ve Yürütülmesine İlişkin Esaslar</strong></p>
+<p style="text-align: justify;"><strong>MADDE 6</strong>(1) Değişim programları, ADİK’in gözetiminde, karşılıklılık esaslarına göre ve iki yönlü düzenlenir.</p>
+<p style="text-align: justify;">(2) Çerçeve anlaşmalar, Üniversitenin akademik birimleri veya Uluslararası İlişkiler Genel Koordinatörlüğünün önerisi ile Uluslararası İlişkiler Genel Koordinatörü tarafından karara bağlanır ve karşılıklılık esasına göre ilgili makam (Rektör, Rektör Yardımcısı veya Uluslararası İlişkiler Genel Koordinatörü) tarafından imzalanarak yürürlüğe girer.</p>
+<p style="text-align: justify;">(3) Erasmus anlaşmaları, taraf olacak akademik program veya birimler ile bu birimlerde görevli değişim programları koordinatörlerinin yazılı talebi veya önerisi üzerine düzenlenir ve Erasmus Kurum Koordinatörü veya Uluslararası İlişkiler Genel Koordinatörü tarafından imzalanarak yürürlüğe girer.</p>
+<p style="text-align: justify;">(4) Mevlana anlaşmaları, katılmak isteyen akademik birimleri kapsayacak şekilde Uluslararası İlişkiler Genel Koordinatörü tarafından karara bağlanır ve karşılıklılık esasına göre ilgili makam (Rektör, Rektör Yardımcısı veya Uluslararası İlişkiler Genel Koordinatörü) tarafından imzalanarak yürürlüğe girer.</p>
+<p style="text-align: justify;">(5) Anlaşmaların koordinasyon ve takip sürecini, ilgili akademik birimde görevli değişim programları koordinatörü yürütür.</p>
+<p style="text-align: justify;"><strong>ÜÇÜNCÜ BÖLÜM</strong></p>
+<p style="text-align: justify;"><strong>Değişim Programları Kapsamında Giden Öğrenciler</strong></p>
+<p style="text-align: justify;"><strong>Başvuru</strong></p>
+<p style="text-align: justify;"><strong>MADDE 7</strong>(1) Öğrenim hareketliliği ile ilgili başvuru takvimi ve başvuru süreçleri, ÖDYK’nin gözetiminde UİO tarafından belirlenerek ilan edilir.</p>
+<p style="text-align: justify;">(2) Öğrenim hareketliliği kapsamında mevcut kontenjanlar, kurumlar arası anlaşmalarda belirlenen kontenjanlara dayanarak UİO tarafından belirlenerek her başvuru dönemi öncesinde ilan edilir. Mevcut kontenjanlarda değişiklik olması durumunda başvuru sürecinde güncellenen kontenjanlar ilan edilir.</p>
+<p style="text-align: justify;">(3) Eğitim hareketliliği ile ilgili başvuru takvimi ve başvuru süreçleri, UİO tarafından belirlenerek ilan edilir.</p>
+<p style="text-align: justify;">(4) Öğrenci yerleştirmeleri sonucu boş kontenjan veya kullanılabilir kaynak kalması durumunda yeni bir başvuru çağrısı ve değerlendirme takvimi ilan edilebilir.</p>
+<p style="text-align: justify;">(5) Lisans, yüksek lisans ve doktora düzeylerinde öğrenim hareketliliğinden birden çok kez yararlanılabilir.</p>
+<p style="text-align: justify;">(6)  Lisans, yüksek lisans ve doktora düzeylerinde mezuniyet sonrasında öğrenim veya staj hareketliliği gerçekleştirilemez.</p>
+
+<p style="text-align: justify;"><strong>MADDE 8</strong>(1) Değişim programları kapsamında öğrenim hareketliliğine katılmak üzere başvuru yapacak öğrencilerin:</p>
+<ol>
+<li style="text-align: justify;">başvuru sırasında lisans, yüksek lisans ya da doktora diploma programlarından birinde kayıtlı olmaları,</li>
+<li style="text-align: justify;">genel not ortalamalarının, lisans öğrencileri için en az 2,50, lisansüstü öğrencileri için en az 3,00 olması,</li>
+<li style="text-align: justify;">İngilizce hazırlık sınıfı ve yaz öğretimi hariç olmak üzere; lisans öğrencilerinin en az iki yarıyıl, lisansüstü öğrencilerinin bilimsel hazırlık süresi hariç en az bir yarıyıl kayıt yaptırıp öğretime devam etmiş olmaları,</li>
+<li style="text-align: justify;">lisans öğrencileri için, değişim programından döndükten sonra, yaz öğretimi hariç en az bir yarıyıl daha Üniversitede kayıtlı olup ders alarak öğretime devam edecek olmaları,</li>
+<li style="text-align: justify;">lisansüstü öğrencileri için, tezlerini değişim programından döndükten sonra savunacak olmaları ya da değişim programından döndükten sonra yaz öğretimi hariç en az bir yarıyıl daha Üniversitede kayıtlı olup ders alarak öğretime devam edecek olmaları,</li>
+<li style="text-align: justify;">İngilizce dışında bir dilde öğretim veren kurumlar için o dilde yeterlik koşulunu sağlaması ya da karşı kuruma gitmeden önce sağlayabileceği biçimde hazırlık yapıyor olmaları,</li>
+<li style="text-align: justify;">değişim programı kapsamında kurumlar arasında imzalanmış olan anlaşmada belirtilen dil yeterliği, not ortalaması ve benzeri ek koşulları sağlamaları,</li>
+<li style="text-align: justify;">ÖDYK tarafından önerilen ve ÜYK tarafından kabul edilen ek koşulları sağlamaları</li>
+</ol>
+<p style="text-align: justify;">gerekir.</p>
+<p style="text-align: justify;"><strong>MADDE 9</strong>(1) Değişim programları kapsamında eğitim hareketliliğine katılmak üzere başvuru yapacak öğrencilerin:</p>
+<ol>
+<li style="text-align: justify;">başvuru sırasında lisans, yüksek lisans ya da doktora diploma programlarından birinde kayıtlı olmaları,</li>
+<li style="text-align: justify;">İngilizce hazırlık sınıfı ve yaz öğretimi hariç olmak üzere; lisans öğrencilerinin en az iki yarıyıl, lisansüstü öğrencilerinin bilimsel hazırlık süresi hariç en az bir yarıyıl kayıt yaptırıp öğretime devam etmiş olmaları,</li>
+<li style="text-align: justify;" value="3">eğitim hareketliliği faaliyetini İngilizce dışında bir dilde yeterlik isteyen kurumlarda gerçekleştirebilmek için o dilde yeterlik koşulunu sağlamaları,</li><li style="text-align: justify;" value="4">ÖDYK önerisi ile ÜYK tarafından ilgili başvuru çağrısı için belirlenen kontenjan, not ortalaması, dil yeterliği ve benzeri koşulları sağlamaları,</li><li style="text-align: justify;" value="5">ilgili başvuru çağrısında istenen bilgi ve belgeleri eksiksiz ve zamanında teslim etmeleri</li></ol>
+
+
+<p style="text-align: justify;">gerekir.</p>
+<p style="text-align: justify;"><strong>MADDE 10</strong>(1) İlan edilen süreler içinde ve tanımlanan kurallar çerçevesinde başvuru yapan öğrencilerin başvuruları değerlendirmeye alınır.</p>
+<p style="text-align: justify;"><strong>Değerlendirme ve Yerleştirme</strong></p>
+<p style="text-align: justify;"><strong>MADDE 11</strong>(1) Değerlendirmede kullanılacak puanların hesaplanmasında dikkate alınacak kriterler (akademik başarı, dil yeterliği gibi) ÖDYK önerisi ile ÜYK tarafından belirlenir. Kullanılacak puanlama yönteminin ayrıntıları ilgili başvuru çağrısında ilan edilir.</p>
+<p style="text-align: justify;">(2) Değişim programları kapsamında yapılan tüm başvurular ÖDYK tarafından değerlendirilerek karara bağlanır. Yerleştirmelerde puan sıralamaları dikkate alınır.</p>
+<p style="text-align: justify;">(3) Değerlendirme ve yerleştirme sonuçları UİO tarafından ilan edilir.</p>
+<p style="text-align: justify;"><strong>Aday Gösterme</strong></p>
+<p style="text-align: justify;"><strong>MADDE 12</strong>(1) Öğrenim hareketliliğinden yararlanma hakkı kazanan ve bu hakkından yararlanacağını taahhüt eden öğrenci, UİO tarafından karşı kuruma aday gösterilir. Bu süreçte gerekli bilgi ve belgelerin UİO’ya tam ve zamanında ulaştırılması öğrencinin sorumluluğundadır.</p>
+<p style="text-align: justify;">(2) İkili anlaşma programlarından aynı eğitim kademesinde en fazla iki dönem faydalanılabilir.</p>
+<p style="text-align: justify;">(3)  İkili anlaşma programlarına bir akademik yıl veya toplamda iki dönem için yerleştirilen ve karşı kuruma gideceğini taahhüt eden öğrenci, bulunduğu eğitim seviyesindeki ikili anlaşma programlarından yararlanma hakkını kullanmış sayılır.</p>
+<p style="text-align: justify;"><strong>MADDE 13</strong>(1) Aday gösterilmesi sırasında öğrencinin:</p>
+<ol>
+<li style="text-align: justify;">birden fazla dersten son notunun F olmaması,</li>
+<li style="text-align: justify;">bir dersten son notu F olan lisans öğrencisinin genel not ortalamasının en az 3,00/4,00 olması,</li>
+<li style="text-align: justify;">bir dersten son notu F olan lisansüstü öğrencisinin genel not ortalamasının en az 3,50/4,00 olması,</li>
+<li style="text-align: justify;">İngilizce dışında bir dilde öğretim veren kurumlar için o dilde yeterlik koşulunu sağlaması ya da karşı kuruma gitmeden önce sağlayabileceği biçimde hazırlık yapıyor olması</li>
+</ol>
+<p style="text-align: justify;">gerekir. Yukarıdaki koşulları sağlamayan öğrenciler aday gösterilmezler ve ilgili dönemde değişim programına katılamazlar, ancak bu öğrencilerin sonraki dönemlerde yeniden değişim programlarına başvurma hakları saklıdır.</p>
+<p style="text-align: justify;">(2) Üniversitenin, ilgili çerçeve programın ve/veya ikili anlaşmanın isterlerini karşılayan bir öğrenci, aday gösterildiği kurumun ek isterlerini de karşılamak zorundadır.</p>
+<p style="text-align: justify;">(3) Üniversite tarafından karşı kuruma aday gösterilmiş bir öğrenci, karşı kurum tarafından reddedilebilir. Böyle bir durumda öğrenci, başvurusunun farklı bir kurum için yeniden değerlendirilmesini veya bir sonraki yerleştirme döneminde kendisine yeniden başvuru hakkı tanınmasını ÖDYK’ya dilekçe vererek isteyebilir. Dilekçe ÖDYK tarafından değerlendirilerek karara bağlanır.</p>
+<p style="text-align: justify;"><strong>Karşı Kuruma Başvuru ve Kabul</strong></p>
+<p style="text-align: justify;"><strong>MADDE 14</strong>(1) Aday gösterilmiş öğrenci, başvuru ile ilgili olarak karşı kurum tarafından istenen belgeleri hazırlamak, bu belgeleri istenen biçimde ve başvuru tarihinden önce karşı kuruma iletmek ile yükümlüdür. Bu süreçte UİO öğrenciye danışmanlık hizmeti verir. Başvuru ile ilgili yükümlülüklerini yerine getirmeyen öğrenci değişim programına katılım hakkını kaybedebilir.</p>
+<p style="text-align: justify;">(2) Seyahat ve vize işlemleri öğrencinin sorumluluğundadır.</p>
+<p style="text-align: justify;"><strong>MADDE 15</strong>(1) Anlaşmalı kurumun akademik takviminin Üniversitenin Akademik Takvimi ile uyuşmadığı hallerde ilgili öğretim elemanı karşı kuruma gidecek değişim öğrencisine yarıyıl sonu sınavını erken verebilir.</p>
+<p style="text-align: justify;"><strong>Alınacak Dersler, Akademik Onay ve Öğrenim Anlaşması</strong></p>
+<p style="text-align: justify;"><strong>MADDE 16</strong>(1) Değişim programına katılacak öğrenci, değişime gideceği yarıyıl için (mezuniyet sonrası eğitim hareketliliği hariç) ilgili yönetim kuruluna başvurarak değişim programına katılmak üzere izin alır. Bu izin alınmadığı durumda öğrenci değişim programına katılmış sayılmaz ve ilgili haklardan yararlanamaz.</p>
+<p style="text-align: justify;">(2) Öğrenim hareketliliği sırasında öğrenci Üniversitedeki ve karşı kurumdaki program ve/veya birim danışmanları tarafından önerilen akademik kredi yükünü alır. Öğrencinin karşı kurumda alacağı derslerin Üniversitedeki eğitim programı ile uyumlu olması beklenir. Önerilen kredi yükünü almayan öğrenci katılım hakkını kaybedebilir ve bu durum karşı kuruma bildirilir.</p>
+<p style="text-align: justify;">(3) Öğrencinin almayı planladığı dersler ile bu dersleri başarıyla tamamlaması durumunda programındaki hangi dersler yerine sayılacağı, ilgili yönetim kurulunun onayladığı öğrenim anlaşmasında belirtilir.</p>
+<p style="text-align: justify;">(4) Öğrenci karşı kuruma gittikten sonra öğrenim anlaşmasında yapılacak her tür değişiklik ilgili danışmanların onayı ile yapılır.</p>
+<p style="text-align: justify;"><strong>Çerçeve Programlar Kapsamında Hibe ve Hibe Sözleşmesi</strong></p>
+<p style="text-align: justify;"><strong>MADDE 17</strong>(1) Erasmus+ ve Mevlana çerçeve programları kapsamında değişim programlarına katılması kesinleşen öğrenci, hibe almak için aday olur. Adaylar arasından hibe almaya hak kazanacak öğrenciler, ÖDYK tarafından, ÜYK’nin belirlediği esaslara göre belirlenir.</p>
+<p style="text-align: justify;">(2) Çerçeve programlar kapsamında katılım sayısı, hibe miktarı, süre ve benzeri hususlarda ilgili programı yürüten kurum ve kuruluşlar tarafından belirlenmiş sınırlamalar gözetilir.</p>
+<p style="text-align: justify;"><strong>MADDE 18</strong>(1) Çerçeve program tarafından belirlenen hibe sözleşmesi hareketliliğe katılacak öğrenci ile Üniversite arasında imzalanır.</p>
+<p style="text-align: justify;">(2) İlgili çerçeve program ve ÜYK’nın belirlediği koşulları ilgili sözleşme dönemi içinde yerine getirmeyen öğrencilerin hibelerinde kesinti yapılır, gerekli durumlarda hibeler tümüyle geri istenir.</p>
+<p style="text-align: justify;">(3) Hibe sözleşmesi, ödemeler ve kesintiler ile ilgili süreçler, UİO tarafından yürütülür.</p>
+<p style="text-align: justify;"><strong>Değişim Programında Geçirilen Süre</strong></p>
+<p style="text-align: justify;"><strong>MADDE 19</strong>(1) Öğrencilerin öğrenim hareketliliği kapsamında değişim programlarına yerleştirmeleri, Senato tarafından onaylanan istisnai durumlar dışında, bir yarıyıl için yapılır.</p>
+<p style="text-align: justify;">(2) Öğrenim hareketliliği kapsamında bir yarıyıl için değişim programına yerleştirilmiş öğrencinin bir yarıyıl daha ek süre talep etmesi durumunda, başvuruları ÖDYK tarafından ancak müsait kota bulunduğu takdirde değerlendirilir. Öğrenim hareketliliği kapsamında karşı kurumda geçirdikleri süreyi bir yarıyıl daha uzatmak isteyen öğrenciler, ÖDYK’nın onayı ile ilgili yönetim kuruluna başvurarak ek izin almak zorundadırlar. Öğrenciler Senato tarafından bir yıllık olarak öngörülen değişim programlarına ek izne gerek olmaksızın tüm yıl için yerleştirilirler.</p>
+<p style="text-align: justify;">(3) Öğrencilerin değişim programlarında geçirdikleri süre azami eğitim süresine dahildir.</p>
+<p style="text-align: justify;">(4) Hibe sağlayan çerçeve programlar kapsamında ek süre alan öğrenciler, bu ek süre için hibeye hak kazanmış sayılmazlar. Ek süre için ek hibe talebinde bulunan öğrencilerin talepleri, yeterli mali kaynak bulunması durumunda, ÖDYK tarafından incelenip karara bağlanır.</p>
+<p style="text-align: justify;"><strong>Üniversiteye Dönüş ve Kredi Transferi</strong></p>
+<p style="text-align: justify;"><strong>MADDE 20</strong>(1) Öğrenciler, dönüş sonrası, kendilerinden istenen belgeleri zamanında ve eksiksiz olarak UİO’ya teslim etmek ve gerekli işlemleri tamamlamakla yükümlüdür.</p>
+<p style="text-align: justify;">(2) Karşı kurum tarafından UİO’ya gönderilen not çizelgesi öğrencinin bağlı olduğu Fakülte/Enstitü/Yüksekokula iletilir. Kredi transferi,  Üniversite’nin eğitim ve öğretim yönetmeliklerinin ilgili hükümleri uyarınca ve Senato’nun kabul ettiği kurallar uyarınca, ilgili yönetim kurulu kararı ile yapılır.</p>
+<p style="text-align: justify;">(3) Öğrencinin karşı kurumda aldığı ve Üniversitemizin lisans öğrencileri için CC, lisansüstü öğrencileri için BB ve üzeri notlarına karşılık gelen notlarla tamamladığı tüm dersler not çizelgesinde özgün isimleriyle ve kredileriyle gösterilir; bunlardan, öğrencinin programındaki ders ve yükümlülüklerin yerine sayılanlar P notu ile, program dışı değerlendirilenler ise P notu ve NC işaretiyle not çizelgesine işlenir.</p>
+<p style="text-align: justify;"><strong>Mali Yükümlülükler</strong></p>
+<p style="text-align: justify;"><strong>MADDE 21</strong>(1) Öğrenciler, değişim programında geçirdikleri süre için Üniversiteye olan mali yükümlülüklerini yerine getirirler, ayrıca karşı kuruma öğrenim ücreti ödemezler.</p>
+<p style="text-align: justify;">(2) Konaklama, ulaşım, sağlık sigortası ve benzeri kişisel harcamalar öğrencilerin sorumluluğundadır.</p>
+<p style="text-align: justify;"><strong>DÖRDÜNCÜ BÖLÜM</strong></p>
+<p style="text-align: justify;"><strong>Değişim Programları Kapsamında Gelen Öğrenciler</strong></p>
+<p style="text-align: justify;"><strong>Başvuru koşulları</strong></p>
+<p style="text-align: justify;"><strong>MADDE 22</strong>(1) Üniversitenin eğitim-öğretim dili İngilizce’dir. Değişim programları kapsamında Üniversiteye gelmek üzere yapılacak başvurularda:</p>
+<p style="text-align: justify;">(a)  Anadili İngilizce olan ya da eğitim dili İngilizce olan bir yükseköğretim kurumunda eğitim gören adaylardan İngilizce dil yeterliklerini belgelemeleri istenmez.</p>
+<p style="text-align: justify;">(b) (a)'daki koşulları sağlamayan tüm adayların İngilizce dil yeterliklerinin en az B2 seviyesinde olduğunu TOEFL ya da IELTS sınavı, yetkili kurumlardan alınmış resmi dil sertifikası ya da kendi yükseköğretim kurumlarından aldıkları resmi yazı ile  belgelemeleri gerekir.</p>
+<p style="text-align: justify;"><strong>MADDE 23</strong>(1) Öğrenim hareketliliği kapsamında gelmek isteyen öğrencilerin akademik takvimde ilan edilen tarihlere kadar kurumları tarafından aday gösterilmeleri gerekir.</p>
+<p style="text-align: justify;">(2) Aday gösterilen öğrencilerin sunması gereken belgeler UİO tarafından ilan edilir.</p>
+<p style="text-align: justify;">(3) Başvuru sırasında ders seçimleri yapılırken programların değişim danışmanları ders seçimlerinde yol gösterir ve öğrencinin danışmanlar tarafından önerilen akademik kredi yükünü alması beklenir.</p>
+<p style="text-align: justify;"><strong>MADDE 24</strong>(1) Eğitim hareketliliği kapsamında gelmek isteyen öğrenciler, hareketliliği gerçekleştirmek istedikleri akademik veya idari birim ile iletişime geçerek onay almak zorundadırlar.</p>
+<p style="text-align: justify;"><strong>Öğrenim Hareketliliğinde Değerlendirme, Kabul ve Kayıt</strong></p>
+<p style="text-align: justify;"><strong>MADDE 25</strong>(1) Öğrenim hareketliliği kapsamında başvuran adayın başvuru belgeleri UİO tarafından ilgili akademik birimlere iletilir ve başvurular bu birimlerce değerlendirilerek kabul veya red görüşü ilgili yönetim kuruluna iletilir. İlgili yönetim kurulu tarafından alınan karar UİO’ya bildirilir, UİO kararı adaya ve adayın kurumuna iletir.</p>
+<p style="text-align: justify;">(2) Kabul edilen adayların isimleri  Uluslararası İlişkiler Koordinatörü tarafından Öğrenci İşleri Daire Başkanlığına yazılı olarak bildirilir.</p>
+<p style="text-align: justify;">(3) Kabul edilen adaylar Üniversiteye kayıt işlemleri için Akademik Takvimde ilan edilen günlerde Kayıt İşleri Şube Müdürlüğü’ne başvururlar.</p>
+<p style="text-align: justify;">(4) Her gelen öğrenciye kayıt olduğu akademik birim tarafından bir akademik danışman atanır. Akademik danışman öğrencinin akademik konularda ilk başvuracağı kişidir, ders programıyla ilgili yönlendirme yapar.</p>
+<p style="text-align: justify;">(5) Erasmus+ ve Mevlana programları kapsamında gelen öğrencilerin Üniversite’de alacağı derslerin en az ikisi, ikili anlaşmalarla gelen öğrencilerin alacağı derslerin ise en az biri, kayıt yaptıracakları bölüm tarafından verilen dersler arasından seçilmelidir.</p>
+<p style="text-align: justify;"><strong>Eğitim Hareketliliğinde Değerlendirme, Kabul ve Kayıt</strong></p>
+<p style="text-align: justify;"><strong>MADDE 26</strong>(1) Öğrenciyi eğitim hareketliliği kapsamında kabul etmek isteyen birim, onayını yazılı olarak UİO’ya bildirir</p>
+<p style="text-align: justify;">(2)  Erasmus+ programı kapsamında kabul edilen öğrenci için “Boğaziçi University Erasmus Student Mobility Training Agreement” (EK: 1) olarak anılan sözleşme ve bu sözleşmenin parçası olarak kabul edilen “Statement of Confidentiality” belgesi hazırlanır ve taraflarca imzalanır. Sözleşmenin bir kopyası UİO tarafından ilgili Dekalık/Yüksekokul/Enstitü’ye iletilir</p>
+<p style="text-align: justify;">(3)  İlgili Yönetim Kurulu kararı ile kabul edilen adaylar Üniversiteye kayıt işlemleri için Kayıt İşleri Şube Müdürlüğü’ne başvururlar.</p>
+<p style="text-align: justify;"><strong>Gelen Öğrencilerin Hak ve Sorumlulukları</strong></p>
+<p style="text-align: justify;"><strong>MADDE 27</strong>(1) Gelen öğrenciler, değişim programı süresince, Üniversitenin tüm öğrencilerine tanıdığı, Senato tarafından belirlenmiş hak ve sorumluluklara sahiptir.</p>
+<p style="text-align: justify;">(2) Gelen öğrenciler Üniversitenin ilgili yönetmelik ve yönergelerine uymakla yükümlüdür. Buna ek olarak, Eğitim hareketliliği kapsamında gelen öğrenciler, “Boğaziçi University Erasmus Student Mobility Training Agreement” sözleşmesi ile belirlenen esaslara da uymakla yükümlüdür.</p>
+<p style="text-align: justify;"><strong>MADDE 28</strong>(1) Anlaşmalı kurumun akademik takviminin Üniversitenin Akademik Takvimi ile uyuşmadığı hallerde ilgili öğretim elemanı karşı kurumdan gelen değişim öğrencisine yarıyıl sonu sınavını erken verebilir.</p>
+<p style="text-align: justify;"><strong>MADDE 29</strong>(1) Değişim programı ile Üniversiteye gelen öğrencilere barınma sağlanması Üniversitenin yükümlülüğünde değildir.</p>
+<p style="text-align: justify;">(2) Gelen öğrenciler, öğrenci vizesi, oturma izni ve benzeri izinleri almak, sağlık sigortası yaptırmak ve bunlarla ilgili süreçleri takip etmekle yükümlüdürler.</p>
+<p style="text-align: justify;">(3) Öğrenim hareketliliği programını tamamlayan öğrencilere Kayıt İşleri Şube Müdürlüğü tarafından resmi not belgesi verilir.</p>
+<p style="text-align: justify;"><strong>BEŞİNCİ BÖLÜM</strong></p>
+<p style="text-align: justify;"><strong>Çeşitli ve Son Hükümler</strong></p>
+<p style="text-align: justify;"><strong>Hükmü Bulunmayan Haller</strong></p>
+<p style="text-align: justify;"><strong>MADDE 30</strong>(1) Bu Yönergede hükmü bulunmayan hallerde Senato ve ÜYK kararları, ilgili diğer mevzuat hükümleri ve ilgili kurul kararları uygulanır.</p>
+<p style="text-align: justify;"><strong>Yürürlük</strong></p>
+<p style="text-align: justify;"><strong>MADDE 31</strong>(1) Bu yönerge Üniversite Senatosu tarafından kabul edildiği tarihte yürürlüğe girer.</p>
+<p style="text-align: justify;"><strong>Yürütme</strong></p>
+<p style="text-align: justify;"><strong>MADDE 32</strong>(1) Bu yönerge hükümlerini Boğaziçi Üniversitesi Rektörü yürütür.</p>
+</div>
+<div class="footer-date">
+</div>
+</div>

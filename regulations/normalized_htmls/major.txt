@@ -1,0 +1,76 @@
+<div class="inner-page__content">
+<div class="inner-page__content-header">
+<h2 class="title">
+                                Boğaziçi Üniversitesi Çift Ana Dal Programları Yönergesi                            </h2>
+</div>
+<div class="inner-page__content-description">
+<h2 style="text-align: center;"><br/>
+</h2>
+<p style="text-align: center;"><strong>BİRİNCİ BÖLÜM</strong></p>
+<p style="text-align: center;"><strong>Amaç, Kapsam, Dayanak ve Tanımlar</strong></p>
+<p style="text-align: justify;"><strong>Amaç</strong></p>
+<p style="text-align: justify;"><strong>MADDE 1</strong>(1) Bu yönergenin amacı, Boğaziçi Üniversitesi’nde yürütülen çift ana dal programlarına ilişkin esasları düzenlemektir.</p>
+<p style="text-align: justify;"><strong>Kapsam</strong></p>
+<p style="text-align: justify;"><strong>MADDE 2</strong>(1) Bu yönerge, Boğaziçi Üniversitesi’nde yürütülen çift ana dal programlarına öğrenci kabul ve kayıt işlemleri ile çift ana dal programı uygulamalarına ilişkin hükümleri kapsar.</p>
+<p><strong>Dayanak</strong></p><p style="text-align: justify;"><strong>MADDE 3</strong>(1) Bu Yönerge, 24 Nisan 2010 tarih ve 27561 sayılı Resmi Gazete’de yayımlanmış olan “Yükseköğretim Kurumlarında Ön Lisans ve Lisans Düzeyindeki Programlar Arasında Geçiş, Çift Ana dal, Yan Dal ile Kurumlar Arası Kredi Transferi Yapılması Esaslarına İlişkin Yönetmeliğe” dayanarak hazırlanmıştır.</p>
+<p style="text-align: justify;"><strong>Tanımlar</strong></p>
+<p style="text-align: justify;"><strong>MADDE 4</strong>(1) Bu Yönergede geçen;</p>
+<p style="text-align: justify;">a) ana dal programı: Öğrencilerin Öğrenci Seçme ve Yerleştirme Sınavları (ÖSYS) veya eşdeğeri bir sınavla yerleştirilerek veya yatay geçiş yolu ile kabul edilerek Boğaziçi Üniversitesi’nde kayıtlı oldukları lisans programını,</p>
+<p style="text-align: justify;">b) GNO: Genel not ortalamasını,</p>
+<p style="text-align: justify;">c) İkinci ana dal programı: Kayıtlı oldukları lisans programını başarıyla sürdüren öğrencilerin, bu lisans programına ek olarak çift ana dal programı kapsamında Boğaziçi Üniversitesi’nde kayıtlı oldukları ikinci bir lisans programını,</p>
+<p style="text-align: justify;">ç) İlgili yönetim kurulu: Fakülte Yönetim Kurullarını,</p>
+<p style="text-align: justify;">d) Rektör: Boğaziçi Üniversitesi Rektörünü,</p>
+<p style="text-align: justify;">e) Senato: Boğaziçi Üniversitesi Senatosunu,</p>
+<p style="text-align: justify;">f) Üniversite: Boğaziçi Üniversitesini</p>
+<p style="text-align: justify;">g) Üniversite Yönetim Kurulu: Boğaziçi Üniversitesi Yönetim Kurulunu,</p>
+<p style="text-align: justify;">ifade eder.</p>
+<p style="text-align: center;"><strong>İKİNCİ BÖLÜM</strong></p>
+<p style="text-align: center;"><strong>Eğitim Öğretime İlişkin Esaslar</strong></p>
+
+<p style="text-align: justify;"><strong>Çift ana dal Programının Oluşturulması</strong> </p>
+<p style="text-align: justify;"><strong>MADDE 5</strong>(1) Çift ana dal programı, iki ayrı lisans programının Senato tarafından belirlenecek  gereklerini sağlayan öğrencilerin, eş zamanlı olarak  iki ayrı lisans diplomasına hak kazanmasına imkan tanıyan  programdır.</p>
+<p style="text-align: justify;">(2) Çift ana dal programının müfredatı bu yönerge esasları doğrultusunda ilgili bölümler tarafından oluşturulur ve  ilgili fakülte kurullarının önerisi ve Senatonun onayı ile kesinleşir.</p>
+<p style="text-align: justify;">(3) Çift ana dal programının ilk iki yarıyılı için öngörülen dersler, ana dal programının ilk iki yarıyılı ile aynı olmalıdır.  Programın diğer yarıyıllarında yapılan ders ikameleri, program önerisinde gerekçeleriyle belirtilir.</p>
+<p style="text-align: justify;">(4) Çift ana dal programı için gerekli olan mezuniyet kredisi, ana dal programının mezuniyet kredisinden en az 15 kredi fazla olmalıdır.</p>
+<p style="text-align: justify;">(5) ana dal veya ikinci ana dal programlarının müfredatında değişiklik olması durumunda, çift ana dal programı müfredatında da gerekli düzenlemeler yapılır.</p>
+<p style="text-align: justify;"><strong>Kontenjanlar</strong></p>
+<p style="text-align: justify;"><strong>MADDE 6</strong>(1) Kontenjanlar, çift ana dal programını yürüten bölümlerin önerisi üzerine ilgili fakülte yönetim kurulu kararı ile belirlenerek Üniversite Yönetim Kurulunun onayına sunulur. Üniversite Yönetim Kurulu kararı ile kesinleşen kontenjanlar, ilgili fakülteler tarafından ilan edilir.</p>
+<p style="text-align: justify;"><strong>Başvuru Koşulları</strong></p>
+<p style="text-align: justify;"><strong>MADDE 7</strong>(1) Çift ana dal programı başvurusu yapan öğrencinin;</p>
+<p style="text-align: justify;">(a) ana dal lisans programının en erken üçüncü, en geç beşinci yarıyılı başında olması,</p>
+<p style="text-align: justify;">(b) başvuru yaptığı yarıyıla kadar ana dal lisans programında aldığı tüm kredili  ve kredisiz dersleri en az DD veya P notu ile tamamlamış olması,</p>
+<p style="text-align: justify;">(c) 3,20 asgari GNO koşulunu sağlaması,</p>
+<p style="text-align: justify;">(d) Üniversite Yönetim Kurulu tarafından onaylanan ek başvuru koşullarını sağlaması,</p>
+<p style="text-align: justify;">gerekir.</p>
+<p style="text-align: justify;">(2) Bir yan dal programını bırakarak ilgili bir çift ana dal programına geçiş yapmak isteyen öğrencilerden beşinci yarıyılını tamamlamış olanların başvurularının alınması hususunda ilgili yönetim kurulları karar almaya yetkilidir.</p>
+<p style="text-align: justify;">(3) Çift ana dal programlarına başvuru koşulları ve başvuru için gerekli belgeler ilgili bölümler tarafından ilan edilir.</p>
+<p><strong>Başvuru Süreci ve Kabul</strong></p><p style="text-align: justify;"><strong>MADDE 8</strong>(1) Başvurular, akademik takvimde ilan edilen başvuru süresi içinde, ikinci ana dal diploma programının yürütüldüğü fakülteye yapılır.</p>
+<p style="text-align: justify;">(2) Öğrencilerin ikinci ana dal diploma programına kabulü, o programın yürütüldüğü ilgili bölümün önerisi üzerine fakülte yönetim kurulunun onayı ile kesinleşir ve ilan edilir.</p>
+<p style="text-align: justify;"><strong>Çift ana dal Programına Kayıt</strong></p>
+<p style="text-align: justify;"><strong>MADDE 9</strong>(1) Öğrenci, çift ana dal programına kabul edildiği yarıyılda, Kayıt İşleri Şube Müdürlüğü’ne başvurarak kayıt işlemlerini tamamlamalıdır. Kabul kararı alındıktan sonraki ilk kayıt dönemine kadar  çift ana dal programına kayıt işlemini tamamlamayan öğrenci kayıt hakkını kaybetmiş sayılır.</p>
+<p style="text-align: justify;">(2) Öğrenci aynı anda birden fazla çift ana dal programına kayıtlı olamaz.</p>
+<p style="text-align: justify;">(3) Öğrenci aynı anda hem çift ana dal hem de yan dal programına kayıtlı olamaz.</p>
+<p style="text-align: justify;"><strong>Çift ana dal Programı Danışmanları</strong></p>
+<p style="text-align: justify;"><strong>MADDE 10</strong>(1) Çift ana dal programına kayıt olan öğrenciye  programı yürüten her iki bölüm tarafından, programdaki dersleri ve bunların alınacağı dönemleri planlamak,   program süresince öğrencinin başarı durumunu ve programın mezuniyet koşullarının  tamamlanıp tamamlanmadığını takip etmek üzere birer akademik danışman atanır.</p>
+<p style="text-align: justify;">(2) Çift ana dal danışmanları, çift ana dal programının amacına uygun biçimde yürütülmesini sağlamak üzere iletişim ve işbirliğinde bulunur.</p>
+<p style="text-align: justify;">(3) Öğrencinin yarıyıl kayıt onayı ana dal danışmanı tarafından yapılır.</p>
+<p><strong>Çift ana dal Programında Başarı Şartı, Ders Yükü ve Süre</strong></p><p style="text-align: justify;"><strong>MADDE  11</strong>(1) Çift ana dal programına kayıtlı öğrencinin aldığı dersler tek bir not belgesinde gösterilir.</p>
+<p style="text-align: justify;">(2) Çift ana dal GNO’su alınan tüm derslerin kredileri ve notları üzerinden hesaplanır. Ana dal ve ikinci ana dal GNO’ları ayrı ayrı hesaplanmaz.</p>
+<p style="text-align: justify;">(3) Öğrencinin çift ana dal programına devam edebilmesi için çift ana dal GNO’sunun en az 3,00 olması şarttır. Tüm çift ana dal eğitimi süresince GNO bir defaya mahsus olmak üzere  2,90'na kadar düşebilir. GNO başarı şartını sağlayamayan öğrenci çift ana dal programından çıkarılır. Değişim programlarında geçen yarıyıllar GNO şartı takibinde dikkate alınmaz.</p>
+<p style="text-align: justify;">(4)  Boğaziçi Üniversitesi Lisans Eğitim Öğretim Yönetmeliği’nde belirtilen ders yükü kuralları çift ana dal öğrencileri için de geçerlidir.</p>
+<p style="text-align: justify;">(5) Çift ana dal programı en geç 10 yarıyılda tamamlanmalıdır. Değişim programlarında geçirilen yarıyıllar bu süreye sayılmaz.</p>
+<p style="text-align: justify;">(6) Çift ana dal programından iki yarıyıl üst üste ders almayan öğrencinin ikinci ana dal diploma programından kaydı silinir.</p>
+<p><strong>Çift ana dal Programından Ayrılma ve Çıkarılma</strong></p><p style="text-align: justify;"><strong>MADDE  12</strong>(1) Çift ana dal programından ayrılmak isteyen öğrenci, ana dal programını yürüten bölüme öğrenim süresinin herhangi bir yarıyılında dilekçe ile başvurur.  Öğrencinin programdan ayrılması, ilgili yönetim kurulu kararı ile kesinleşir. Bu karar, ilgili yönetim kurulu tarafından öğrencinin ikinci ana dal programının bağlı olduğu fakülteye bildirilir.</p>
+<p style="text-align: justify;">(2) Bu yönergenin 11. Maddesinin üçüncü, beşinci ve altıncı fıkralarındaki şartlardan herhangi birini yerine getiremeyen öğrenci ana dal programını yürüten bölümün beyanı ve ilgili yönetim kurulu kararı ile çift ana dal programından çıkarılır.  Bu karar, ilgili yönetim kurulu tarafından öğrencinin ikinci ana dal programının bağlı olduğu fakülteye bildirilir.</p>
+<p style="text-align: justify;">(3) Çift ana dal programından ayrılan veya çıkarılan bir öğrencinin çift ana dal programı çerçevesinde ana dal programı dışında aldığı derslerin kredisize çevrilip çevrilmemesi hususu çıkarılma kararı ile beraber ilgili yönetim kurulu tarafından karara bağlanır.</p>
+<p style="text-align: justify;">(4) Çift ana dal programından ayrılan veya çıkarılan öğrenciler aynı programa tekrar başvuramazlar.</p>
+<p style="text-align: justify;">(5) Çift ana dal programından ayrılan veya çıkarılan bir öğrenci programdan ayrıldığı veya çıkarıldığı yarıyıla kadar almış olduğu dersler ile ilgili bir yan dal programının tüm gereklerini (ders ve ortalama) yerine getirmişse  dönem koşulu aranmaksızın, programdan ayrıldığı veya çıkarıldığı yarıyıl içinde yan dal sertifikası almak üzere başvurabilir.  Öğrencinin  sertifika başvurusu yan dal programını yürüten bölüm tarafından değerlendirilir ve  ilgili yönetim kurulu tarafından karara bağlanır.   Bu karar, ilgili yönetim kurulu tarafından öğrencinin ana dal programının bağlı olduğu fakülteye bildirilir.</p>
+<p style="text-align: justify;"><strong>Mezuniyet</strong></p>
+<p style="text-align: justify;"><strong>MADDE 13</strong>(1) Çift ana dal programındaki tüm dersleri geçer not ile (en az P veya DD) ve en az 3,00 çift ana dal GNO’su ile yönergenin 11. Maddesinin 5. Fıkrasında belirtilen süre içinde tamamlayan öğrenciler çift ana dal programından mezun olmaya hak kazanırlar.</p>
+<p style="text-align: justify;">(2) Çift ana dal programını tamamlayan öğrenciye çift ana dal programını oluşturan iki lisans programının diploması verilir.</p>
+<p style="text-align: justify;">(3) Öğrencilere diplomaları her iki bölümden de mezuniyet kararı çıktıktan sonra verilir.</p>
+<p style="text-align: justify;">(4) Çift ana dal programlarını bu yönergenin 11. Maddesinin 5. Fıkrasında belirtilen süre içinde tamamlayan öğrenciler sadece ana dal programında başarı sıralamasına alınırlar. Bu sıralamada çift ana dal GNO’ları dikkate alınır. Bu öğrencilerden, çift ana dal GNO'ları 3,50 veya daha fazla olanlar "Yüksek Onur", 3,00 ile 3,49 arasında olanlar "Onur" listelerine alınırlar. Ancak, disiplin cezası almış olan öğrenciler bu listelere alınamazlar</p>
+</div>
+<div class="footer-date">
+</div>
+</div>

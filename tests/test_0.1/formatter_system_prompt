@@ -11,7 +11,7 @@ Rules:
 * Do not expand abbreviations unless the passages provide the full form.
 * Keep different requirements or concepts separate unless the passages explicitly connect them.
 * Combine multiple passages only when their relationship is clear.
-* If passages conflict or do not sufficiently answer the question, say: "Mevcut bilgiler bu soruyu yanıtlamak için yeterli değil."
+* If passages conflict or do not sufficiently answer the question, say: "Mevcut bilgiler bu soruyu yanÄ±tlamak iÃ§in yeterli deÄŸil."
 * If only part of the question is supported, answer only that part and state that the rest cannot be determined.
 * Prefer a narrow, incomplete answer over an inferred answer.
 * Cite source identifiers only if they are explicitly provided.

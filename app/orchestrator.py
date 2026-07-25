@@ -1,24 +1,26 @@
 from typing import ClassVar
-from app.services import MenuService, RegulationService, Service
+from app.query_rewriter import QueryRewriter
+from app.tools import *
 
 class Orchestrator:
 
-    SERVICE_MAPPINGS: ClassVar[dict[str, Service]] = {
-        "menu_service": MenuService(),
-        "regulation_service": RegulationService(),
+    TOOL_MAPPINGS: ClassVar[dict[str, Tool]] = {
+        "unsure": UnsureTool(),
+        "regulation_search": RegulationSearchTool(),
     }
 
     def __init__(self, model, tokenizer):
         self.model = model
         self.tokenizer = tokenizer
+        self.query_rewriter = QueryRewriter(model, tokenizer)
 
-    def call_service(self, service_call: dict, user_prompt: str):
+    def call_tool(self, tool_call: dict, query: str):
 
-        called_service = service_call["service"]
+        called_tool = tool_call["tool"]
 
-        service = self.SERVICE_MAPPINGS.get(called_service)
-        if service is None:
+        tool = self.TOOL_MAPPINGS.get(called_tool)
+        if tool is None:
             return None
 
-        return service.call_tool(user_prompt=user_prompt)
-
+        rewritten_query = self.query_rewriter.rewrite_query(query=query) if not called_tool == "unsure" else None
+        return tool.call(query=rewritten_query), rewritten_query

@@ -2,6 +2,21 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from app.router import Router
 from app.orchestrator import Orchestrator
 from app.formatter import Formatter
+from app.tools import ToolResult
+from dataclasses import dataclass, asdict
+
+@dataclass
+class Trace:
+    query: str
+    selected_tool: str
+
+    rewritten_query: str
+    tool_result: ToolResult
+
+    response: str
+
+    def as_dict(self):
+        return asdict(self)
 
 class Agent:
     def __init__(self,
@@ -23,10 +38,25 @@ class Agent:
                                          tokenizer=self.tokenizer)
         self.formatter = Formatter(model=self.model,
                                    tokenizer=self.tokenizer)
-    def enter_prompt(self, user_prompt: str) -> str:
-        service_call = self.router.select_service(user_prompt=user_prompt)
-        tool_result = self.orchestrator.call_service(user_prompt=user_prompt,
-                                                     service_call=service_call)
+
+    def enter_query(self, query: str) -> str:
+        tool_call = self.router.select_tool(query=query)
+        tool_result = self.orchestrator.call_tool(query=query,
+                                                  tool_call=tool_call)[0]
         response = self.formatter.format_tool_result(tool_result=tool_result,
-                                                             user_prompt=user_prompt)
+                                                             query=query)
         return response
+
+    def test_query(self, query: str) -> Trace:
+        tool_call = self.router.select_tool(query=query)
+        tool_result, rewritten_query = self.orchestrator.call_tool(query=query,
+                                                                   tool_call=tool_call)
+        response = self.formatter.format_tool_result(tool_result=tool_result,
+                                                     query=query)
+        return Trace(
+            query=query,
+            selected_tool=tool_call["tool"],
+            rewritten_query=rewritten_query,
+            tool_result=tool_result,
+            response=response
+        )

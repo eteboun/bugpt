@@ -3,7 +3,7 @@ import torch
 
 from app.agent import Agent
 
-model_name = "Qwen/Qwen2.5-7B-Instruct"
+model_name = "Qwen/Qwen3.5-4B"
 model_quantization_config = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_quant_type="nf4",
@@ -21,5 +21,5 @@ while True:
     if prompt == "quit":
         break
     print(
-        agent.enter_prompt(prompt)
+        agent.enter_query(prompt)
     )

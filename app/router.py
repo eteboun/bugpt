@@ -1,12 +1,11 @@
 from app.model_runner import ModelRunner
 import torch
-import json
 
 class Router(ModelRunner):
 
     system_prompt_file_name = "router_system_prompt"
 
-    def select_service(self, user_prompt: str) -> dict:
+    def select_tool(self, query: str) -> dict:
 
         messages = [
             {
@@ -15,13 +14,15 @@ class Router(ModelRunner):
             },
             {
                 "role": "user",
-                "content": user_prompt,
+                "content": query,
             }
         ]
 
         text = self.tokenizer.apply_chat_template(messages,
                                                   tokenize=False,
-                                                  add_generation_prompt=True)
+                                                  add_generation_prompt=True,
+                                                  enable_thinking=False)
+
         inputs = self.tokenizer(text, return_tensors="pt").to(self.model.device)
 
         with torch.inference_mode():
@@ -35,5 +36,4 @@ class Router(ModelRunner):
         generated_ids = outputs[0][input_len:]
 
         generated = self.tokenizer.decode(generated_ids, skip_special_tokens=True)
-
-        return json.loads(generated)
+        return {"tool": generated.strip()}

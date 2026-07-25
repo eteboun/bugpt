@@ -69,39 +69,10 @@ class Chunker:
 
         parts = [
             f'Belge: {payload.main_title}',
-            f'Bölüm: {payload.chapter_number}',
-            f'Madde {payload.article_number}: {payload.article_title}',
+            f'Bölüm: {payload.chapter_name}',
+            f'Başlık: {payload.article_title}',
+            f'İçerik: {payload.text}'
         ]
-
-        if payload.kind == "item":
-            parts.append(f'Paragraf {payload.paragraph_number}')
-            item_displays = []
-            sub_item_displays = []
-
-            for item_included in payload.content:
-                item_displays.append(f"{item_included.item_number:02d}")
-                for sub_item in item_included.included_sub_items:
-                    sub_item_displays.append(f"{item_included.item_number:02d}.{sub_item.sub_item_number:02d}")
-
-            if sub_item_displays:
-                item_display_text = f"Bentler {", ".join(item_displays)}"
-                sub_item_display_text = f"Alt Bentler {", ".join(sub_item_displays)}: {payload.text}"
-
-                parts.append(item_display_text)
-                parts.append(sub_item_display_text)
-            else:
-                item_display_text = f"Bentler {", ".join(item_displays)}: {payload.text}"
-                parts.append(item_display_text)
-
-        elif payload.kind == "table":
-            parts.append(f'Paragraf {payload.paragraph_number}')
-
-            table = payload.content
-            display_text = f"Tablo {table.table_number}: {payload.text}"
-            parts.append(display_text)
-
-        else:
-            parts.append(f'Paragraf {payload.paragraph_number}: {payload.text}')
 
         embedding_text = "\n".join(parts)
         return f"passage: {embedding_text}"
