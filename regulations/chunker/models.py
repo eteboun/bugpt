@@ -65,7 +65,9 @@ class Payload:
     article_title: str = field(init=False)
     article_number: int = field(init=False)
     article_kind: Literal["temporary", "default"] = field(init=False)
+
     id: str = field(init=False)
+    embedding_text: str = field(init=False)
 
     def as_dict(self):
         return asdict(self)
@@ -74,7 +76,6 @@ class Payload:
 class Chunk:
     id: str
     payload: Payload
-    embedding_text: str
 
     def as_dict(self):
         return asdict(self)

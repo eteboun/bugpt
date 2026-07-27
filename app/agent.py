@@ -27,10 +27,10 @@ class Agent:
         self.model_name = model_name
         self.model_quantization_config = model_quantization_config
 
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForCausalLM.from_pretrained(model_name,
                                                           quantization_config=model_quantization_config,
-                                                            device_map="auto")
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+                                                          device_map="auto")
 
         self.router = Router(model=self.model,
                              tokenizer=self.tokenizer)

@@ -35,5 +35,5 @@ class QueryRewriter(ModelRunner):
         generated_ids = outputs[0][input_len:]
 
         new_query = self.tokenizer.decode(generated_ids, skip_special_tokens=True)
-
+        print(new_query)
         return new_query

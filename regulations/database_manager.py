@@ -5,16 +5,31 @@ import shutil
 import torch
 
 from qdrant_client import QdrantClient
-from qdrant_client.models import VectorParams, Distance, PointStruct
+from qdrant_client.models import (SparseVectorParams,
+                                  VectorParams,
+                                  Distance,
+                                  PointStruct,
+                                  Modifier,
+                                  Document,
+                                  Prefetch,
+                                  FusionQuery,
+                                  Fusion)
 from sentence_transformers import SentenceTransformer
-
 from regulations.pipeline import Pipeline
 
 class DatabaseManager:
 
-    MODEL: ClassVar[SentenceTransformer] = SentenceTransformer("intfloat/multilingual-e5-base",
-                                                               model_kwargs={"torch_dtype": torch.float16},
-                                                               device="cuda")
+    VECTOR_MODEL: ClassVar[SentenceTransformer] = SentenceTransformer("intfloat/multilingual-e5-base",
+                                                                      model_kwargs={"torch_dtype": torch.float16},
+                                                                      device="cuda")
+    BM25_MODEL_NAME: ClassVar[str] = "Qdrant/bm25"
+
+    BM25_OPTIONS: ClassVar[dict] = {
+        "language": "turkish",
+        "tokenizer": "word",
+    }
+
+
     COLLECTION: ClassVar[str] = "regulations"
     DB_NAME: ClassVar[str] = "storage"
 
@@ -54,26 +69,45 @@ class DatabaseManager:
 
     @staticmethod
     @_run_client
-    def search_chunk(client: QdrantClient, query: str, limit: int = 2) -> list[dict]:
+    def search_chunk(client: QdrantClient,
+                     query: str,
+                     search_limit: int = 2,
+                     ) -> list[dict]:
 
-        query = f"query: {query}"
-        vector = DatabaseManager.MODEL.encode(query).tolist()
+        vector = DatabaseManager.VECTOR_MODEL.encode(query).tolist()
 
-        results = client.query_points(
+        points = client.query_points(
             collection_name=DatabaseManager.COLLECTION,
-            query=vector,
-            limit=limit,
+
+            prefetch=[
+                Prefetch(
+                    query=vector,
+                    using="dense",
+                    limit=20
+                ),
+
+                Prefetch(
+                    query=Document(
+                        text=query,
+                        model=DatabaseManager.BM25_MODEL_NAME,
+                        options=DatabaseManager.BM25_OPTIONS
+                    ),
+                    using="bm25",
+                    limit=20
+                )
+            ],
+
+            query=FusionQuery(
+                fusion=Fusion.RRF
+            ),
+
+            limit=search_limit,
+            with_payload=True
         ).points
 
-        result = []
-        for point in results:
-
-            result.append({
-                "score": round(point.score, 3),
-                "text": point.payload.get("text")
-            })
-
-        return result
+        results = [point.payload.get("text") for point in points]
+        print(results)
+        return results
 
     @staticmethod
     def _save_pipeline_chunks(pipeline: Pipeline, client: QdrantClient) -> None:
@@ -84,16 +118,31 @@ class DatabaseManager:
 
             client.create_collection(
                 collection_name=DatabaseManager.COLLECTION,
-                vectors_config=VectorParams(
-                    size=DatabaseManager.MODEL.get_embedding_dimension(),
-                    distance=Distance.COSINE
-                )
+                vectors_config={
+                    "dense": VectorParams(
+                            size=DatabaseManager.VECTOR_MODEL.get_embedding_dimension(),
+                            distance=Distance.COSINE
+                        )
+                },
+                sparse_vectors_config={
+                    "bm25": SparseVectorParams(
+                        modifier=Modifier.IDF
+                    )
+                }
             )
 
         points = [
             PointStruct(
                 id=chunk.id,
-                vector=DatabaseManager.MODEL.encode(chunk.embedding_text).tolist(),
+                vector={
+                    "dense": DatabaseManager.VECTOR_MODEL.encode(chunk.payload.embedding_text).tolist(),
+
+                    "bm25": Document(
+                        text=chunk.payload.embedding_text,
+                        model=DatabaseManager.BM25_MODEL_NAME,
+                        options=DatabaseManager.BM25_OPTIONS,
+                    )
+                },
                 payload=chunk.payload.as_dict()
             ) for chunk in chunks
         ]

@@ -75,7 +75,7 @@ class Chunker:
         ]
 
         embedding_text = "\n".join(parts)
-        return f"passage: {embedding_text}"
+        return embedding_text
 
     @staticmethod
     def _flatten_unsplittable_item_to_flattened_item(item: Item) -> FlattenedItem:
@@ -275,12 +275,10 @@ class Chunker:
             consumed_paragraph_text=consumed_paragraph_text
         )
 
-    def _create_chunk(self, payload: Payload) -> Chunk:
-
-        embedding_text = self._create_embedding_text(payload)
+    @staticmethod
+    def _create_chunk(payload: Payload) -> Chunk:
 
         return Chunk(
-            embedding_text=embedding_text,
             id=str(uuid.uuid4()),
             payload=payload,
         )
@@ -384,7 +382,9 @@ class Chunker:
             payload.article_number = article_number
             payload.article_kind = article_kind
             payload.paragraph_number = paragraph.number
+
             payload.id = self._create_id(payload)
+            payload.embedding_text = self._create_embedding_text(payload)
 
         return payloads
 

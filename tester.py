@@ -77,5 +77,5 @@ queries = [
     "ÇAP yapmak için gereken mezuniyet kredisi ana daldan kaç kredi fazla olmalıdır?"
 ]
 
-tester = Tester("test_0.1")
+tester = Tester("test_0.3")
 tester.run(queries)
