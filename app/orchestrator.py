@@ -20,7 +20,8 @@ class Orchestrator:
 
         tool = self.TOOL_MAPPINGS.get(called_tool)
         if tool is None:
-            return None
+            return None, None
 
         rewritten_query = self.query_rewriter.rewrite_query(query=query) if not called_tool == "unsure" else None
-        return tool.call(query=rewritten_query), rewritten_query
+        tool_result = tool.call(query=rewritten_query)["result"]
+        return tool_result, rewritten_query

@@ -14,7 +14,7 @@ from qdrant_client.models import (SparseVectorParams,
                                   Prefetch,
                                   FusionQuery,
                                   Fusion)
-from sentence_transformers import SentenceTransformer
+from sentence_transformers import SentenceTransformer, CrossEncoder
 from regulations.pipeline import Pipeline
 
 class DatabaseManager:
@@ -22,6 +22,7 @@ class DatabaseManager:
     VECTOR_MODEL: ClassVar[SentenceTransformer] = SentenceTransformer("intfloat/multilingual-e5-base",
                                                                       model_kwargs={"torch_dtype": torch.float16},
                                                                       device="cuda")
+
     BM25_MODEL_NAME: ClassVar[str] = "Qdrant/bm25"
 
     BM25_OPTIONS: ClassVar[dict] = {
@@ -74,7 +75,7 @@ class DatabaseManager:
                      search_limit: int = 2,
                      ) -> list[dict]:
 
-        vector = DatabaseManager.VECTOR_MODEL.encode(query).tolist()
+        vector = DatabaseManager.VECTOR_MODEL.encode(f"query: {query}").tolist()
 
         points = client.query_points(
             collection_name=DatabaseManager.COLLECTION,
@@ -105,7 +106,8 @@ class DatabaseManager:
             with_payload=True
         ).points
 
-        results = [point.payload.get("text") for point in points]
+        results = [point.payload.get("text") for point in points[:search_limit]]
+
         print(results)
         return results
 
@@ -135,7 +137,7 @@ class DatabaseManager:
             PointStruct(
                 id=chunk.id,
                 vector={
-                    "dense": DatabaseManager.VECTOR_MODEL.encode(chunk.payload.embedding_text).tolist(),
+                    "dense": DatabaseManager.VECTOR_MODEL.encode(f"passage: {chunk.payload.embedding_text}").tolist(),
 
                     "bm25": Document(
                         text=chunk.payload.embedding_text,

@@ -4,6 +4,7 @@ from app.orchestrator import Orchestrator
 from app.formatter import Formatter
 from app.tools import ToolResult
 from dataclasses import dataclass, asdict
+import torch
 
 @dataclass
 class Trace:
@@ -30,7 +31,9 @@ class Agent:
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForCausalLM.from_pretrained(model_name,
                                                           quantization_config=model_quantization_config,
-                                                          device_map="auto")
+                                                          device_map="auto",
+                                                          torch_dtype=torch.float16,
+                                                          )
 
         self.router = Router(model=self.model,
                              tokenizer=self.tokenizer)
@@ -44,7 +47,7 @@ class Agent:
         tool_result = self.orchestrator.call_tool(query=query,
                                                   tool_call=tool_call)[0]
         response = self.formatter.format_tool_result(tool_result=tool_result,
-                                                             query=query)
+                                                     query=query)
         return response
 
     def test_query(self, query: str) -> Trace:

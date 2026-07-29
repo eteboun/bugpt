@@ -14,13 +14,12 @@ class UnsureTool(Tool):
 
     @override
     def call(self, query: str) -> ToolResult:
-        return {"status": "unsure"}
+        return {"result": "unsure"}
 
 class RegulationSearchTool(Tool):
 
     @override
     def call(self, query: str) -> ToolResult:
         return {
-            "status": "success",
             "result": DatabaseManager.search_chunk(query=query)
         }
