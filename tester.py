@@ -1,6 +1,6 @@
 from pathlib import Path
 from transformers import BitsAndBytesConfig
-from app.agent import Agent
+from ai.agent import Agent
 
 import torch
 import shutil

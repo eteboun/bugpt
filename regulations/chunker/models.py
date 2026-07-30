@@ -56,14 +56,17 @@ class Payload:
 
     kind: Literal["item", "table", "paragraph"]
 
+
     text: str
     content: list[ItemIncluded] | TableIncluded | None
-    paragraph_number: int = field(init=False)
-    main_title: str = field(init=False)
+
+    document_type: str = field(init=False)
+    document_name: str = field(init=False)
     chapter_name: str = field(init=False)
     chapter_number: int = field(init=False)
     article_title: str = field(init=False)
     article_number: int = field(init=False)
+    paragraph_number: int = field(init=False)
     article_kind: Literal["temporary", "default"] = field(init=False)
 
     id: str = field(init=False)

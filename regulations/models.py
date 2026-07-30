@@ -61,8 +61,11 @@ class Chapter:
 
 @dataclass
 class Document:
-    title: str
+
+    name: str
     chapters: list[Chapter]
+
+    document_type: str = field(init=False)
 
     def as_dict(self):
         return asdict(self)

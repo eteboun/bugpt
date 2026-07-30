@@ -1,7 +1,7 @@
 from transformers import BitsAndBytesConfig
 import torch
 
-from app.agent import Agent
+from ai.agent import Agent
 
 model_name = "Qwen/Qwen3.5-4B"
 model_quantization_config = BitsAndBytesConfig(

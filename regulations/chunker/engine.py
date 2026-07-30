@@ -23,7 +23,7 @@ class Chunker:
     @staticmethod
     def _create_id(payload: Payload) -> str:
 
-        base_slug = (payload.main_title
+        base_slug = (payload.document_name
                      .translate(Chunker.TR_MAP)
                      .lower()
                      .replace(" ", "_"))
@@ -68,7 +68,7 @@ class Chunker:
     def _create_embedding_text(payload: Payload) -> str:
 
         parts = [
-            f'Belge: {payload.main_title}',
+            f'Belge: {payload.document_name}',
             f'Bölüm: {payload.chapter_name}',
             f'Başlık: {payload.article_title}',
             f'İçerik: {payload.text}'
@@ -298,7 +298,8 @@ class Chunker:
         return "\n".join(row_texts)
 
     def _create_payloads(self,
-                         main_title: str,
+                         document_type: str,
+                         document_name: str,
                          chapter_name: str,
                          article_title:str,
                          chapter_number: int,
@@ -375,7 +376,8 @@ class Chunker:
             ))
 
         for payload in payloads:
-            payload.main_title = main_title
+            payload.document_type = document_type
+            payload.document_name = document_name
             payload.article_title = article_title
             payload.chapter_number = chapter_number
             payload.chapter_name = chapter_name
@@ -390,7 +392,7 @@ class Chunker:
 
     def run(self, document: Document) -> list[Chunk]:
 
-        document_title = document.title
+        document_name = document.name
         chunks = []
 
         for chapter in document.chapters:
@@ -399,7 +401,8 @@ class Chunker:
                     for paragraph in article.paragraphs:
 
                         payloads = self._create_payloads(
-                            main_title=document_title,
+                            document_type=document.document_type,
+                            document_name=document_name,
                             chapter_name=chapter.name,
                             chapter_number=chapter.number,
                             article_title=title.name,

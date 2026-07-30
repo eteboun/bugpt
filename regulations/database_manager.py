@@ -3,18 +3,10 @@ from typing import ClassVar
 from pathlib import Path
 import shutil
 import torch
+import qdrant_client.models as models
 
 from qdrant_client import QdrantClient
-from qdrant_client.models import (SparseVectorParams,
-                                  VectorParams,
-                                  Distance,
-                                  PointStruct,
-                                  Modifier,
-                                  Document,
-                                  Prefetch,
-                                  FusionQuery,
-                                  Fusion)
-from sentence_transformers import SentenceTransformer, CrossEncoder
+from sentence_transformers import SentenceTransformer
 from regulations.pipeline import Pipeline
 
 class DatabaseManager:
@@ -49,67 +41,25 @@ class DatabaseManager:
 
     @staticmethod
     @_run_client
-    def build_db(client: QdrantClient, use_cache: bool = True):
+    def _build_db(client: QdrantClient, use_cache: bool = True):
 
-        for pipeline_name in Pipeline.PIPELINE_NAME_MAPPING.keys():
-            pipeline = Pipeline(pipeline_name, DatabaseManager.COLLECTION, use_cache)
+        client.create_payload_index(
+            collection_name=DatabaseManager.COLLECTION,
+            field_name="document_type",
+            field_schema=models.PayloadSchemaType.KEYWORD,
+        )
+
+        for document_type in Pipeline.DOCUMENT_TYPE_MAPPING.keys():
+            pipeline = Pipeline(document_type, DatabaseManager.COLLECTION, use_cache)
             DatabaseManager._save_pipeline_chunks(pipeline=pipeline, client=client)
 
     @staticmethod
-    def rebuild_db(use_cache: bool = True):
-        DatabaseManager.delete_db()
-        DatabaseManager.build_db(use_cache=use_cache)
-
-    @staticmethod
-    def delete_db():
+    def _delete_db():
         path = Path(__file__).resolve().parent / DatabaseManager.DB_NAME
         if path.exists():
             shutil.rmtree(path)
         else:
             raise Exception("Path doesn't exist")
-
-    @staticmethod
-    @_run_client
-    def search_chunk(client: QdrantClient,
-                     query: str,
-                     search_limit: int = 2,
-                     ) -> list[dict]:
-
-        vector = DatabaseManager.VECTOR_MODEL.encode(f"query: {query}").tolist()
-
-        points = client.query_points(
-            collection_name=DatabaseManager.COLLECTION,
-
-            prefetch=[
-                Prefetch(
-                    query=vector,
-                    using="dense",
-                    limit=20
-                ),
-
-                Prefetch(
-                    query=Document(
-                        text=query,
-                        model=DatabaseManager.BM25_MODEL_NAME,
-                        options=DatabaseManager.BM25_OPTIONS
-                    ),
-                    using="bm25",
-                    limit=20
-                )
-            ],
-
-            query=FusionQuery(
-                fusion=Fusion.RRF
-            ),
-
-            limit=search_limit,
-            with_payload=True
-        ).points
-
-        results = [point.payload.get("text") for point in points[:search_limit]]
-
-        print(results)
-        return results
 
     @staticmethod
     def _save_pipeline_chunks(pipeline: Pipeline, client: QdrantClient) -> None:
@@ -121,25 +71,26 @@ class DatabaseManager:
             client.create_collection(
                 collection_name=DatabaseManager.COLLECTION,
                 vectors_config={
-                    "dense": VectorParams(
+                    "dense": models.VectorParams(
                             size=DatabaseManager.VECTOR_MODEL.get_embedding_dimension(),
-                            distance=Distance.COSINE
+                            distance=models.Distance.COSINE
                         )
                 },
                 sparse_vectors_config={
-                    "bm25": SparseVectorParams(
-                        modifier=Modifier.IDF
+                    "bm25": models.SparseVectorParams(
+                        modifier=models.Modifier.IDF
                     )
                 }
             )
 
         points = [
-            PointStruct(
+            models.PointStruct(
                 id=chunk.id,
                 vector={
-                    "dense": DatabaseManager.VECTOR_MODEL.encode(f"passage: {chunk.payload.embedding_text}").tolist(),
+                    "dense": DatabaseManager.VECTOR_MODEL.encode(f"passage: {chunk.payload.embedding_text}",
+                                                                 normalize_embeddings=True).tolist(),
 
-                    "bm25": Document(
+                    "bm25": models.Document(
                         text=chunk.payload.embedding_text,
                         model=DatabaseManager.BM25_MODEL_NAME,
                         options=DatabaseManager.BM25_OPTIONS,
@@ -153,5 +104,73 @@ class DatabaseManager:
             collection_name=DatabaseManager.COLLECTION,
             points=points
         )
+
+    @staticmethod
+    def rebuild_db(use_cache: bool = True):
+        DatabaseManager._delete_db()
+        DatabaseManager._build_db(use_cache=use_cache)
+
+    @staticmethod
+    @_run_client
+    def search_chunk(client: QdrantClient,
+                     query: str,
+                     document_types: list[str],
+                     search_limit: int = 2,
+                     ) -> list[str]:
+
+        if not document_types or search_limit <= 0:
+            return []
+
+        query_filter = models.Filter(
+            must=[
+                models.FieldCondition(
+                    key="document_type",
+                    match=models.MatchAny(
+                        any=document_types
+                    ),
+                )
+            ]
+        )
+
+        prefetch_limit = max(10, search_limit)
+
+        vector = DatabaseManager.VECTOR_MODEL.encode(
+            f"query: {query}"
+        ).tolist()
+
+        points = client.query_points(
+            collection_name=DatabaseManager.COLLECTION,
+            query_filter=query_filter,
+
+            prefetch=[
+                models.Prefetch(
+                    query=vector,
+                    using="dense",
+                    limit=prefetch_limit
+                ),
+
+                models.Prefetch(
+                    query=models.Document(
+                        text=query,
+                        model=DatabaseManager.BM25_MODEL_NAME,
+                        options=DatabaseManager.BM25_OPTIONS
+                    ),
+                    using="bm25",
+                    limit=prefetch_limit
+                )
+            ],
+            query=models.FusionQuery(
+                fusion=models.Fusion.RRF
+            ),
+            limit=search_limit,
+            with_payload=True
+        ).points
+
+        results = [
+            point.payload.get("text") for point in points
+        ]
+
+        return results
+
 
 DatabaseManager.rebuild_db(use_cache=True)

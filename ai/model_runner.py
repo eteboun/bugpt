@@ -1,16 +1,33 @@
-from app.model_runner import ModelRunner
+from pathlib import Path
 import torch
 
-class Router(ModelRunner):
+class ModelRunner:
 
-    system_prompt_file_name = "router_system_prompt"
+    def __init__(self, model, tokenizer, sys_prompts_dir: Path):
+        self.model = model
+        self.tokenizer = tokenizer
+        self.system_prompts_dir = sys_prompts_dir
 
-    def select_tool(self, query: str) -> dict:
+    def run(self,
+            system_prompt_file_name: str,
+            query: str,
+            max_new_tokens: int = 100
+            ) -> str:
+
+        if self.model is None or self.tokenizer is None:
+            raise Exception('Model and Tokenizer are not initialized')
+
+        path = self.system_prompts_dir / system_prompt_file_name
+
+        if not path.exists():
+            raise FileNotFoundError(f"File {path} not found")
+
+        system_prompt = path.read_text(encoding='utf-8')
 
         messages = [
             {
                 "role": "system",
-                "content": self.system_prompt,
+                "content": system_prompt,
             },
             {
                 "role": "user",
@@ -28,7 +45,7 @@ class Router(ModelRunner):
         with torch.inference_mode():
             outputs = self.model.generate(
                 **inputs,
-                max_new_tokens=100,
+                max_new_tokens=max_new_tokens,
                 do_sample=False,
             )
 
@@ -36,4 +53,4 @@ class Router(ModelRunner):
         generated_ids = outputs[0][input_len:]
 
         generated = self.tokenizer.decode(generated_ids, skip_special_tokens=True)
-        return {"tool": generated.strip()}
+        return generated

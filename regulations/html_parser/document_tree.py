@@ -237,6 +237,6 @@ class HtmlDocumentTree:
         )
 
         return Document(
-            title=title,
+            name=title,
             chapters=chapters,
         )

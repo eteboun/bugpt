@@ -18,7 +18,8 @@ class PipelineConfig:
     url: str
 
 class Pipeline:
-    PIPELINE_NAME_MAPPING: ClassVar[dict[str, PipelineConfig]] = {
+
+    DOCUMENT_TYPE_MAPPING: ClassVar[dict[str, PipelineConfig]] = {
         "dormitory": PipelineConfig(
             chunker=Chunker(ChunkerConfig("dormitory")),
             normalizer=DormitoryNormalizer,
@@ -55,22 +56,22 @@ class Pipeline:
     DESCRIPTION_SELECTOR: ClassVar[str] = "div.inner-page__content-description"
 
     def __init__(self,
-                 regulation_name: str,
+                 document_type: str,
                  collection_name: str,
                  use_cache: bool = True
                  ) -> None:
 
-        pipe_info = self.PIPELINE_NAME_MAPPING.get(regulation_name)
+        pipe_info = self.DOCUMENT_TYPE_MAPPING.get(document_type)
         if not pipe_info:
-            raise Exception(f"Unknown pipeline: {regulation_name}")
+            raise Exception(f"Unknown pipeline: {document_type}")
 
-        cached_dir = Path(__file__).resolve().parent / "normalized_htmls" / f"{regulation_name}.txt"
+        cached_dir = Path(__file__).resolve().parent / "normalized_htmls" / f"{document_type}.txt"
         if use_cache:
 
             if os.path.exists(cached_dir):
                 normalized_html_text = cached_dir.read_text(encoding="utf-8")
             else:
-                raise Exception(f"Cache does not exist: {regulation_name}")
+                raise Exception(f"Cache does not exist: {document_type}")
 
         else:
 
@@ -88,7 +89,7 @@ class Pipeline:
                 f.write(normalized_html_text)
 
         self.soup = BeautifulSoup(normalized_html_text, "html.parser")
-        self.regulation_name = regulation_name
+        self.document_type = document_type
         self.collection_name = collection_name
 
     @staticmethod
@@ -117,14 +118,16 @@ class Pipeline:
     def _get_document_tree(self) -> Document:
         content_container = self._get_content_container(self.soup)
         parser = HtmlDocumentTree(content_container)
+
         document = parser.run()
+        document.document_type = self.document_type
 
         return document
 
     def _get_chunks(self) -> list[Chunk]:
 
-        chunker = (self.PIPELINE_NAME_MAPPING
-                   .get(self.regulation_name)
+        chunker = (self.DOCUMENT_TYPE_MAPPING
+                   .get(self.document_type)
                    .chunker)
 
         document = self._get_document_tree()
