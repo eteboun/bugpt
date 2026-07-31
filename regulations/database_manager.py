@@ -43,12 +43,6 @@ class DatabaseManager:
     @_run_client
     def _build_db(client: QdrantClient, use_cache: bool = True):
 
-        client.create_payload_index(
-            collection_name=DatabaseManager.COLLECTION,
-            field_name="document_type",
-            field_schema=models.PayloadSchemaType.KEYWORD,
-        )
-
         for document_type in Pipeline.DOCUMENT_TYPE_MAPPING.keys():
             pipeline = Pipeline(document_type, DatabaseManager.COLLECTION, use_cache)
             DatabaseManager._save_pipeline_chunks(pipeline=pipeline, client=client)
@@ -140,12 +134,12 @@ class DatabaseManager:
 
         points = client.query_points(
             collection_name=DatabaseManager.COLLECTION,
-            query_filter=query_filter,
 
             prefetch=[
                 models.Prefetch(
                     query=vector,
                     using="dense",
+                    filter=query_filter,
                     limit=prefetch_limit
                 ),
 
@@ -156,6 +150,7 @@ class DatabaseManager:
                         options=DatabaseManager.BM25_OPTIONS
                     ),
                     using="bm25",
+                    filter=query_filter,
                     limit=prefetch_limit
                 )
             ],
@@ -171,6 +166,5 @@ class DatabaseManager:
         ]
 
         return results
-
 
 DatabaseManager.rebuild_db(use_cache=True)
