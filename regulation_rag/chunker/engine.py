@@ -2,9 +2,9 @@ import uuid
 import re
 
 from typing import ClassVar
-from regulations.chunker.config import ChunkerConfig, TableOption
-from regulations.chunker.models import *
-from regulations.models import *
+from regulation_rag.chunker.config import ChunkerConfig, TableOption
+from regulation_rag.chunker.models import *
+from regulation_rag.models import *
 
 class Chunker:
 

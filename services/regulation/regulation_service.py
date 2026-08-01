@@ -1,7 +1,7 @@
 from services.service import Service
 from services.regulation.query_rewriter import QueryRewriter
 from services.regulation.doctype_classifier import DoctypeClassifier
-from regulations.database_manager import DatabaseManager
+from regulation_rag.database_manager import DatabaseManager
 from typing import ClassVar
 
 class RegulationService(Service):
@@ -35,5 +35,5 @@ class RegulationService(Service):
 
         retrieval = DatabaseManager.search_chunk(query=query,
                                                  document_types=doctypes)
-        print(f"retrieval: {retrieval}")
+
         return retrieval

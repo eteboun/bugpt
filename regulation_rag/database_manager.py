@@ -7,7 +7,7 @@ import qdrant_client.models as models
 
 from qdrant_client import QdrantClient
 from sentence_transformers import SentenceTransformer
-from regulations.pipeline import Pipeline
+from regulation_rag.pipeline import Pipeline
 
 class DatabaseManager:
 
@@ -23,7 +23,7 @@ class DatabaseManager:
     }
 
 
-    COLLECTION: ClassVar[str] = "regulations"
+    COLLECTION: ClassVar[str] = "regulation_rag"
     DB_NAME: ClassVar[str] = "storage"
 
     @staticmethod

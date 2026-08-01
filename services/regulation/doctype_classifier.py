@@ -13,5 +13,5 @@ class DoctypeClassifier(ModelRunner):
         selected_doctypes = self.run(system_prompt_file_name="doctype_classifier_system_prompt",
                                      query=query)
         selected_doctypes = json.loads(selected_doctypes)["selected_doctypes"]
-        print(f"selected_doctypes: {selected_doctypes}")
+
         return selected_doctypes

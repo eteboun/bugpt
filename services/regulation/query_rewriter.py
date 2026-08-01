@@ -12,5 +12,5 @@ class QueryRewriter(ModelRunner):
         new_query = self.run(query=query,
                              system_prompt_file_name="query_rewriter_system_prompt",
                              max_new_tokens=200)
-        print(f"new_query: {new_query}")
+
         return new_query

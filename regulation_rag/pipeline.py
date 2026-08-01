@@ -4,12 +4,12 @@ import os
 from pathlib import Path
 from dataclasses import dataclass
 
-from regulations.chunker.models import Chunk
-from regulations.chunker.config import ChunkerConfig
-from regulations.models import Document
-from regulations.html_parser.document_tree import HtmlDocumentTree
-from regulations.chunker.engine import Chunker
-from regulations.normalizers import *
+from regulation_rag.chunker.models import Chunk
+from regulation_rag.chunker.config import ChunkerConfig
+from regulation_rag.models import Document
+from regulation_rag.html_parser.document_tree import HtmlDocumentTree
+from regulation_rag.chunker.engine import Chunker
+from regulation_rag.normalizers import *
 
 @dataclass
 class PipelineConfig:
@@ -111,7 +111,7 @@ class Pipeline:
         if regulation_container is not None:
             normalizer.run(regulation_container, soup)
         else:
-            raise ValueError("No regulations found")
+            raise ValueError("No regulation_rag found")
 
         return soup
 

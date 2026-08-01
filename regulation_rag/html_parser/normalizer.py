@@ -1,5 +1,5 @@
 from bs4 import Tag, BeautifulSoup
-from regulations.html_parser.operations import Operations
+from regulation_rag.html_parser.operations import Operations
 import re
 
 class HtmlNormalizer:

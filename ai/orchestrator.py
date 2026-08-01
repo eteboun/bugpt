@@ -1,3 +1,4 @@
+from services.refectory.refectory_service import RefectoryService
 from services.regulation.regulation_service import RegulationService
 from services.unsure.unsure_service import UnsureService
 
@@ -9,6 +10,7 @@ class Orchestrator:
 
         self.services = {
             "regulation": RegulationService(model, tokenizer),
+            "refectory": RefectoryService(model, tokenizer),
             "unsure": UnsureService(model, tokenizer),
         }
 

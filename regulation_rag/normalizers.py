@@ -1,7 +1,7 @@
 from bs4 import Tag, BeautifulSoup
-from regulations.html_parser.normalizer import HtmlNormalizer
+from regulation_rag.html_parser.normalizer import HtmlNormalizer
 from typing import override, ClassVar
-from regulations.html_parser.operations import Operations
+from regulation_rag.html_parser.operations import Operations
 
 class DormitoryNormalizer(HtmlNormalizer):
 

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field, asdict
 from typing import Literal
-from regulations.models import Item
+from regulation_rag.models import Item
 
 @dataclass
 class FlattenedSubItem:
