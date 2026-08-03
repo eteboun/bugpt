@@ -1,6 +1,6 @@
 {
-    "start": "2026-08-02",
-    "end": "2027-08-01",
+    "start": "2026-08-03",
+    "end": "2027-08-02",
     "events": [
         {
             "key": {
@@ -36,15 +36,7 @@
         },
         {
             "key": {
-                "name": "Yedek listeden kurum içi yatay geçiş kabulü alan öğrencilerin bölüm değişikliği için Fakülte Öğrenci İşleri sorumlularına başvuru günü",
-                "kind": "İdari"
-            },
-            "start": "2026-08-07",
-            "end": "2026-08-07"
-        },
-        {
-            "key": {
-                "name": "Yedek listeden kurum dışı yatay geçiş ile kabul edilen öğrencilerin Üniversiteye kayıt günü",
+                "name": "YADYOK Yaz Okulu Program II ve III derslerinin sonu",
                 "kind": "İdari"
             },
             "start": "2026-08-07",
@@ -60,7 +52,15 @@
         },
         {
             "key": {
-                "name": "YADYOK Yaz Okulu Program II ve III derslerinin sonu",
+                "name": "Yedek listeden kurum dışı yatay geçiş ile kabul edilen öğrencilerin Üniversiteye kayıt günü",
+                "kind": "İdari"
+            },
+            "start": "2026-08-07",
+            "end": "2026-08-07"
+        },
+        {
+            "key": {
+                "name": "Yedek listeden kurum içi yatay geçiş kabulü alan öğrencilerin bölüm değişikliği için Fakülte Öğrenci İşleri sorumlularına başvuru günü",
                 "kind": "İdari"
             },
             "start": "2026-08-07",
@@ -84,7 +84,7 @@
         },
         {
             "key": {
-                "name": "Yaz Öğretimi ve II. Öğretim Yüksek Lisans Programlarının Yaz Dönemi derslerinin son günü",
+                "name": "Ders değerlendirme dönemi son günü (23:59)",
                 "kind": "Eğitim-Öğretim"
             },
             "start": "2026-08-12",
@@ -95,12 +95,12 @@
                 "name": "Ders değerlendirme dönemi (YADYOK Hazırlık Okulu dahil)",
                 "kind": "Eğitim-Öğretim"
             },
-            "start": "2026-08-02",
+            "start": "2026-08-03",
             "end": "2026-08-12"
         },
         {
             "key": {
-                "name": "Ders değerlendirme dönemi son günü (23:59)",
+                "name": "Yaz Öğretimi ve II. Öğretim Yüksek Lisans Programlarının Yaz Dönemi derslerinin son günü",
                 "kind": "Eğitim-Öğretim"
             },
             "start": "2026-08-12",
@@ -244,7 +244,7 @@
         },
         {
             "key": {
-                "name": "İkinci başvuru döneminde asıl listeden Lisans programlarına yurt dışından öğrenci kabulü kapsamında yerleştirilen öğrencilerin Üniversiteye kayıtları",
+                "name": "Lisansüstü programlara yedek listeden kabul edilen öğrencilerin üniversiteye kayıtları",
                 "kind": "İdari"
             },
             "start": "2026-09-04",
@@ -252,7 +252,7 @@
         },
         {
             "key": {
-                "name": "Lisansüstü programlara yedek listeden kabul edilen öğrencilerin üniversiteye kayıtları",
+                "name": "İkinci başvuru döneminde asıl listeden Lisans programlarına yurt dışından öğrenci kabulü kapsamında yerleştirilen öğrencilerin Üniversiteye kayıtları",
                 "kind": "İdari"
             },
             "start": "2026-09-04",
@@ -268,16 +268,16 @@
         },
         {
             "key": {
-                "name": "İkinci başvuru döneminde asıl listeden Lisans programlarına yurt dışından öğrenci kabulü kapsamında yerleştirilen öğrencilerin Üniversiteye kayıtları",
-                "kind": "İdari"
+                "name": "Kayıt ödeme sisteminin açılışı (10:00)",
+                "kind": "Kayıt"
             },
             "start": "2026-09-08",
             "end": "2026-09-08"
         },
         {
             "key": {
-                "name": "Kayıt ödeme sisteminin açılışı (10:00)",
-                "kind": "Kayıt"
+                "name": "İkinci başvuru döneminde asıl listeden Lisans programlarına yurt dışından öğrenci kabulü kapsamında yerleştirilen öğrencilerin Üniversiteye kayıtları",
+                "kind": "İdari"
             },
             "start": "2026-09-08",
             "end": "2026-09-08"
@@ -292,6 +292,14 @@
         },
         {
             "key": {
+                "name": "Birimler tarafından kota girişleri ve danışman atama işlemlerinin tamamlanması için son gün (17:00)",
+                "kind": "İdari"
+            },
+            "start": "2026-09-14",
+            "end": "2026-09-14"
+        },
+        {
+            "key": {
                 "name": "YADYOK Güz İngilizce Yeterlik Sınavı (BUEPT) sonuçlarının Kayıt İşleri Şube Müdürlüğüne bildirilmesi için son gün (15:00)",
                 "kind": "İdari"
             },
@@ -302,14 +310,6 @@
             "key": {
                 "name": "Misafir öğrencilerin ve değişim öğrencilerinin Üniversiteyi Tanıma Programı/Çevrimiçi Üniversiteyi Tanıma Programı",
                 "kind": "Eğitim-Öğretim"
-            },
-            "start": "2026-09-14",
-            "end": "2026-09-14"
-        },
-        {
-            "key": {
-                "name": "Birimler tarafından kota girişleri ve danışman atama işlemlerinin tamamlanması için son gün (17:00)",
-                "kind": "İdari"
             },
             "start": "2026-09-14",
             "end": "2026-09-14"
@@ -332,6 +332,22 @@
         },
         {
             "key": {
+                "name": "Akademik kayıt sisteminin öğrenci erişimine kapanışı (23:59)",
+                "kind": "Kayıt"
+            },
+            "start": "2026-09-17",
+            "end": "2026-09-17"
+        },
+        {
+            "key": {
+                "name": "Ders onay (consent) sisteminin öğrenciye kapanışı (14:00)",
+                "kind": "Kayıt"
+            },
+            "start": "2026-09-17",
+            "end": "2026-09-17"
+        },
+        {
+            "key": {
                 "name": "Ders onay (consent) sisteminin öğretim elemanına kapanışı (21:00)",
                 "kind": "Kayıt"
             },
@@ -348,32 +364,16 @@
         },
         {
             "key": {
-                "name": "Ders onay (consent) sisteminin öğrenciye kapanışı (14:00)",
-                "kind": "Kayıt"
-            },
-            "start": "2026-09-17",
-            "end": "2026-09-17"
-        },
-        {
-            "key": {
-                "name": "Akademik kayıt sisteminin öğrenci erişimine kapanışı (23:59)",
-                "kind": "Kayıt"
-            },
-            "start": "2026-09-17",
-            "end": "2026-09-17"
-        },
-        {
-            "key": {
-                "name": "Lisans programlarına yeni başlayan öğrenciler için Kimya, Moleküler Biyoloji ve Genetik, Fizik, Bilgisayar Mühendisliği muafiyet sınavları",
-                "kind": "Eğitim-Öğretim"
+                "name": "Akademik kayıt sisteminin danışman erişimine kapanışı (23:59)",
+                "kind": "İdari"
             },
             "start": "2026-09-18",
             "end": "2026-09-18"
         },
         {
             "key": {
-                "name": "Akademik kayıt sisteminin danışman erişimine kapanışı (23:59)",
-                "kind": "İdari"
+                "name": "Lisans programlarına yeni başlayan öğrenciler için Kimya, Moleküler Biyoloji ve Genetik, Fizik, Bilgisayar Mühendisliği muafiyet sınavları",
+                "kind": "Eğitim-Öğretim"
             },
             "start": "2026-09-18",
             "end": "2026-09-18"
@@ -420,14 +420,6 @@
         },
         {
             "key": {
-                "name": "Akademik kayıt danışmanı ile görüşme günü",
-                "kind": "İdari"
-            },
-            "start": "2026-09-28",
-            "end": "2026-09-28"
-        },
-        {
-            "key": {
                 "name": "Ders ekleme/bırakma dönemi için akademik kayıt sisteminin açılışı (10:00)",
                 "kind": "Kayıt"
             },
@@ -436,23 +428,23 @@
         },
         {
             "key": {
-                "name": "Ders ekleme/bırakma dönemi için akademik kayıt sisteminin öğrenci erişimine kapanışı (23:59)",
-                "kind": "Kayıt"
+                "name": "Akademik kayıt danışmanı ile görüşme günü",
+                "kind": "İdari"
+            },
+            "start": "2026-09-28",
+            "end": "2026-09-28"
+        },
+        {
+            "key": {
+                "name": "Ders ekleme/bırakma dönemi ders onay (consent) sisteminin öğrenciye kapanışı (14:00)",
+                "kind": "İdari"
             },
             "start": "2026-09-30",
             "end": "2026-09-30"
         },
         {
             "key": {
-                "name": "Ders ekleme/bırakma dönemi",
-                "kind": "Kayıt"
-            },
-            "start": "2026-09-28",
-            "end": "2026-09-30"
-        },
-        {
-            "key": {
-                "name": "Ders ekleme/bırakma dönemi ders onay (consent) sisteminin öğrenciye kapanışı (14:00)",
+                "name": "Kayıt ödeme sisteminin kapanışı (17:00)",
                 "kind": "İdari"
             },
             "start": "2026-09-30",
@@ -468,10 +460,18 @@
         },
         {
             "key": {
-                "name": "Kayıt ödeme sisteminin kapanışı (17:00)",
-                "kind": "İdari"
+                "name": "Ders ekleme/bırakma dönemi için akademik kayıt sisteminin öğrenci erişimine kapanışı (23:59)",
+                "kind": "Kayıt"
             },
             "start": "2026-09-30",
+            "end": "2026-09-30"
+        },
+        {
+            "key": {
+                "name": "Ders ekleme/bırakma dönemi",
+                "kind": "Kayıt"
+            },
+            "start": "2026-09-28",
             "end": "2026-09-30"
         }
     ]

@@ -1,0 +1,54 @@
+{
+    "tables": [
+        {
+            "label": "Öğrenci Kahvaltı ve Yemek Ücreti",
+            "rows": [
+                {
+                    "category": "Kahvaltı",
+                    "price": "65,00 ₺"
+                },
+                {
+                    "category": "Öğle Yemeği",
+                    "price": "75,00 ₺"
+                },
+                {
+                    "category": "Akşam Yemeği",
+                    "price": "75,00 ₺"
+                }
+            ]
+        },
+        {
+            "label": "Personel ve Misafir Yemek Ücretleri",
+            "rows": [
+                {
+                    "category": "≤79,800 ₺",
+                    "price": "75,00 ₺"
+                },
+                {
+                    "category": "79,801 ₺ - 97,000 ₺",
+                    "price": "100,00 ₺"
+                },
+                {
+                    "category": "97,001 ₺ ve Üstü Maaş Alanlar",
+                    "price": "125,00 ₺"
+                },
+                {
+                    "category": "Yarı Zamanlı Akademik Personel",
+                    "price": "125,00 ₺"
+                },
+                {
+                    "category": "Sözleşmeli Büyük Ölçekli Bilgi İşlem Personeli",
+                    "price": "125,00 ₺"
+                },
+                {
+                    "category": "Sürekli İşçi",
+                    "price": "240,00 ₺"
+                },
+                {
+                    "category": "İkinci Yemek ve Tabldot Misafir",
+                    "price": "320,00 ₺"
+                }
+            ]
+        }
+    ]
+}

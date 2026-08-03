@@ -1,0 +1,4 @@
+MENU_CACHE_NAME = "menu"
+MENU_PRICE_CACHE_NAME = "menu_price"
+
+REFECTORY_CACHE_FOLDER = "refectory"

@@ -2,7 +2,9 @@ import requests
 import os
 
 from pathlib import Path
-from dataclasses import dataclass
+
+from config.regulation_config import DOCUMENT_URL_MAPPING, REGULATION_DB_PATH, REGULATION_COLLECTION_NAME
+from qdrant.client import run_client, add_to_collection
 
 from regulation_rag.chunker.models import Chunk
 from regulation_rag.chunker.config import ChunkerConfig
@@ -11,45 +13,15 @@ from regulation_rag.html_parser.document_tree import HtmlDocumentTree
 from regulation_rag.chunker.engine import Chunker
 from regulation_rag.normalizers import *
 
-@dataclass
-class PipelineConfig:
-    chunker: Chunker
-    normalizer: type[HtmlNormalizer]
-    url: str
-
 class Pipeline:
 
-    DOCUMENT_TYPE_MAPPING: ClassVar[dict[str, PipelineConfig]] = {
-        "dormitory": PipelineConfig(
-            chunker=Chunker(ChunkerConfig("dormitory")),
-            normalizer=DormitoryNormalizer,
-            url="https://bogazici.edu.tr/tr/pages/bogazici-universitesi-ogrenci-yurtlari-yonerg/669",
-        ),
-        "erasmus": PipelineConfig(
-            chunker=Chunker(ChunkerConfig("erasmus")),
-            normalizer=ErasmusNormalizer,
-            url="https://bogazici.edu.tr/tr/pages/bogazici-universitesi-degisim-programlari-yon/662",
-        ),
-        "undergraduate": PipelineConfig(
-            chunker=Chunker(ChunkerConfig("undergraduate")),
-            normalizer=UndergraduateNormalizer,
-            url="https://bogazici.edu.tr/tr/pages/bogazici-universitesi-lisans-egitim-ve-ogreti/657",
-        ),
-        "graduate": PipelineConfig(
-            chunker=Chunker(ChunkerConfig("graduate")),
-            normalizer=GraduateNormalizer,
-            url="https://bogazici.edu.tr/tr/pages/bogazici-universitesi-lisansustu-egitim-ve-og/656",
-        ),
-        "major": PipelineConfig(
-            chunker=Chunker(ChunkerConfig("major")),
-            normalizer=MajorNormalizer,
-            url="https://bogazici.edu.tr/tr/pages/bogazici-universitesi-cift-ana-dal-programlar/661",
-        ),
-        "minor": PipelineConfig(
-            chunker=Chunker(ChunkerConfig("minor")),
-            normalizer=MinorNormalizer,
-            url="https://bogazici.edu.tr/tr/pages/bogazici-universitesi-yan-dal-programlari-yon/668",
-        ),
+    DOCUMENT_NORMALIZER_MAPPING: ClassVar[dict] = {
+        "dormitory": DormitoryNormalizer,
+        "erasmus": ErasmusNormalizer,
+        "undergraduate": UndergraduateNormalizer,
+        "graduate": GraduateNormalizer,
+        "major": MajorNormalizer,
+        "minor": MinorNormalizer,
     }
 
     CONTENT_SELECTOR: ClassVar[str] = "div.inner-page__content"
@@ -57,12 +29,11 @@ class Pipeline:
 
     def __init__(self,
                  document_type: str,
-                 collection_name: str,
                  use_cache: bool = True
                  ) -> None:
 
-        pipe_info = self.DOCUMENT_TYPE_MAPPING.get(document_type)
-        if not pipe_info:
+        url = DOCUMENT_URL_MAPPING.get(document_type)
+        if not url:
             raise Exception(f"Unknown pipeline: {document_type}")
 
         cached_dir = Path(__file__).resolve().parent / "normalized_htmls" / f"{document_type}.txt"
@@ -75,13 +46,17 @@ class Pipeline:
 
         else:
 
-            response = requests.get(pipe_info.url, timeout=10)
+            response = requests.get(url, timeout=10)
             response.raise_for_status()
 
             html_text = response.text
             temp_soup = BeautifulSoup(html_text, "html.parser")
 
-            normalized_soup = self._normalize_soup(pipe_info.normalizer, temp_soup)
+            normalizer = Pipeline.DOCUMENT_NORMALIZER_MAPPING.get(document_type)
+            if not normalizer:
+                raise Exception(f"Unknown normalizer: {document_type}")
+
+            normalized_soup = self._normalize_soup(normalizer, temp_soup)
             normalized_content_container = self._get_content_container(normalized_soup)
 
             normalized_html_text = str(normalized_content_container)
@@ -90,7 +65,9 @@ class Pipeline:
 
         self.soup = BeautifulSoup(normalized_html_text, "html.parser")
         self.document_type = document_type
-        self.collection_name = collection_name
+        self.chunker = Chunker(
+            ChunkerConfig(self.document_type)
+        )
 
     @staticmethod
     def _get_content_container(soup: BeautifulSoup) -> Tag:
@@ -126,14 +103,19 @@ class Pipeline:
 
     def _get_chunks(self) -> list[Chunk]:
 
-        chunker = (self.DOCUMENT_TYPE_MAPPING
-                   .get(self.document_type)
-                   .chunker)
-
         document = self._get_document_tree()
-        chunks = chunker.run(document)
+        chunks = self.chunker.run(document)
 
         return chunks
 
-    def run(self) -> list[Chunk]:
-        return self._get_chunks()
+    @staticmethod
+    def _save_chunks(chunks: list[Chunk]) -> None:
+        chunks = [
+            chunk.as_dict() for chunk in chunks
+        ]
+        with run_client(db_path=REGULATION_DB_PATH) as client:
+            add_to_collection(client=client, collection_name=REGULATION_COLLECTION_NAME, chunks=chunks)
+
+    def run(self) -> None:
+        chunks = self._get_chunks()
+        self._save_chunks(chunks=chunks)

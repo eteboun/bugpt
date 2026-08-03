@@ -3,6 +3,8 @@ from typing import ClassVar
 
 from refectory_extractor.models.menu_price_models import MenuPrice, PriceTable, PriceTableRow
 from refectory_extractor.utils import get_soup, serialize
+from config.refectory_config import REFECTORY_CACHE_FOLDER, MENU_PRICE_CACHE_NAME
+from cache.operations import write_cache
 
 class MenuPriceExtractor:
 
@@ -80,8 +82,13 @@ class MenuPriceExtractor:
         return menu_price
 
     @staticmethod
-    def call() -> dict:
+    def cache():
         menu_price = MenuPriceExtractor._extract_menu_price()
         serialized_menu_price = serialize(menu_price)
 
-        return serialized_menu_price
+        write_cache(
+            cache_folder=REFECTORY_CACHE_FOLDER,
+            cache_name=MENU_PRICE_CACHE_NAME,
+            cache_data=serialized_menu_price
+        )
+

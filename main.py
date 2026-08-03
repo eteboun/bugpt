@@ -1,19 +1,9 @@
-from transformers import BitsAndBytesConfig
-import torch
-
 from ai.agent import Agent
-
-model_name = "Qwen/Qwen3.5-4B"
-model_quantization_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_compute_dtype=torch.float16,
-    bnb_4bit_use_double_quant=True,
-)
+from model_loader import GENERATOR_MODEL, GENERATOR_TOKENIZER
 
 agent = Agent(
-    model_name=model_name,
-    model_quantization_config=model_quantization_config,
+    model=GENERATOR_MODEL,
+    tokenizer=GENERATOR_TOKENIZER
 )
 
 while True:

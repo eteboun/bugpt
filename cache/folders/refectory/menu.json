@@ -1,0 +1,85 @@
+{
+    "sections": [
+        {
+            "mealtime": "lunch",
+            "service": "canteen",
+            "categories": {
+                "soup": [
+                    "Şafak Çorba"
+                ],
+                "main_course": [
+                    "Pideli Parmak Köfte"
+                ],
+                "vegetarian": [
+                    "Patates Yemeği"
+                ],
+                "complementary": [
+                    "Zy. Enginar",
+                    "Pirinç Pilavı"
+                ],
+                "selective": [
+                    "Akdeniz Salata",
+                    "Portakallı Gazoz",
+                    "Spoonful"
+                ]
+            }
+        },
+        {
+            "mealtime": "dinner",
+            "service": "canteen",
+            "categories": {
+                "soup": [
+                    "Naneli Yoğurt Çorba"
+                ],
+                "main_course": [
+                    "Orman Kebabı"
+                ],
+                "vegetarian": [
+                    "Sebze Sote"
+                ],
+                "complementary": [
+                    "Melek Pilavı",
+                    "Domatesli Bulgur Pilavı"
+                ],
+                "selective": [
+                    "Cacık",
+                    "Gazoz",
+                    "Meyve"
+                ]
+            }
+        },
+        {
+            "mealtime": "lunch",
+            "service": "takeaway",
+            "categories": {
+                "main_course": [
+                    "Mantar Soslu Tavuk Pirzola"
+                ],
+                "complementary": [
+                    "Domatesli Arpa Şehriye Pilavı"
+                ],
+                "selective": [
+                    "Limonata",
+                    "Meyve",
+                    "Spoonful"
+                ]
+            }
+        },
+        {
+            "mealtime": "dinner",
+            "service": "takeaway",
+            "categories": {
+                "main_course": [
+                    "Et Döner Sandviç"
+                ],
+                "complementary": [
+                    "Ayran"
+                ],
+                "selective": [
+                    "Kuruyemiş Bar",
+                    "Dubai Magnolia"
+                ]
+            }
+        }
+    ]
+}

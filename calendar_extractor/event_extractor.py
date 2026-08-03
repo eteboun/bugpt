@@ -1,10 +1,10 @@
 import requests
-import json
-from pathlib import Path
+from config.calendar_config import CALENDAR_CACHE_NAME, CALENDAR_CACHE_FOLDER
 from datetime import date, timedelta
 from typing import ClassVar
 from bs4 import BeautifulSoup, Tag
 from calendar_extractor.models import Event, EventKey, EventKind, Calendar
+from cache.operations import write_cache
 
 today = date.today()
 
@@ -16,8 +16,6 @@ class EventExtractor:
     EVENT_NAME_CLASS: ClassVar[str] = "title query-title"
     EVENT_KIND_CLASS: ClassVar[str] = "tag query-tag"
     EVENT_HTML_ELEMENT: ClassVar[str] = "li"
-
-    SAVE_FILE_NAME: ClassVar[str] = "calendar.json"
 
     START_DATE: ClassVar[date] = today
     END_DATE: ClassVar[date] = today + timedelta(days=364)
@@ -139,20 +137,12 @@ class EventExtractor:
         return calendar.serialize()
 
     @staticmethod
-    def _save_serialized_calendar(calendar: dict) -> None:
-        path = Path(__file__).parent / EventExtractor.SAVE_FILE_NAME
-
-        if not path.exists():
-            raise FileNotFoundError(f"File {path} does not exist")
-
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(calendar, f, indent=4, ensure_ascii=False)
-
-    @staticmethod
-    def run():
+    def cache():
         calendar = EventExtractor._extract_calendar()
         serialized_calendar = calendar.serialize()
 
-        EventExtractor._save_serialized_calendar(serialized_calendar)
-
-EventExtractor.run()
+        write_cache(
+            cache_folder=CALENDAR_CACHE_FOLDER,
+            cache_name=CALENDAR_CACHE_NAME,
+            cache_data=serialized_calendar
+        )

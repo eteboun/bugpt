@@ -1,20 +1,23 @@
+from sentence_transformers import SentenceTransformer
+from transformers import PreTrainedModel, PreTrainedTokenizer
+
 from services.service import Service
 from services.regulation.query_rewriter import QueryRewriter
 from services.regulation.doctype_classifier import DoctypeClassifier
-from regulation_rag.database_manager import DatabaseManager
-from typing import ClassVar
+from services.regulation.retriever import RegulationRetriever
+from config.regulation_config import DOCUMENT_TYPES
 
 class RegulationService(Service):
 
-    DOCUMENT_TYPES: ClassVar[set] = {"dormitory", "erasmus",
-                                     "undergraduate", "graduate",
-                                     "major", "minor"}
+    def __init__(self,
+                 generation_model: PreTrainedModel,
+                 generation_tokenizer: PreTrainedTokenizer,
+                 embedding_model: SentenceTransformer):
+        super().__init__(generation_model, generation_tokenizer)
 
-    def __init__(self, model, tokenizer):
-        super().__init__(model, tokenizer)
-
-        self.query_rewriter = QueryRewriter(model=model, tokenizer=tokenizer)
-        self.doctype_classifier = DoctypeClassifier(model=model, tokenizer=tokenizer)
+        self.query_rewriter = QueryRewriter(model=generation_model, tokenizer=generation_tokenizer)
+        self.doctype_classifier = DoctypeClassifier(model=generation_model, tokenizer=generation_tokenizer)
+        self.retriever = RegulationRetriever(model=embedding_model)
 
     def _rewrite_query(self, query: str) -> str:
         return self.query_rewriter.rewrite_query(query=query)
@@ -25,7 +28,7 @@ class RegulationService(Service):
         return [
             doctype
             for doctype in doctypes
-            if doctype in self.DOCUMENT_TYPES
+            if doctype in DOCUMENT_TYPES
         ]
 
     def answer(self, query: str) -> list[str]:
@@ -33,7 +36,7 @@ class RegulationService(Service):
         query = self._rewrite_query(query)
         doctypes = self._classify_query(query)
 
-        retrieval = DatabaseManager.search_chunk(query=query,
-                                                 document_types=doctypes)
+        retrieval = self.retriever.retrieve(query=query,
+                                            document_types=doctypes)
 
         return retrieval
