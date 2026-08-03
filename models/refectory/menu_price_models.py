@@ -1,10 +1,10 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 
 @dataclass
 class PriceTableRow:
     category: str
     price: str
-
+        
 @dataclass
 class PriceTable:
     label: str
@@ -13,3 +13,6 @@ class PriceTable:
 @dataclass
 class MenuPrice:
     tables: list[PriceTable] = field(default_factory=list)
+
+    def serialize(self) -> dict:
+        return asdict(self)

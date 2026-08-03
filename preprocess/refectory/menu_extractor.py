@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup, Tag
 from typing import ClassVar
 
-from refectory_extractor.utils import get_soup, serialize
+from preprocess.soup import get_soup
 from models.refectory.menu_models import MenuSection, Mealtime, Service, CategoryType, Menu
 from config.refectory_config import MENU_CACHE_NAME, REFECTORY_CACHE_FOLDER
 from cache.operations import write_cache
@@ -122,10 +122,9 @@ class MenuExtractor:
     @staticmethod
     def cache():
         menu = MenuExtractor._extract_menu()
-        serialized_menu = serialize(menu)
 
         write_cache(
             cache_folder=REFECTORY_CACHE_FOLDER,
             cache_name=MENU_CACHE_NAME,
-            cache_data=serialized_menu
+            cache_data=menu.serialize()
         )

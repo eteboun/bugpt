@@ -72,7 +72,7 @@ class Payload:
     id: str = field(init=False)
     embedding_text: str = field(init=False)
 
-    def as_dict(self):
+    def serialize(self):
         return asdict(self)
 
 @dataclass
@@ -80,5 +80,5 @@ class Chunk:
     id: str
     payload: Payload
 
-    def as_dict(self):
+    def serialize(self):
         return asdict(self)

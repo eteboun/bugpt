@@ -1,7 +1,7 @@
 from bs4 import Tag
-from regulation_rag.cursor import Cursor
+from preprocess.regulation.cursor import Cursor
 from typing import ClassVar
-from regulation_rag.html_parser.operations import Operations
+from preprocess.regulation.html_parser.operations import Operations
 from models.regulation.document_models import *
 
 import re

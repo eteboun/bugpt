@@ -67,5 +67,5 @@ class Document:
 
     document_type: str = field(init=False)
 
-    def as_dict(self):
+    def serialize(self):
         return asdict(self)

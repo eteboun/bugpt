@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup, Tag
 from typing import ClassVar
 
 from models.refectory.menu_price_models import MenuPrice, PriceTable, PriceTableRow
-from refectory_extractor.utils import get_soup, serialize
+from preprocess.soup import get_soup
 from config.refectory_config import REFECTORY_CACHE_FOLDER, MENU_PRICE_CACHE_NAME
 from cache.operations import write_cache
 
@@ -84,11 +84,10 @@ class MenuPriceExtractor:
     @staticmethod
     def cache():
         menu_price = MenuPriceExtractor._extract_menu_price()
-        serialized_menu_price = serialize(menu_price)
 
         write_cache(
             cache_folder=REFECTORY_CACHE_FOLDER,
             cache_name=MENU_PRICE_CACHE_NAME,
-            cache_data=serialized_menu_price
+            cache_data=menu_price.serialize()
         )
 

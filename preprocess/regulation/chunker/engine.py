@@ -2,7 +2,7 @@ import uuid
 import re
 
 from typing import ClassVar
-from regulation_rag.chunker.config import ChunkerConfig, TableOption
+from preprocess.regulation.chunker.config import ChunkerConfig, TableOption
 from models.regulation.chunk_models import *
 from models.regulation.document_models import *
 

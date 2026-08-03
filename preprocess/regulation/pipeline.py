@@ -7,11 +7,11 @@ from config.regulation_config import DOCUMENT_URL_MAPPING, REGULATION_DB_PATH, R
 from qdrant.client import run_client, add_to_collection
 
 from models.regulation.chunk_models import Chunk
-from regulation_rag.chunker.config import ChunkerConfig
+from preprocess.regulation.chunker.config import ChunkerConfig
 from models.regulation.document_models import Document
-from regulation_rag.html_parser.document_tree import HtmlDocumentTree
-from regulation_rag.chunker.engine import Chunker
-from regulation_rag.normalizers import *
+from preprocess.regulation.html_parser.document_tree import HtmlDocumentTree
+from preprocess.regulation.chunker.engine import Chunker
+from preprocess.regulation.normalizers import *
 
 class Pipeline:
 
@@ -88,7 +88,7 @@ class Pipeline:
         if regulation_container is not None:
             normalizer.run(regulation_container, soup)
         else:
-            raise ValueError("No regulation_rag found")
+            raise ValueError("No regulation found")
 
         return soup
 
@@ -111,7 +111,7 @@ class Pipeline:
     @staticmethod
     def _save_chunks(chunks: list[Chunk]) -> None:
         chunks = [
-            chunk.as_dict() for chunk in chunks
+            chunk.serialize() for chunk in chunks
         ]
         with run_client(db_path=REGULATION_DB_PATH) as client:
             add_to_collection(client=client, collection_name=REGULATION_COLLECTION_NAME, chunks=chunks)
