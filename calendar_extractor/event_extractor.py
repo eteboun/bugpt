@@ -3,7 +3,7 @@ from config.calendar_config import CALENDAR_CACHE_NAME, CALENDAR_CACHE_FOLDER
 from datetime import date, timedelta
 from typing import ClassVar
 from bs4 import BeautifulSoup, Tag
-from calendar_extractor.models import Event, EventKey, EventKind, Calendar
+from models.calendar.calendar_models import Event, EventKey, EventKind, Calendar
 from cache.operations import write_cache
 
 today = date.today()
@@ -96,7 +96,7 @@ class EventExtractor:
         ongoing_events: dict[EventKey, date] = {}
 
         while date_ <= EventExtractor.END_DATE or ongoing_events:
-            print(date_)
+
             event_tag_list = EventExtractor._extract_event_tag_list(date_)
             event_tags = EventExtractor._extract_event_tags(event_tag_list)
 

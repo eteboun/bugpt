@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup, Tag
 from typing import ClassVar
 
 from refectory_extractor.utils import get_soup, serialize
-from refectory_extractor.models.menu_models import MenuSection, Mealtime, Service, CategoryType, Menu
+from models.refectory.menu_models import MenuSection, Mealtime, Service, CategoryType, Menu
 from config.refectory_config import MENU_CACHE_NAME, REFECTORY_CACHE_FOLDER
 from cache.operations import write_cache
 

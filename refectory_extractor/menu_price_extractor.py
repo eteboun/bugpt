@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup, Tag
 from typing import ClassVar
 
-from refectory_extractor.models.menu_price_models import MenuPrice, PriceTable, PriceTableRow
+from models.refectory.menu_price_models import MenuPrice, PriceTable, PriceTableRow
 from refectory_extractor.utils import get_soup, serialize
 from config.refectory_config import REFECTORY_CACHE_FOLDER, MENU_PRICE_CACHE_NAME
 from cache.operations import write_cache

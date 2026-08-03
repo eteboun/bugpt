@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 from dataclasses import asdict
 from typing import TypeAlias
 
-from refectory_extractor.models.menu_price_models import MenuPrice
-from refectory_extractor.models.menu_models import Menu
+from models.refectory.menu_price_models import MenuPrice
+from models.refectory.menu_models import Menu
 
 Extraction: TypeAlias = MenuPrice | Menu
 

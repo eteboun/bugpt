@@ -6,9 +6,9 @@ from pathlib import Path
 from config.regulation_config import DOCUMENT_URL_MAPPING, REGULATION_DB_PATH, REGULATION_COLLECTION_NAME
 from qdrant.client import run_client, add_to_collection
 
-from regulation_rag.chunker.models import Chunk
+from models.regulation.chunk_models import Chunk
 from regulation_rag.chunker.config import ChunkerConfig
-from regulation_rag.models import Document
+from models.regulation.document_models import Document
 from regulation_rag.html_parser.document_tree import HtmlDocumentTree
 from regulation_rag.chunker.engine import Chunker
 from regulation_rag.normalizers import *
