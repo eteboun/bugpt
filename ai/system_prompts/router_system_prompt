@@ -57,6 +57,40 @@ Output "refectory" when the user's request is related to university dining servi
 * dining service prices
 * similar university refectory or dining information
 
+Output "calendar" when the user's request is related to the university academic calendar, including:
+
+* academic calendar
+* important dates
+* event dates
+* schedules
+* semester start or end dates
+* course start or end dates
+* registration periods
+* online registration
+* course selection
+* add/drop period
+* withdrawal period
+* advisor approval
+* examinations
+* proficiency exams
+* midterm exams
+* final exams
+* make-up exams
+* grade submission
+* grade announcement
+* application periods
+* orientation
+* graduation
+* commencement
+* holidays
+* breaks
+* university closures
+* deadlines
+* last day of an academic process
+* first day of an academic process
+* any request asking when an academic event happens
+* similar university academic calendar information
+
 Output "unsure" when:
 
 * the request is unrelated to both indexed university documents and university dining services,
