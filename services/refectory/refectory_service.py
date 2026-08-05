@@ -13,11 +13,11 @@ class RefectoryService(Service):
 
     def __init__(self, model, tokenizer):
         super().__init__(model, tokenizer)
-        self.tool_selector = ToolSelector(model=model, tokenizer=tokenizer)
+        self.tool_selector = ToolSelector()
 
     def answer(self, query: str):
 
-        tool_call = self.tool_selector.select_tool(query=query)
+        tool_call = self.tool_selector.select(query=query)
         tool = tool_call['tool']
 
         if tool not in self.TOOL_CACHE_NAME_MAPPING:

@@ -3,7 +3,7 @@ from typing import ClassVar
 
 class EventRewriter:
 
-    ALIASES: ClassVar[dict] = {
+    EVENT_ALIASES: ClassVar[dict[str, str]] = {
 
         "add drop": "ders ekleme bırakma",
         "oryantasyon": "üniversiteyi tanıma günleri",
@@ -17,6 +17,10 @@ class EventRewriter:
         "ders onay": "ders onay (consent)",
         "consent sistemi": "ders onay (consent) sistemi",
 
+    }
+
+    MORPHOLOGICAL_ALIASES: ClassVar[dict[str, str]] = {
+
         "kapanıyor": "kapanışı",
         "kapanacak": "kapanışı",
         "kapanır": "kapanışı",
@@ -26,7 +30,6 @@ class EventRewriter:
         "açılır": "açılışı",
 
         "başvurusu": "başvuruları",
-
     }
 
     TIME_PHRASES: ClassVar[set] = {
@@ -89,7 +92,7 @@ class EventRewriter:
         index = 0
 
         aliases = sorted(
-            self.ALIASES,
+            self.EVENT_ALIASES | self.MORPHOLOGICAL_ALIASES,
             key=lambda alias: len(alias.split()),
             reverse=True,
         )
@@ -120,7 +123,7 @@ class EventRewriter:
                 result.append(words[index])
                 index += 1
             else:
-                result.append(self.ALIASES[best_alias])
+                result.append(self.EVENT_ALIASES[best_alias])
                 index += len(best_alias.split())
 
         return " ".join(result)
