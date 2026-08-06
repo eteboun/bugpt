@@ -86,13 +86,14 @@ class EventRewriter:
     def rewrite_event(self, query: str, threshold: float = 80) -> str:
 
         cleaned_query = self._clean_query(query)
+        alias_dicts = self.EVENT_ALIASES | self.MORPHOLOGICAL_ALIASES
 
         words = cleaned_query.split()
         result: list[str] = []
         index = 0
 
         aliases = sorted(
-            self.EVENT_ALIASES | self.MORPHOLOGICAL_ALIASES,
+            alias_dicts,
             key=lambda alias: len(alias.split()),
             reverse=True,
         )
@@ -123,7 +124,7 @@ class EventRewriter:
                 result.append(words[index])
                 index += 1
             else:
-                result.append(self.EVENT_ALIASES[best_alias])
+                result.append(alias_dicts[best_alias])
                 index += len(best_alias.split())
 
         return " ".join(result)

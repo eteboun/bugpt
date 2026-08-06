@@ -49,7 +49,6 @@ class EventFinder:
         )
 
         top_event = ranked_events[0]
-        print(f"fuzzy score: {self._score_event(query, top_event.key.name)}")
         if self._score_event(query, top_event.key.name) >= fuzzy_threshold:
             return top_event.serialize()
 
@@ -75,7 +74,7 @@ class EventFinder:
         )
         top_score = results[0][1]
         found_event = results[0][0]
-        print(f"semantic search score: {top_score}")
+
         if top_score >= semantic_threshold:
             return found_event.serialize()
 

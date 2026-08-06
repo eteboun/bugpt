@@ -1,36 +1,8 @@
 from typing import ClassVar, TypeVar
 from rapidfuzz import fuzz
-from config.refectory_config import MENU_CACHE_NAME, MENU_PRICE_CACHE_NAME, REFECTORY_CACHE_FOLDER
-from cache.operations import read_cache
-from models.refectory.menu_models import Menu, Mealtime, ServiceType, CategoryType
+from models.refectory.menu_models import Mealtime, ServiceType, CategoryType
 
 T = TypeVar('T')
-
-def tool_menu(
-        mealtimes: list[Mealtime] | None = None,
-        services: list[ServiceType] | None = None,
-        categories: list[CategoryType] | None = None,
-) -> dict:
-
-    menu_json = read_cache(
-        cache_folder=REFECTORY_CACHE_FOLDER,
-        cache_name=MENU_CACHE_NAME
-    )
-    menu = Menu.deserialize(menu_json)
-
-    filtered_menu = (menu.
-                     filter_by_mealtimes(mealtimes).
-                     filter_by_services(services).
-                     filter_by_categories(categories))
-
-
-    return filtered_menu.serialize()
-
-def tool_menu_price() -> dict:
-    return read_cache(
-        cache_folder=REFECTORY_CACHE_FOLDER,
-        cache_name=MENU_PRICE_CACHE_NAME
-    )
 
 class ToolSelector:
 
@@ -117,6 +89,7 @@ class ToolSelector:
         },
 
         CategoryType.VEGETARIAN: {
+            "vegan",
             "vegetarian",
             "vejetaryen",
             "vejeteryan",
@@ -226,7 +199,10 @@ class ToolSelector:
                 index += 1
 
         if has_alias:
-            return tool_menu_price()
+            return {
+                "tool": "menu_price",
+                "args": {}
+            }
 
         else:
 
@@ -245,8 +221,11 @@ class ToolSelector:
                 self.CATEGORY_ALIASES
             )
 
-            return tool_menu(
-                mealtimes,
-                services,
-                categories,
-            )
+            return {
+                "tool": "menu",
+                "args": {
+                    "mealtimes": mealtimes,
+                    "services": services,
+                    "categories": categories,
+                }
+            }

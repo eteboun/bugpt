@@ -52,8 +52,6 @@ class MenuSection:
             categories=categories
         )
 
-
-
 @dataclass
 class Menu:
     sections: list[MenuSection] = field(default_factory=list)
@@ -78,46 +76,43 @@ class Menu:
 
         return menu
 
-    def filter_by_mealtimes(self, mealtimes: list[Mealtime] | None = None) -> "Menu":
+    def filter(self,
+               mealtimes: list[Mealtime],
+               services: list[ServiceType],
+               categories: list[CategoryType]
+               ) -> "Menu":
 
-        if not mealtimes:
-            return self
+        if mealtimes:
+            mealtime_filtered_sections = [
+                section for section in self.sections
+                if section.mealtime in mealtimes
+            ]
+        else:
+            mealtime_filtered_sections = self.sections
 
-        filtered_menu = Menu()
-        for section in self.sections:
-            if section.mealtime in mealtimes:
-                filtered_menu.sections.append(section)
+        if services:
+            service_filtered_sections = [
+                section for section in mealtime_filtered_sections
+                if section.service in services
+            ]
+        else:
+            service_filtered_sections = mealtime_filtered_sections
 
-        return filtered_menu
+        if categories:
+            category_filtered_sections = []
+            for section in service_filtered_sections:
+                filtered_section = MenuSection(
+                    mealtime=section.mealtime,
+                    service=section.service,
+                    categories={}
+                )
+                for category in categories:
+                    filtered_section.categories[category] = section.categories.get(category, [])
 
-    def filter_by_services(self, services: list[ServiceType] | None = None) -> "Menu":
+                category_filtered_sections.append(filtered_section)
+        else:
+            category_filtered_sections = service_filtered_sections
 
-        if not services:
-            return self
-
-        filtered_menu = Menu()
-        for section in self.sections:
-            if section.service in services:
-                filtered_menu.sections.append(section)
-
-        return filtered_menu
-
-    def filter_by_categories(self, categories: list[CategoryType] | None = None) -> "Menu":
-
-        if not categories:
-            return self
-
-        filtered_menu = Menu()
-        for section in self.sections:
-            filtered_section = MenuSection(
-                mealtime=section.mealtime,
-                service=section.service,
-                categories={}
-            )
-            for category in section.categories:
-                if category in categories:
-                    filtered_section.categories[category] = section.categories[category]
-
-            filtered_menu.sections.append(filtered_section)
-
-        return filtered_menu
+        return Menu(
+            sections=category_filtered_sections
+        )
