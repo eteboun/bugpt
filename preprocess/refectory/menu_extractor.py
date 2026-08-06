@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup, Tag
 from typing import ClassVar
 
 from preprocess.soup import get_soup
-from models.refectory.menu_models import MenuSection, Mealtime, Service, CategoryType, Menu
+from models.refectory.menu_models import MenuSection, Mealtime, ServiceType, CategoryType, Menu
 from config.refectory_config import MENU_CACHE_NAME, REFECTORY_CACHE_FOLDER
 from cache.operations import write_cache
 
@@ -17,19 +17,19 @@ class MenuExtractor:
     MENU_SECTION_ARGS_MAPPING: ClassVar[dict[str, dict]] = {
         "Öğle Yemeği": {
             "mealtime": Mealtime.LUNCH,
-            "service": Service.CANTEEN
+            "service": ServiceType.CANTEEN
         },
         "Akşam Yemeği": {
             "mealtime": Mealtime.DINNER,
-            "service": Service.CANTEEN
+            "service": ServiceType.CANTEEN
         },
         "Paket Öğle Yemeği": {
             "mealtime": Mealtime.LUNCH,
-            "service": Service.TAKEAWAY
+            "service": ServiceType.TAKEAWAY
         },
         "Paket Akşam Yemeği": {
             "mealtime": Mealtime.DINNER,
-            "service": Service.TAKEAWAY
+            "service": ServiceType.TAKEAWAY
         },
     }
 
