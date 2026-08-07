@@ -1,8 +1,6 @@
-from typing import ClassVar, TypeVar
-from rapidfuzz import fuzz
-from models.refectory.menu_models import Mealtime, ServiceType, CategoryType
-
-T = TypeVar('T')
+from typing import ClassVar, Literal
+from ai.fuzzy import extract_keys, match
+from schemas.refectory.menu_models import Mealtime, ServiceType, CategoryType, MenuFilter
 
 class ToolSelector:
 
@@ -111,121 +109,62 @@ class ToolSelector:
         },
     }
 
-    @staticmethod
-    def _extract_args(
-            query: str,
-            aliases: dict[T, set[str]],
-            threshold: float = 80.0
-            ) -> list[T]:
+    def _select_tool(self, query: str, threshold: float = 85.0) -> Literal["menu", "menu_price"]:
 
-        words = query.split()
-        extraction: list[T] = []
+        match_ = match(
+            query,
+            aliases=self.MENU_PRICE_ALIASES,
+            threshold=threshold,
+        )
 
-        index = 0
-        while index < len(words):
-            best_value: T | None = None
-            best_score = 0.0
-            best_word_count = 0
+        if match_:
+            return "menu_price"
+        else:
+            return "menu"
 
-            for t, alias_set in aliases.items():
-                for alias in alias_set:
+    def _extract_menu_args(self, query: str, threshold: float = 80.0) -> MenuFilter:
 
-                    alias_length = len(alias.split())
-                    candidate_words = words[index:index + alias_length]
+        mealtimes = extract_keys(
+            query,
+            key_dict=self.MEALTIME_ALIASES,
+            threshold=threshold
+        )
 
-                    if len(candidate_words) < alias_length:
-                        continue
+        services = extract_keys(
+            query,
+            key_dict=self.SERVICE_ALIASES,
+            threshold=threshold
+        )
 
-                    candidate = " ".join(candidate_words)
+        categories = extract_keys(
+            query,
+            key_dict=self.CATEGORY_ALIASES,
+            threshold=threshold
+        )
 
-                    score = fuzz.ratio(
-                        candidate.casefold(),
-                        alias.casefold(),
-                    )
+        filter_ = MenuFilter(
+            mealtimes=mealtimes,
+            services=services,
+            categories=categories,
+        )
 
-                    if score < threshold:
-                        continue
-
-                    if score > best_score or (
-                        score == best_score and len(alias.split()) > best_word_count
-                    ):
-
-                        best_value = t
-                        best_score = score
-                        best_word_count = len(alias.split())
-
-            if best_value:
-                if best_value not in extraction:
-                    extraction.append(best_value)
-                index += best_word_count
-            else:
-                index += 1
-
-        return extraction
+        return filter_
 
     def run(self,
             query: str,
             tool_threshold: float = 85.0,
+            extraction_threshold: float = 80.0,
             ) -> dict:
 
-        words = query.split()
-        index = 0
-
-        has_alias = False
-        while index < len(words):
-
-            for alias in self.MENU_PRICE_ALIASES:
-
-                alias_length = len(alias.split())
-                candidate_words = words[index:index + alias_length]
-
-                if len(candidate_words) < alias_length:
-                    continue
-
-                candidate = " ".join(candidate_words)
-
-                score = fuzz.ratio(
-                    candidate.casefold(),
-                    alias.casefold()
-                )
-
-                if score >= tool_threshold:
-                    has_alias = True
-                    break
-
-            if has_alias:
-                break
-            else:
-                index += 1
-
-        if has_alias:
-            return {
-                "tool": "menu_price",
-                "args": {}
+        selected_tool: Literal["menu", "menu_price"] = self._select_tool(query, threshold=tool_threshold)
+        if selected_tool == "menu":
+            args = {
+                "filter_": self._extract_menu_args(query, threshold=extraction_threshold)
             }
-
         else:
+            args = {}
 
-            mealtimes = self._extract_args(
-                query,
-                self.MEALTIME_ALIASES
-            )
-
-            services = self._extract_args(
-                query,
-                self.SERVICE_ALIASES
-            )
-
-            categories = self._extract_args(
-                query,
-                self.CATEGORY_ALIASES
-            )
-
-            return {
-                "tool": "menu",
-                "args": {
-                    "mealtimes": mealtimes,
-                    "services": services,
-                    "categories": categories,
-                }
-            }
+        return {
+            "tool": selected_tool,
+            "args": args,
+        }

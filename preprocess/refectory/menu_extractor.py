@@ -2,8 +2,8 @@ from bs4 import BeautifulSoup, Tag
 from typing import ClassVar
 
 from preprocess.soup import get_soup
-from models.refectory.menu_models import MenuSection, Mealtime, ServiceType, CategoryType, Menu
-from config.refectory_config import MENU_CACHE_NAME, REFECTORY_CACHE_FOLDER
+from schemas.refectory.menu_models import MenuSection, Mealtime, ServiceType, CategoryType, Menu
+from config.cache_names import MENU_CACHE_NAME, REFECTORY_CACHE_FOLDER
 from cache.operations import write_cache
 
 class MenuExtractor:

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field, asdict
 from typing import Literal
-from models.regulation.document_models import Item
+from schemas.regulation.document_models import Item, DocTypes
 
 @dataclass
 class FlattenedSubItem:
@@ -56,11 +56,10 @@ class Payload:
 
     kind: Literal["item", "table", "paragraph"]
 
-
     text: str
     content: list[ItemIncluded] | TableIncluded | None
 
-    document_type: str = field(init=False)
+    document_type: DocTypes = field(init=False)
     document_name: str = field(init=False)
     chapter_name: str = field(init=False)
     chapter_number: int = field(init=False)
@@ -71,9 +70,6 @@ class Payload:
 
     id: str = field(init=False)
     embedding_text: str = field(init=False)
-
-    def serialize(self):
-        return asdict(self)
 
 @dataclass
 class Chunk:

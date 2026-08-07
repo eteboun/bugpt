@@ -1,2 +1,0 @@
-CALENDAR_CACHE_NAME = "calendar"
-CALENDAR_CACHE_FOLDER = "calendar"

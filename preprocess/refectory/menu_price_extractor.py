@@ -1,9 +1,9 @@
 from bs4 import BeautifulSoup, Tag
 from typing import ClassVar
 
-from models.refectory.menu_price_models import MenuPrice, PriceTable, PriceTableRow
+from schemas.refectory.menu_price_models import MenuPrice, PriceTable, PriceTableRow
 from preprocess.soup import get_soup
-from config.refectory_config import REFECTORY_CACHE_FOLDER, MENU_PRICE_CACHE_NAME
+from config.cache_names import REFECTORY_CACHE_FOLDER, MENU_PRICE_CACHE_NAME
 from cache.operations import write_cache
 
 class MenuPriceExtractor:

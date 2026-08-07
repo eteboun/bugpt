@@ -1,15 +1,11 @@
 from services.service import Service
 from services.refectory.tool_selector import ToolSelector
-from config.refectory_config import MENU_CACHE_NAME, MENU_PRICE_CACHE_NAME, REFECTORY_CACHE_FOLDER
+from config.cache_names import MENU_CACHE_NAME, MENU_PRICE_CACHE_NAME, REFECTORY_CACHE_FOLDER
 from cache.operations import read_cache
-from models.refectory.menu_models import Menu, Mealtime, ServiceType, CategoryType
+from schemas.refectory.menu_models import Menu, MenuFilter
 from typing import ClassVar
 
-def tool_menu(
-        mealtimes: list[Mealtime],
-        services: list[ServiceType],
-        categories: list[CategoryType]
-) -> dict:
+def tool_menu(filter_: MenuFilter) -> dict:
 
     menu_json = read_cache(
         cache_folder=REFECTORY_CACHE_FOLDER,
@@ -17,12 +13,7 @@ def tool_menu(
     )
     menu = Menu.deserialize(menu_json)
 
-    filtered_menu = menu.filter(
-        mealtimes=mealtimes,
-        services=services,
-        categories=categories,
-    )
-
+    filtered_menu = menu.filter(filter_)
     return filtered_menu.serialize()
 
 def tool_menu_price() -> dict:

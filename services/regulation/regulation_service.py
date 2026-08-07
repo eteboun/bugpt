@@ -5,7 +5,6 @@ from services.service import Service
 from services.regulation.doctype_classifier import DoctypeClassifier
 from services.regulation.retriever import RegulationRetriever
 from services.regulation.query_rewriter import QueryRewriter
-from config.regulation_config import DOCUMENT_TYPES
 
 class RegulationService(Service):
 
@@ -19,19 +18,10 @@ class RegulationService(Service):
         self.doctype_classifier = DoctypeClassifier()
         self.retriever = RegulationRetriever(model=embedding_model)
 
-    def _classify_query(self, query: str) -> list[str]:
-        doctypes = self.doctype_classifier.classify(query=query)
-
-        return [
-            doctype
-            for doctype in doctypes
-            if doctype in DOCUMENT_TYPES
-        ]
-
     def answer(self, query: str) -> list[str]:
 
         query = self.query_rewriter.rewrite_query(query)
-        doctypes = self._classify_query(query)
+        doctypes = self.doctype_classifier.classify(query)
         retrieval = self.retriever.retrieve(query=query,
                                             document_types=doctypes)
 

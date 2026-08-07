@@ -1,7 +1,7 @@
 from pathlib import Path
 from contextlib import contextmanager
 from qdrant_client import QdrantClient, models
-from model_loader import VECTOR_MODEL
+from model_loader.model_loader import VECTOR_MODEL
 from config.model_config import BM25_MODEL_NAME, BM25_OPTIONS
 
 @contextmanager

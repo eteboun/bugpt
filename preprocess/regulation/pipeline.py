@@ -6,43 +6,43 @@ from pathlib import Path
 from config.regulation_config import DOCUMENT_URL_MAPPING, REGULATION_DB_PATH, REGULATION_COLLECTION_NAME
 from qdrant.client import run_client, add_to_collection
 
-from models.regulation.chunk_models import Chunk
+from schemas.regulation.chunk_models import Chunk
 from preprocess.regulation.chunker.config import ChunkerConfig
-from models.regulation.document_models import Document
+from schemas.regulation.document_models import Document, DocTypes
 from preprocess.regulation.html_parser.document_tree import HtmlDocumentTree
 from preprocess.regulation.chunker.engine import Chunker
 from preprocess.regulation.normalizers import *
 
 class Pipeline:
 
-    DOCUMENT_NORMALIZER_MAPPING: ClassVar[dict] = {
-        "dormitory": DormitoryNormalizer,
-        "erasmus": ErasmusNormalizer,
-        "undergraduate": UndergraduateNormalizer,
-        "graduate": GraduateNormalizer,
-        "major": MajorNormalizer,
-        "minor": MinorNormalizer,
+    DOCUMENT_NORMALIZER_MAPPING: ClassVar[dict[DocTypes, type[HtmlNormalizer]]] = {
+        DocTypes.DORMITORY: DormitoryNormalizer,
+        DocTypes.ERASMUS: ErasmusNormalizer,
+        DocTypes.UNDERGRADUATE: UndergraduateNormalizer,
+        DocTypes.GRADUATE: GraduateNormalizer,
+        DocTypes.MAJOR: MajorNormalizer,
+        DocTypes.MINOR: MinorNormalizer,
     }
 
     CONTENT_SELECTOR: ClassVar[str] = "div.inner-page__content"
     DESCRIPTION_SELECTOR: ClassVar[str] = "div.inner-page__content-description"
 
     def __init__(self,
-                 document_type: str,
+                 document_type: DocTypes,
                  use_cache: bool = True
                  ) -> None:
 
-        url = DOCUMENT_URL_MAPPING.get(document_type)
+        url = DOCUMENT_URL_MAPPING.get(document_type.value)
         if not url:
-            raise Exception(f"Unknown pipeline: {document_type}")
+            raise Exception(f"Unknown pipeline: {document_type.value}")
 
-        cached_dir = Path(__file__).resolve().parent / "normalized_htmls" / f"{document_type}.txt"
+        cached_dir = Path(__file__).resolve().parent / "normalized_htmls" / f"{document_type.value}.txt"
         if use_cache:
 
             if os.path.exists(cached_dir):
                 normalized_html_text = cached_dir.read_text(encoding="utf-8")
             else:
-                raise Exception(f"Cache does not exist: {document_type}")
+                raise Exception(f"Cache does not exist: {document_type.value}")
 
         else:
 
@@ -54,7 +54,7 @@ class Pipeline:
 
             normalizer = Pipeline.DOCUMENT_NORMALIZER_MAPPING.get(document_type)
             if not normalizer:
-                raise Exception(f"Unknown normalizer: {document_type}")
+                raise Exception(f"Unknown normalizer: {document_type.value}")
 
             normalized_soup = self._normalize_soup(normalizer, temp_soup)
             normalized_content_container = self._get_content_container(normalized_soup)
@@ -66,7 +66,7 @@ class Pipeline:
         self.soup = BeautifulSoup(normalized_html_text, "html.parser")
         self.document_type = document_type
         self.chunker = Chunker(
-            ChunkerConfig(self.document_type)
+            ChunkerConfig(config_name=self.document_type)
         )
 
     @staticmethod

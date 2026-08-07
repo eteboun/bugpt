@@ -1,5 +1,6 @@
 from dataclasses import dataclass, asdict, field
 from typing import Literal
+from enum import StrEnum
 
 @dataclass
 class SubItem:
@@ -59,13 +60,25 @@ class Chapter:
 
     titles: list[Title]
 
+class DocTypes(StrEnum):
+
+    DORMITORY = "dormitory"
+    ERASMUS = "erasmus"
+    UNDERGRADUATE = "undergraduate"
+    GRADUATE = "graduate"
+    MAJOR = "major"
+    MINOR = "minor"
+
 @dataclass
 class Document:
 
     name: str
     chapters: list[Chapter]
 
-    document_type: str = field(init=False)
+    document_type: DocTypes = field(init=False)
 
-    def serialize(self):
-        return asdict(self)
+    def serialize(self) -> dict:
+        dict_ = asdict(self)
+        dict_['document_type'] = self.document_type.value
+
+        return dict_

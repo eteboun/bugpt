@@ -3,6 +3,7 @@ from qdrant_client import models
 from config.regulation_config import REGULATION_COLLECTION_NAME, REGULATION_DB_PATH
 from config.model_config import BM25_MODEL_NAME, BM25_OPTIONS
 from qdrant.client import run_client
+from schemas.regulation.document_models import DocTypes
 
 class RegulationRetriever:
 
@@ -11,7 +12,7 @@ class RegulationRetriever:
 
     def retrieve(self,
                  query: str,
-                 document_types: list[str],
+                 document_types: list[DocTypes],
                  search_limit: int = 2,
                  ) -> list[str]:
 

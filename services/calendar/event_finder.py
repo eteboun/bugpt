@@ -1,6 +1,6 @@
-from models.calendar.calendar_models import Calendar
+from schemas.calendar.calendar_models import Calendar
 from cache.operations import read_cache
-from config.calendar_config import CALENDAR_CACHE_NAME, CALENDAR_CACHE_FOLDER
+from config.cache_names import CALENDAR_CACHE_NAME, CALENDAR_CACHE_FOLDER
 from sentence_transformers import SentenceTransformer
 from sentence_transformers.util import cos_sim
 from rapidfuzz import fuzz

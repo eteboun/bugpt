@@ -12,4 +12,3 @@ DOCUMENT_URL_MAPPING = {
     "major": "https://bogazici.edu.tr/tr/pages/bogazici-universitesi-cift-ana-dal-programlar/661",
     "minor": "https://bogazici.edu.tr/tr/pages/bogazici-universitesi-yan-dal-programlari-yon/668",
 }
-DOCUMENT_TYPES = set(DOCUMENT_URL_MAPPING)

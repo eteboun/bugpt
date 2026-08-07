@@ -3,8 +3,8 @@ import re
 
 from typing import ClassVar
 from preprocess.regulation.chunker.config import ChunkerConfig, TableOption
-from models.regulation.chunk_models import *
-from models.regulation.document_models import *
+from schemas.regulation.chunk_models import *
+from schemas.regulation.document_models import *
 
 class Chunker:
 
@@ -298,7 +298,7 @@ class Chunker:
         return "\n".join(row_texts)
 
     def _create_payloads(self,
-                         document_type: str,
+                         document_type: DocTypes,
                          document_name: str,
                          chapter_name: str,
                          article_title:str,

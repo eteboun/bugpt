@@ -1,10 +1,11 @@
-from rapidfuzz import fuzz
 from typing import ClassVar
+from schemas.regulation.document_models import DocTypes
+from ai.fuzzy import extract_keys
 
 class DoctypeClassifier:
 
-    DOCTYPE_ALIASES: ClassVar[dict[str, set[str]]] = {
-        "erasmus": {
+    DOCTYPE_ALIASES: ClassVar[dict[DocTypes, set[str]]] = {
+        DocTypes.ERASMUS: {
             "erasmus",
             "erasmus programı",
             "erasmus değişim programı",
@@ -16,7 +17,7 @@ class DoctypeClassifier:
             "yurtdışında eğitim",
         },
 
-        "dormitory": {
+        DocTypes.DORMITORY: {
             "öğrenci yurdu",
             "üniversite yurdu",
             "boğaziçi yurdu",
@@ -29,7 +30,7 @@ class DoctypeClassifier:
             "residence hall",
         },
 
-        "undergraduate": {
+        DocTypes.UNDERGRADUATE: {
             "lisans",
             "lisans öğrencisi",
             "lisans eğitimi",
@@ -38,7 +39,7 @@ class DoctypeClassifier:
             "undergraduate program",
         },
 
-        "graduate": {
+        DocTypes.GRADUATE: {
             "lisansüstü",
             "lisansüstü eğitim",
             "lisansüstü program",
@@ -51,7 +52,7 @@ class DoctypeClassifier:
             "phd program",
         },
 
-        "double_major": {
+        DocTypes.MAJOR: {
             "çap",
             "çift anadal",
             "çift ana dal",
@@ -59,7 +60,7 @@ class DoctypeClassifier:
             "double major",
         },
 
-        "minor": {
+        DocTypes.MINOR: {
             "yandal",
             "yan dal",
             "yandal programı",
@@ -68,42 +69,12 @@ class DoctypeClassifier:
         },
     }
 
-    def classify(self, query: str, threshold: float = 80.) -> list[str]:
+    def classify(self, query: str, threshold: float = 80.0) -> list[DocTypes]:
 
-        classified_doctypes: list[str] = []
-        words = query.split()
-        index = 0
+        doctypes: list[DocTypes] = extract_keys(
+            query=query,
+            key_dict=self.DOCTYPE_ALIASES,
+            threshold=threshold
+        )
 
-        while index < len(words):
-            best_doctype: str | None = None
-            best_alias: str | None = None
-            best_score = 0
-
-            for doctype, aliases in self.DOCTYPE_ALIASES.items():
-                for alias in aliases:
-
-                    alias_length = len(alias.split())
-                    candidate_words = words[index:index + alias_length]
-
-                    if len(candidate_words) < alias_length:
-                        continue
-
-                    candidate = " ".join(candidate_words)
-
-                    score = fuzz.ratio(
-                        candidate.casefold(),
-                        alias.casefold(),
-                    )
-
-                    if score >= threshold and score > best_score:
-                        best_score = score
-                        best_doctype = doctype
-                        best_alias = alias
-
-            if best_doctype:
-                classified_doctypes.append(best_doctype)
-                index += len(best_alias.split())
-            else:
-                index += 1
-
-        return classified_doctypes
+        return doctypes

@@ -1,5 +1,5 @@
 from ai.agent import Agent
-from model_loader import GENERATOR_MODEL, GENERATOR_TOKENIZER, VECTOR_MODEL
+from model_loader.model_loader import GENERATOR_MODEL, GENERATOR_TOKENIZER, VECTOR_MODEL
 
 agent = Agent(
     generation_model=GENERATOR_MODEL,

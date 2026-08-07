@@ -1,17 +1,15 @@
 from dataclasses import dataclass, field
-from enum import Enum
-from tkinter import Menu
+from enum import StrEnum
 
-
-class Mealtime(Enum):
+class Mealtime(StrEnum):
     LUNCH = "lunch"
     DINNER = "dinner"
 
-class ServiceType(Enum):
+class ServiceType(StrEnum):
     CANTEEN = "canteen"
     TAKEAWAY = "takeaway"
 
-class CategoryType(Enum):
+class CategoryType(StrEnum):
     SOUP = "soup"
     MAIN_COURSE = "main_course"
     SELECTIVE = "selective"
@@ -53,6 +51,12 @@ class MenuSection:
         )
 
 @dataclass
+class MenuFilter:
+    mealtimes: list[Mealtime]
+    services: list[ServiceType]
+    categories: list[CategoryType]
+
+@dataclass
 class Menu:
     sections: list[MenuSection] = field(default_factory=list)
 
@@ -76,29 +80,25 @@ class Menu:
 
         return menu
 
-    def filter(self,
-               mealtimes: list[Mealtime],
-               services: list[ServiceType],
-               categories: list[CategoryType]
-               ) -> "Menu":
+    def filter(self, filter_: MenuFilter) -> "Menu":
 
-        if mealtimes:
+        if filter_.mealtimes:
             mealtime_filtered_sections = [
                 section for section in self.sections
-                if section.mealtime in mealtimes
+                if section.mealtime in filter_.mealtimes
             ]
         else:
             mealtime_filtered_sections = self.sections
 
-        if services:
+        if filter_.services:
             service_filtered_sections = [
                 section for section in mealtime_filtered_sections
-                if section.service in services
+                if section.service in filter_.services
             ]
         else:
             service_filtered_sections = mealtime_filtered_sections
 
-        if categories:
+        if filter_.categories:
             category_filtered_sections = []
             for section in service_filtered_sections:
                 filtered_section = MenuSection(
@@ -106,7 +106,7 @@ class Menu:
                     service=section.service,
                     categories={}
                 )
-                for category in categories:
+                for category in filter_.categories:
                     filtered_section.categories[category] = section.categories.get(category, [])
 
                 category_filtered_sections.append(filtered_section)

@@ -1,9 +1,9 @@
 import requests
-from config.calendar_config import CALENDAR_CACHE_NAME, CALENDAR_CACHE_FOLDER
+from config.cache_names import CALENDAR_CACHE_NAME, CALENDAR_CACHE_FOLDER
 from datetime import date, timedelta
 from typing import ClassVar
 from bs4 import BeautifulSoup, Tag
-from models.calendar.calendar_models import Event, EventKey, EventKind, Calendar
+from schemas.calendar.calendar_models import Event, EventKey, EventKind, Calendar
 from cache.operations import write_cache
 
 today = date.today()
