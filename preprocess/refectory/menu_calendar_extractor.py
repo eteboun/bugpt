@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from abc import ABC, abstractmethod
 
 from preprocess.soup import get_soup
-from schemas.refectory.menu_models import Mealtime, ServiceType, CategoryType, Menu, MainMeal, Breakfast, MenuSection, MenuCalendar
+from schemas.refectory.menu_calendar_models import Mealtime, ServiceType, CategoryType, Menu, MainMeal, Breakfast, MenuSection, MenuCalendar
 from config.cache_names import MENU_CALENDAR_CACHE_NAME, REFECTORY_CACHE_FOLDER
 from cache.operations import write_cache
 
@@ -138,16 +138,15 @@ class MainMealExtractor(MealExtractor):
         for class_suffix, category in self.CLASS_SUFFIX_CATEGORY_TYPE_MAPPING.items():
             food_block = self._extract_food_block(item_block=item_block, class_suffix=class_suffix)
 
-            if not food_block:
+            foods = self._extract_foods(food_block=food_block)
+            if not foods:
                 continue
 
-            foods = self._extract_foods(food_block=food_block)
             categories[category] = foods
 
         return categories
 
-    def get_sections(self, date_: date) -> list[MainMeal]:
-
+    def _extract_main_meals(self, date_: date) -> list[MainMeal]:
         main_meals: list[MainMeal] = []
 
         soup = get_soup(url=self.URL)
@@ -170,11 +169,26 @@ class MainMealExtractor(MealExtractor):
 
         return main_meals
 
+    def get_sections(self, date_: date) -> list[MainMeal]:
+        canteen_extractor = CanteenMainMealExtractor()
+        takeaway_extractor = TakeawayMainMealExtractor()
+
+        sections = (canteen_extractor.get_sections(date_=date_)
+                    + takeaway_extractor.get_sections(date_=date_))
+
+        return sections
+
 class CanteenMainMealExtractor(MainMealExtractor):
     URL = "https://yemekhane.bogazici.edu.tr/aylik-menu"
 
+    def get_sections(self, date_: date) -> list[MainMeal]:
+        return self._extract_main_meals(date_=date_)
+
 class TakeawayMainMealExtractor(MainMealExtractor):
     URL = "https://yemekhane.bogazici.edu.tr/paket-menu"
+
+    def get_sections(self, date_: date) -> list[MainMeal]:
+        return self._extract_main_meals(date_=date_)
 
 class BreakfastExtractor(MealExtractor):
     URL = "https://yemekhane.bogazici.edu.tr/kahvalti-menu/"
@@ -214,7 +228,8 @@ class BreakfastExtractor(MealExtractor):
                 foods=foods
             ),
             Breakfast(
-                service=ServiceType.TAKEAWAY
+                service=ServiceType.TAKEAWAY,
+                foods=[]
             )
         ]
 
@@ -222,14 +237,12 @@ class MenuExtractor:
 
     def __init__(self):
         self.breakfast_extractor = BreakfastExtractor()
-        self.canteen_main_meal_extractor = CanteenMainMealExtractor()
-        self.takeaway_main_meal_extractor = TakeawayMainMealExtractor()
+        self.main_meal_extractor = MainMealExtractor()
 
     def _extract_menu(self, date_: date) -> Menu:
 
-        sections = (self.breakfast_extractor.get_sections(date_=date_) +
-                    self.canteen_main_meal_extractor.get_sections(date_=date_) +
-                    self.takeaway_main_meal_extractor.get_sections(date_=date_))
+        sections = (self.breakfast_extractor.get_sections(date_=date_)
+                    + self.main_meal_extractor.get_sections(date_=date_))
 
         return Menu(
             sections=sections
@@ -265,3 +278,6 @@ class MenuExtractor:
             cache_name=MENU_CALENDAR_CACHE_NAME,
             cache_data=serialized_menu_calendar
         )
+
+e = MenuExtractor()
+e.cache()

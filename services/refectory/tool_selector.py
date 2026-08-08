@@ -1,6 +1,6 @@
 from typing import ClassVar, Literal
 from ai.fuzzy import extract_key, extract_keys, match
-from schemas.refectory.menu_models import Mealtime, ServiceType, CategoryType, MenuFilter
+from schemas.refectory.menu_calendar_models import Mealtime, ServiceType, CategoryType, MenuFilter
 
 class ToolSelector:
 
@@ -121,7 +121,7 @@ class ToolSelector:
         },
     }
 
-    def _select_tool(self, query: str, threshold: float = 85.0) -> Literal["menu", "menu_price"]:
+    def _select_tool(self, query: str, threshold: float = 90.0) -> Literal["menu", "menu_price"]:
 
         match_ = match(
             query,
@@ -134,7 +134,7 @@ class ToolSelector:
         else:
             return "menu"
 
-    def _extract_menu_args(self, query: str, threshold: float = 80.0) -> MenuFilter:
+    def _extract_menu_args(self, query: str, threshold: float = 90.0) -> MenuFilter:
 
         mealtime = extract_key(
             query,
@@ -164,8 +164,8 @@ class ToolSelector:
 
     def run(self,
             query: str,
-            tool_threshold: float = 85.0,
-            extraction_threshold: float = 80.0,
+            tool_threshold: float = 90.0,
+            extraction_threshold: float = 90.0,
             ) -> dict:
 
         selected_tool: Literal["menu", "menu_price"] = self._select_tool(query, threshold=tool_threshold)

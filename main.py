@@ -11,6 +11,5 @@ while True:
     prompt = input("> ")
     if prompt == "quit":
         break
-    print(
-        agent.enter_query(prompt)
-    )
+
+    agent.enter_query(prompt)

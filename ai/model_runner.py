@@ -1,4 +1,5 @@
 from pathlib import Path
+from transformers import TextStreamer
 import torch
 
 class ModelRunner:
@@ -11,7 +12,8 @@ class ModelRunner:
     def run(self,
             system_prompt_file_name: str,
             query: str,
-            max_new_tokens: int = 100
+            max_new_tokens: int = 100,
+            streamer: TextStreamer = None
             ) -> str:
 
         if self.model is None or self.tokenizer is None:
@@ -47,6 +49,7 @@ class ModelRunner:
                 **inputs,
                 max_new_tokens=max_new_tokens,
                 do_sample=False,
+                streamer=streamer
             )
 
         input_len = inputs["input_ids"].shape[-1]

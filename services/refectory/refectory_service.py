@@ -2,7 +2,7 @@ from services.service import Service
 from services.refectory.tool_selector import ToolSelector
 from config.cache_names import MENU_CALENDAR_CACHE_NAME, MENU_PRICE_CACHE_NAME, REFECTORY_CACHE_FOLDER
 from cache.operations import read_cache
-from schemas.refectory.menu_models import MenuFilter, MenuCalendar
+from schemas.refectory.menu_calendar_models import MenuFilter, MenuCalendar
 from typing import ClassVar
 from datetime import date
 

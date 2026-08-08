@@ -25,7 +25,8 @@ class RegulationRetriever:
                     models.FieldCondition(
                         key="document_type",
                         match=models.MatchAny(
-                            any=document_types
+                            any=[doctype.value
+                                 for doctype in document_types]
                         ),
                     )
                 ]

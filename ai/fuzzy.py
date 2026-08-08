@@ -101,13 +101,12 @@ def extract_key(
         ) -> T:
 
     words = query.split()
+
     best_value: T | None = None
+    best_score = 0.0
+    best_word_count = 0
 
-    index = 0
-    while index < len(words):
-        best_score = 0.0
-        best_word_count = 0
-
+    for index in range(len(words)):
         for t, alias_set in key_dict.items():
             for alias in alias_set:
 
@@ -135,7 +134,7 @@ def extract_key(
                     best_score = score
                     best_word_count = len(alias.split())
 
-            index += 1
+        index += 1
 
     return best_value
 

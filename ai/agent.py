@@ -1,4 +1,4 @@
-from transformers import PreTrainedModel, PreTrainedTokenizer
+from transformers import PreTrainedModel, PreTrainedTokenizer, TextStreamer
 from sentence_transformers import SentenceTransformer
 from ai.orchestrator import Orchestrator
 from ai.formatter import Formatter
@@ -17,7 +17,17 @@ class Agent:
         self.orchestrator = Orchestrator(generation_model=generation_model,
                                          generation_tokenizer=generation_tokenizer,
                                          embedding_model=embedding_model)
-        self.formatter = Formatter(model=generation_model, tokenizer=generation_tokenizer)
+        streamer = TextStreamer(
+            generation_tokenizer,
+            skip_prompt=True,
+            skip_special_tokens=True,
+        )
+
+        self.formatter = Formatter(
+            model=generation_model,
+            tokenizer=generation_tokenizer,
+            streamer=streamer
+        )
 
     def enter_query(self, query: str) -> str:
         service_call = self.router.select_service(query=query)

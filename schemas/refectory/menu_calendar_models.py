@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Literal
 from datetime import date
@@ -25,13 +25,16 @@ class MenuSection:
     service: ServiceType
 
     def serialize(self) -> dict:
-        return asdict(self)
+        return {
+            "mealtime": self.mealtime.value,
+            "service": self.service.value,
+        }
 
-    @classmethod
-    def deserialize(cls, data: dict) -> "MenuSection":
-        return cls(
-            mealtime=Mealtime(data["mealtime"]),
-            service=ServiceType(data["service"]),
+    @staticmethod
+    def deserialize(data: dict) -> tuple[Mealtime, ServiceType]:
+        return (
+            Mealtime(data["mealtime"]),
+            ServiceType(data["service"]),
         )
 
 @dataclass
@@ -41,18 +44,23 @@ class MainMeal(MenuSection):
     categories: dict[CategoryType, list[str]] = field(default_factory=dict)
 
     def serialize(self) -> dict:
-        return asdict(self)
+        data = super().serialize()
+        data["categories"] = {
+                category.value: foods
+                for category, foods in self.categories.items()
+            }
 
+        return data
     @classmethod
     def deserialize(cls, data: dict) -> "MainMeal":
 
-        menu_section =  super().deserialize(data)
-        if menu_section.mealtime == Mealtime.BREAKFAST:
+        mealtime, service = super().deserialize(data)
+        if mealtime == Mealtime.BREAKFAST:
             raise ValueError("Breakfast is not a main meal")
 
         return cls(
-            mealtime=menu_section.mealtime,
-            service=menu_section.service,
+            mealtime=mealtime,
+            service=service,
             categories={
                 CategoryType(category): foods
                 for category, foods in data["categories"].items()
@@ -66,20 +74,30 @@ class Breakfast(MenuSection):
         init=False,
         default=Mealtime.BREAKFAST
     )
-    foods: list[str] = field(default_factory=list)
+    foods: list[str]
+
+    empty_food_label: str = "no foods available"
 
     def serialize(self) -> dict:
-        return asdict(self)
+        data = super().serialize()
+        data["foods"] = self.foods if self.foods else self.empty_food_label
+
+        return data
 
     @classmethod
     def deserialize(cls, data: dict) -> "Breakfast":
-        menu_section =  super().deserialize(data)
-        if menu_section.mealtime != Mealtime.BREAKFAST:
+
+        mealtime, service = super().deserialize(data)
+        if mealtime != Mealtime.BREAKFAST:
             raise ValueError("Lunch or Dinner is not a breakfast")
 
+        foods = [] \
+            if data["foods"] == cls.empty_food_label \
+            else data["foods"]
+
         return cls(
-            service=menu_section.service,
-            foods=data["foods"]
+            service=service,
+            foods=foods,
         )
 
 @dataclass
@@ -87,7 +105,25 @@ class CategoryFilterResult(MenuSection):
     categories: dict[CategoryType, list[str]] = field(default_factory=dict)
 
     def serialize(self) -> dict:
-        return asdict(self)
+
+        data = super().serialize()
+        data["categories"] = {
+                category.value: foods
+                for category, foods in self.categories.items()
+            }
+
+        return data
+
+    @classmethod
+    def deserialize(cls, data: dict) -> "CategoryFilterResult":
+        mealtime, service = super().deserialize(data)
+        return cls(
+            mealtime = mealtime,
+            service = service,
+            categories = {
+                CategoryType(category): foods for category, foods in data["categories"].items()
+            }
+        )
 
 @dataclass
 class MenuFilter:
@@ -108,13 +144,22 @@ class Menu:
 
     @classmethod
     def deserialize(cls, data: dict) -> "Menu":
-
         menu = Menu()
         sections = data["sections"]
 
         for section in sections:
+            mealtime = Mealtime(
+                section["mealtime"]
+            )
+
+            if mealtime == Mealtime.BREAKFAST:
+                menu_section = Breakfast.deserialize(section)
+
+            else:
+                menu_section = MainMeal.deserialize(section)
+
             menu.sections.append(
-                MenuSection.deserialize(section)
+                menu_section
             )
 
         return menu
@@ -141,8 +186,8 @@ class Menu:
             category_filtered_sections = []
             for section in service_filtered_sections:
                 filtered_section = CategoryFilterResult(
-                    mealtime=filter_.mealtime,
-                    service=filter_.service,
+                    mealtime=section.mealtime,
+                    service=section.service,
                 )
 
                 if isinstance(section, Breakfast):

@@ -1,6 +1,6 @@
 from typing import ClassVar
 from schemas.regulation.document_models import DocTypes
-from ai.fuzzy import extract_key
+from ai.fuzzy import extract_keys
 
 class DoctypeClassifier:
 
@@ -71,7 +71,7 @@ class DoctypeClassifier:
 
     def classify(self, query: str, threshold: float = 80.0) -> list[DocTypes]:
 
-        doctypes: list[DocTypes] = extract_key(
+        doctypes: list[DocTypes] = extract_keys(
             query=query,
             key_dict=self.DOCTYPE_ALIASES,
             threshold=threshold
