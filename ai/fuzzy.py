@@ -94,6 +94,51 @@ def rewrite_query(query: str,
 
     return " ".join(result)
 
+def extract_key(
+        query: str,
+        key_dict: dict[T, set[str]],
+        threshold: float
+        ) -> T:
+
+    words = query.split()
+    best_value: T | None = None
+
+    index = 0
+    while index < len(words):
+        best_score = 0.0
+        best_word_count = 0
+
+        for t, alias_set in key_dict.items():
+            for alias in alias_set:
+
+                alias_length = len(alias.split())
+                candidate_words = words[index:index + alias_length]
+
+                if len(candidate_words) < alias_length:
+                    continue
+
+                candidate = " ".join(candidate_words)
+
+                score = fuzz.ratio(
+                    candidate.casefold(),
+                    alias.casefold(),
+                )
+
+                if score < threshold:
+                    continue
+
+                if score > best_score or (
+                    score == best_score and len(alias.split()) > best_word_count
+                ):
+
+                    best_value = t
+                    best_score = score
+                    best_word_count = len(alias.split())
+
+            index += 1
+
+    return best_value
+
 def extract_keys(
         query: str,
         key_dict: dict[T, set[str]],

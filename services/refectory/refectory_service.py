@@ -1,17 +1,19 @@
 from services.service import Service
 from services.refectory.tool_selector import ToolSelector
-from config.cache_names import MENU_CACHE_NAME, MENU_PRICE_CACHE_NAME, REFECTORY_CACHE_FOLDER
+from config.cache_names import MENU_CALENDAR_CACHE_NAME, MENU_PRICE_CACHE_NAME, REFECTORY_CACHE_FOLDER
 from cache.operations import read_cache
-from schemas.refectory.menu_models import Menu, MenuFilter
+from schemas.refectory.menu_models import MenuFilter, MenuCalendar
 from typing import ClassVar
+from datetime import date
 
 def tool_menu(filter_: MenuFilter) -> dict:
 
-    menu_json = read_cache(
+    menu_calendar_json = read_cache(
         cache_folder=REFECTORY_CACHE_FOLDER,
-        cache_name=MENU_CACHE_NAME
+        cache_name=MENU_CALENDAR_CACHE_NAME
     )
-    menu = Menu.deserialize(menu_json)
+    menu_calendar = MenuCalendar.deserialize(menu_calendar_json)
+    menu = menu_calendar.search(date_=date.today())
 
     filtered_menu = menu.filter(filter_)
     return filtered_menu.serialize()

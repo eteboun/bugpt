@@ -1,5 +1,5 @@
 import requests
-from config.cache_names import CALENDAR_CACHE_NAME, CALENDAR_CACHE_FOLDER
+from config.cache_names import ACADEMIC_CALENDAR_CACHE_NAME, ACADEMIC_CALENDAR_CACHE_FOLDER
 from datetime import date, timedelta
 from typing import ClassVar
 from bs4 import BeautifulSoup, Tag
@@ -142,7 +142,9 @@ class EventExtractor:
         serialized_calendar = calendar.serialize()
 
         write_cache(
-            cache_folder=CALENDAR_CACHE_FOLDER,
-            cache_name=CALENDAR_CACHE_NAME,
+            cache_folder=ACADEMIC_CALENDAR_CACHE_FOLDER,
+            cache_name=ACADEMIC_CALENDAR_CACHE_NAME,
             cache_data=serialized_calendar
         )
+
+EventExtractor.cache()

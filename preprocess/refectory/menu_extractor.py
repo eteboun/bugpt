@@ -1,130 +1,267 @@
 from bs4 import BeautifulSoup, Tag
 from typing import ClassVar
+from datetime import date
+from calendar import monthrange
+from enum import StrEnum
+from dataclasses import dataclass
+from abc import ABC, abstractmethod
 
 from preprocess.soup import get_soup
-from schemas.refectory.menu_models import MenuSection, Mealtime, ServiceType, CategoryType, Menu
-from config.cache_names import MENU_CACHE_NAME, REFECTORY_CACHE_FOLDER
+from schemas.refectory.menu_models import Mealtime, ServiceType, CategoryType, Menu, MainMeal, Breakfast, MenuSection, MenuCalendar
+from config.cache_names import MENU_CALENDAR_CACHE_NAME, REFECTORY_CACHE_FOLDER
 from cache.operations import write_cache
 
-class MenuExtractor:
+class MainMealLabel(StrEnum):
+    LUNCH_CANTEEN = "öğle yemeği"
+    DINNER_CANTEEN = "akşam yemeği"
+    LUNCH_TAKEAWAY = "paket öğle yemeği"
+    DINNER_TAKEAWAY = "paket akşam yemeği"
 
-    URL: ClassVar[str] = "https://yemekhane.bogazici.edu.tr/"
+class FoodBlockClassSuffixes(StrEnum):
+    SOUP = "ccorba"
+    MAIN_COURSE = "anaa-yemek"
+    SELECTIVE = "aperatiff"
+    VEGETARIAN = "vejetarien"
+    COMPLEMENTARY = "yardimciyemek"
 
-    BASE_FOOD_BLOCK_ID: ClassVar[str] = "block-views-yemek-block"
-    MEAL_FIELD_CONTENT_CLASS: ClassVar[str] = "field-content"
-    MEAL_HTML_ELEMENT: ClassVar[str] = "a"
+    MEALTIME_LABEL = "yemek-saati"
 
-    MENU_SECTION_ARGS_MAPPING: ClassVar[dict[str, dict]] = {
-        "Öğle Yemeği": {
-            "mealtime": Mealtime.LUNCH,
-            "service": ServiceType.CANTEEN
-        },
-        "Akşam Yemeği": {
-            "mealtime": Mealtime.DINNER,
-            "service": ServiceType.CANTEEN
-        },
-        "Paket Öğle Yemeği": {
-            "mealtime": Mealtime.LUNCH,
-            "service": ServiceType.TAKEAWAY
-        },
-        "Paket Akşam Yemeği": {
-            "mealtime": Mealtime.DINNER,
-            "service": ServiceType.TAKEAWAY
-        },
+@dataclass
+class MainMealLabelInfo:
+    mealtime: Mealtime
+    service: ServiceType
+
+class MealExtractor(ABC):
+
+    URL: ClassVar[str]
+
+    DATE_BLOCK_FIELD: ClassVar[str] = "data-date"
+    DATE_BLOCK_CLASS: ClassVar[str] = "single-day"
+
+    FOOD_HTML_ELEMENT: ClassVar[str] = "a"
+
+    MEAL_LABEL_CLASS_BASE: ClassVar[str] = "views-field-field-"
+
+    CLASS_SUFFIX_CATEGORY_TYPE_MAPPING: ClassVar[dict[FoodBlockClassSuffixes, CategoryType]] = {
+        FoodBlockClassSuffixes.SOUP: CategoryType.SOUP,
+        FoodBlockClassSuffixes.MAIN_COURSE: CategoryType.MAIN_COURSE,
+        FoodBlockClassSuffixes.SELECTIVE: CategoryType.SELECTIVE,
+        FoodBlockClassSuffixes.VEGETARIAN: CategoryType.VEGETARIAN,
+        FoodBlockClassSuffixes.COMPLEMENTARY: CategoryType.COMPLEMENTARY,
     }
 
-    CATEGORY_TYPE_KEY_MAPPING: ClassVar[dict[str, CategoryType]] = {
-        "soup": CategoryType.SOUP,
-        "maincourse": CategoryType.MAIN_COURSE,
-        "selective": CategoryType.SELECTIVE,
-        "vegetarien": CategoryType.VEGETARIAN,
-        "complementary": CategoryType.COMPLEMENTARY,
+    def _get_class(self, class_suffix: FoodBlockClassSuffixes) -> str:
+        return self.MEAL_LABEL_CLASS_BASE + class_suffix
+
+    def _extract_date_block(self, soup: BeautifulSoup, date_: date) -> Tag:
+        block = soup.find(
+            "td",
+            attrs={
+                self.DATE_BLOCK_FIELD: str(date_),
+                "class": self.DATE_BLOCK_CLASS,
+            },
+        )
+        if not block:
+            raise ValueError("Invalid date")
+
+        return block
+
+    @staticmethod
+    def _extract_item_blocks(date_block: Tag) -> list[Tag]:
+        return date_block.find_all("div", class_="item")
+
+    def _extract_food_block(self, item_block: Tag, class_suffix: FoodBlockClassSuffixes) -> Tag:
+        class_ = self._get_class(class_suffix)
+        return item_block.find(class_=class_)
+
+    def _extract_foods(self, food_block: Tag) -> list[str]:
+        return [
+            element.get_text(strip=True)
+            for element in food_block.find_all(self.FOOD_HTML_ELEMENT)
+        ]
+
+    @abstractmethod
+    def get_sections(self, date_: date) -> list[MenuSection]:
+        ...
+
+class MainMealExtractor(MealExtractor):
+
+    MAIN_MEAL_LABEL_MAPPING: ClassVar[dict[
+        MainMealLabel, MainMealLabelInfo
+    ]] = {
+        MainMealLabel.LUNCH_CANTEEN: MainMealLabelInfo(
+            mealtime=Mealtime.LUNCH,
+            service=ServiceType.CANTEEN,
+        ),
+        MainMealLabel.DINNER_CANTEEN: MainMealLabelInfo(
+            mealtime=Mealtime.DINNER,
+            service=ServiceType.CANTEEN,
+        ),
+        MainMealLabel.LUNCH_TAKEAWAY: MainMealLabelInfo(
+            mealtime=Mealtime.LUNCH,
+            service=ServiceType.TAKEAWAY,
+        ),
+        MainMealLabel.DINNER_TAKEAWAY: MainMealLabelInfo(
+            mealtime=Mealtime.DINNER,
+            service=ServiceType.TAKEAWAY,
+        ),
     }
 
-    @staticmethod
-    def _extract_empty_menu_section_from_food_block(food_block: Tag) -> MenuSection:
-        food_block_title = (food_block
-                            .find("h2")
-                            .string
-                            .strip())
-        args = MenuExtractor.MENU_SECTION_ARGS_MAPPING.get(food_block_title)
+    def _extract_main_meal_label(self, item_block: Tag) -> MainMealLabel:
 
-        if not args:
-            raise ValueError("Invalid food block title")
+        class_ = self._get_class(class_suffix=FoodBlockClassSuffixes.MEALTIME_LABEL)
 
-        return MenuSection(**args)
+        label_tag = item_block.find("div", class_=class_)
+        if not label_tag:
+            raise ValueError("Invalid date block")
 
-    @staticmethod
-    def _extract_food_blocks(soup: BeautifulSoup) -> list[Tag]:
-        return soup.select(f'[id^="{MenuExtractor.BASE_FOOD_BLOCK_ID}"]')
+        label = (label_tag
+                 .get_text(strip=True)
+                 .casefold())
 
-    @staticmethod
-    def _extract_categories_from_food_block(food_block: Tag) -> dict[CategoryType, list[str]]:
+        return MainMealLabel(label)
+
+    def _extract_main_meal_label_info(self, main_meal_label: MainMealLabel) -> MainMealLabelInfo:
+
+        label_info = self.MAIN_MEAL_LABEL_MAPPING.get(
+            main_meal_label
+        )
+
+        if not label_info:
+            raise ValueError("Invalid main meal label")
+
+        return label_info
+
+    def _extract_categories(self, item_block: Tag) -> dict[CategoryType, list[str]]:
+
         categories = {}
+        for class_suffix, category in self.CLASS_SUFFIX_CATEGORY_TYPE_MAPPING.items():
+            food_block = self._extract_food_block(item_block=item_block, class_suffix=class_suffix)
 
-        food_containers = food_block.find_all(class_="food-container")
+            if not food_block:
+                continue
 
-        for food_container in food_containers:
-            classes = food_container["class"]
-            if len(classes) < 2:
-                raise ValueError("Invalid food container")
-
-            category_type_key = classes[1]
-            category_type = MenuExtractor.CATEGORY_TYPE_KEY_MAPPING.get(category_type_key)
-
-            if not category_type:
-                raise ValueError("Invalid category type")
-
-            meal_field_content = food_container.find(class_=MenuExtractor.MEAL_FIELD_CONTENT_CLASS)
-
-            if not meal_field_content:
-                raise ValueError("Invalid meal field content")
-
-            meal_html_elements = meal_field_content.find_all(MenuExtractor.MEAL_HTML_ELEMENT)
-
-            if not meal_html_elements:
-                raise ValueError("Invalid meal html elements")
-
-            meals = [
-                meal_html_element
-                .string
-                .strip()
-                for meal_html_element in meal_html_elements
-            ]
-
-            categories[category_type] = meals
+            foods = self._extract_foods(food_block=food_block)
+            categories[category] = foods
 
         return categories
 
-    @staticmethod
-    def _extract_menu_section_from_food_block(food_block: Tag) -> MenuSection:
+    def get_sections(self, date_: date) -> list[MainMeal]:
 
-        menu_section = MenuExtractor._extract_empty_menu_section_from_food_block(food_block)
-        categories = MenuExtractor._extract_categories_from_food_block(food_block)
+        main_meals: list[MainMeal] = []
 
-        menu_section.categories = categories
-        return menu_section
+        soup = get_soup(url=self.URL)
+        date_block = self._extract_date_block(soup=soup, date_=date_)
+        item_blocks = self._extract_item_blocks(date_block=date_block)
 
-    @staticmethod
-    def _extract_menu() -> Menu:
+        for item_block in item_blocks:
+            label = self._extract_main_meal_label(item_block=item_block)
+            label_info = self._extract_main_meal_label_info(main_meal_label=label)
 
-        menu = Menu()
-        soup = get_soup(MenuExtractor.URL)
+            mealtime = label_info.mealtime
+            service = label_info.service
+            categories = self._extract_categories(item_block=item_block)
 
-        food_blocks = MenuExtractor._extract_food_blocks(soup)
+            main_meals.append(MainMeal(
+                mealtime=mealtime,
+                service=service,
+                categories=categories,
+            ))
 
-        for food_block in food_blocks:
-            menu_section = MenuExtractor._extract_menu_section_from_food_block(food_block)
-            menu.sections.append(menu_section)
+        return main_meals
 
-        return menu
+class CanteenMainMealExtractor(MainMealExtractor):
+    URL = "https://yemekhane.bogazici.edu.tr/aylik-menu"
 
-    @staticmethod
-    def cache():
-        menu = MenuExtractor._extract_menu()
+class TakeawayMainMealExtractor(MainMealExtractor):
+    URL = "https://yemekhane.bogazici.edu.tr/paket-menu"
+
+class BreakfastExtractor(MealExtractor):
+    URL = "https://yemekhane.bogazici.edu.tr/kahvalti-menu/"
+
+    def _extract_breakfast_foods(self, item_block: Tag) -> list[str]:
+
+        foods: list[str] = []
+        for class_suffix, category in self.CLASS_SUFFIX_CATEGORY_TYPE_MAPPING.items():
+            food_block = self._extract_food_block(item_block=item_block, class_suffix=class_suffix)
+
+            if not food_block:
+                continue
+
+            extracted_foods = self._extract_foods(food_block=food_block)
+            foods += extracted_foods
+
+        return foods
+
+    def get_sections(self, date_: date) -> list[Breakfast]:
+
+        soup = get_soup(self.URL)
+        date_block = self._extract_date_block(soup=soup, date_=date_)
+        item_blocks = self._extract_item_blocks(date_block=date_block)
+
+        if not item_blocks:
+            return []
+
+        item_block = next(iter(
+            item_blocks
+        ))
+
+        foods = self._extract_breakfast_foods(item_block=item_block)
+
+        return [
+            Breakfast(
+                service=ServiceType.CANTEEN,
+                foods=foods
+            ),
+            Breakfast(
+                service=ServiceType.TAKEAWAY
+            )
+        ]
+
+class MenuExtractor:
+
+    def __init__(self):
+        self.breakfast_extractor = BreakfastExtractor()
+        self.canteen_main_meal_extractor = CanteenMainMealExtractor()
+        self.takeaway_main_meal_extractor = TakeawayMainMealExtractor()
+
+    def _extract_menu(self, date_: date) -> Menu:
+
+        sections = (self.breakfast_extractor.get_sections(date_=date_) +
+                    self.canteen_main_meal_extractor.get_sections(date_=date_) +
+                    self.takeaway_main_meal_extractor.get_sections(date_=date_))
+
+        return Menu(
+            sections=sections
+        )
+
+    def _extract_menu_calendar(self) -> MenuCalendar:
+
+        today = date.today()
+
+        dates = [
+            date(today.year, today.month, day)
+            for day in range(1, monthrange(today.year, today.month)[1] + 1)
+        ]
+
+        menus = [
+            self._extract_menu(date_=date_)
+            for date_ in dates
+        ]
+
+        return MenuCalendar(
+            calendar=dict(
+                zip(dates, menus)
+            )
+        )
+
+    def cache(self) -> None:
+
+        menu_calendar = self._extract_menu_calendar()
+        serialized_menu_calendar = menu_calendar.serialize()
 
         write_cache(
             cache_folder=REFECTORY_CACHE_FOLDER,
-            cache_name=MENU_CACHE_NAME,
-            cache_data=menu.serialize()
+            cache_name=MENU_CALENDAR_CACHE_NAME,
+            cache_data=serialized_menu_calendar
         )

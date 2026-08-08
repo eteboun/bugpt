@@ -1,5 +1,5 @@
 from typing import ClassVar, Literal
-from ai.fuzzy import extract_keys, match
+from ai.fuzzy import extract_key, extract_keys, match
 from schemas.refectory.menu_models import Mealtime, ServiceType, CategoryType, MenuFilter
 
 class ToolSelector:
@@ -14,6 +14,19 @@ class ToolSelector:
     }
 
     MEALTIME_ALIASES: ClassVar[dict[Mealtime, set[str]]] = {
+        Mealtime.BREAKFAST: {
+            "kahvaltı",
+            "kahvaltıda",
+            "kahvaltı yemeği",
+            "kahvaltı menüsü",
+            "sabah",
+            "sabah yemeği",
+            "sabah menüsü",
+            "breakfast",
+            "breakfast menu",
+            "gündüz"
+        },
+
         Mealtime.LUNCH: {
             "öğle",
             "öğlen",
@@ -21,7 +34,6 @@ class ToolSelector:
             "öğlen yemeği",
             "öğle menüsü",
             "öğlen menüsü",
-            "gündüz",
             "lunch",
             "lunch menu"
         },
@@ -124,13 +136,13 @@ class ToolSelector:
 
     def _extract_menu_args(self, query: str, threshold: float = 80.0) -> MenuFilter:
 
-        mealtimes = extract_keys(
+        mealtime = extract_key(
             query,
             key_dict=self.MEALTIME_ALIASES,
             threshold=threshold
         )
 
-        services = extract_keys(
+        service = extract_key(
             query,
             key_dict=self.SERVICE_ALIASES,
             threshold=threshold
@@ -143,8 +155,8 @@ class ToolSelector:
         )
 
         filter_ = MenuFilter(
-            mealtimes=mealtimes,
-            services=services,
+            mealtime=mealtime,
+            service=service,
             categories=categories,
         )
 

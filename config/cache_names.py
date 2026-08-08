@@ -1,6 +1,6 @@
-CALENDAR_CACHE_NAME = "calendar"
-CALENDAR_CACHE_FOLDER = "calendar"
+ACADEMIC_CALENDAR_CACHE_NAME = "academic_calendar"
+ACADEMIC_CALENDAR_CACHE_FOLDER = "academic_calendar"
 
-MENU_CACHE_NAME = "menu"
+MENU_CALENDAR_CACHE_NAME = "menu_calendar"
 MENU_PRICE_CACHE_NAME = "menu_price"
 REFECTORY_CACHE_FOLDER = "refectory"

@@ -1,6 +1,6 @@
 from schemas.calendar.calendar_models import Calendar
 from cache.operations import read_cache
-from config.cache_names import CALENDAR_CACHE_NAME, CALENDAR_CACHE_FOLDER
+from config.cache_names import ACADEMIC_CALENDAR_CACHE_NAME, ACADEMIC_CALENDAR_CACHE_FOLDER
 from sentence_transformers import SentenceTransformer
 from sentence_transformers.util import cos_sim
 from rapidfuzz import fuzz
@@ -10,8 +10,8 @@ class EventFinder:
     def __init__(self, model: SentenceTransformer) -> None:
 
         calendar_json = read_cache(
-            cache_folder=CALENDAR_CACHE_FOLDER,
-            cache_name=CALENDAR_CACHE_NAME,
+            cache_folder=ACADEMIC_CALENDAR_CACHE_FOLDER,
+            cache_name=ACADEMIC_CALENDAR_CACHE_NAME,
         )
 
         self.model = model
